@@ -4,7 +4,7 @@
 
 [![license](https://img.shields.io/badge/LICENSE-MIT-green.svg)](LICENSE)
 
-[English README is here](README.md)
+[日本語版READMEはこちら](README_JA.md)
 
 ## Overview
 
