@@ -45,6 +45,12 @@ Alternatively, open Packages/manifest.json and add the following to the dependen
 }
 ```
 
+### Samples
+
+You can obtain a sample to verify the behavior of all attributes from the Package Manager. Please refer to this sample for detailed usage instructions.
+
+<img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/img7.png" width="500">
+
 ## Basic Usage
 
 To customize the display in the Inspector, add attributes to the fields of the class.

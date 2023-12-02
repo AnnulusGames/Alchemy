@@ -45,6 +45,13 @@ https://github.com/AnnulusGames/Alchemy.git?path=/Alchemy/Assets/Alchemy
 }
 ```
 
+### サンプル
+
+Package Managerから全属性の挙動を確認できるサンプルを入手できます。詳しい使用方法はこちらのサンプルを参考にしてみてください。
+
+<img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/img7.png" width="500">
+
+
 ## 基本的な使い方
 
 Inspectorでの表示をカスタマイズしたい場合には、クラスが持つフィールドに属性を付加します。
