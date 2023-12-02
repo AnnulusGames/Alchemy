@@ -1,6 +1,6 @@
 # Alchemy
 
-<!-- Header image --> 
+<img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/Header.png" width="800">
 
 [![license](https://img.shields.io/badge/LICENSE-MIT-green.svg)](LICENSE)
 
@@ -9,8 +9,6 @@
 ## Overview
 
 Alchemy is a library that provides Inspector extensions using attributes.
-
-<!-- inspector sample image --> 
 
 In addition to adding easy and powerful editor extensions based on attributes, it allows serialization of various types (Dictionary, HashSet, Nullable, Tuple, etc.) through its custom serialization process, enabling editing within the Inspector. By using Source Generator to dynamically generate necessary code, it functions by simply adding attributes to the targeted type made partial. There's no need to inherit specialized classes similar to Odin.
 

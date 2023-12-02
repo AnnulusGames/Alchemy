@@ -1,6 +1,6 @@
 # Alchemy
 
-<!-- Header image --> 
+<img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/Header.png" width="800">
 
 [![license](https://img.shields.io/badge/LICENSE-MIT-green.svg)](LICENSE)
 
@@ -9,8 +9,6 @@
 ## 概要
 
 Alchemyは属性を使用したInspector拡張を提供するライブラリです。
-
-<!-- inspector sample image --> 
 
 属性ベースの簡単かつ強力なエディタ拡張を追加するほか、独自のシリアル化プロセスを介してあらゆる型(Dictionary, Hashset, Nullable, Tuple, etc...)をシリアル化し、Inspector上で編集することが可能になります。Source Generatorを用いて必要なコードを動的に生成するため、partialにした対象型に属性を付加するだけで機能します。Odinのように専用のクラスを継承する必要はありません。
 
