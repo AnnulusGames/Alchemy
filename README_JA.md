@@ -6,38 +6,38 @@
 
 [English README is here](README.md)
 
-## Overview
+## 概要
 
-Alchemy is a library that provides Inspector extensions using attributes.
+Alchemyは属性を使用したInspector拡張を提供するライブラリです。
 
 <!-- inspector sample image --> 
 
-In addition to adding easy and powerful editor extensions based on attributes, it allows serialization of various types (Dictionary, HashSet, Nullable, Tuple, etc.) through its custom serialization process, enabling editing within the Inspector. By using Source Generator to dynamically generate necessary code, it functions by simply adding attributes to the targeted type made partial. There's no need to inherit specialized classes similar to Odin.
+属性ベースの簡単かつ強力なエディタ拡張を追加するほか、独自のシリアル化プロセスを介してあらゆる型(Dictionary, Hashset, Nullable, Tuple, etc...)をシリアル化し、Inspector上で編集することが可能になります。Source Generatorを用いて必要なコードを動的に生成するため、partialにした対象型に属性を付加するだけで機能します。Odinのように専用のクラスを継承する必要はありません。
 
-## Features
+## 特徴
 
-* Adds over 30 attributes to extend the Inspector
-* Supports SerializeReference, allowing type selection from dropdown
-* Enables serialization/editing of various types (Dictionary, HashSet, Nullable, Tuple, etc.)
+* Inspectorを拡張する30以上の属性を追加
+* SerializeReferenceをサポートし、ドロップダウンから型を選択可能に
+* あらゆる型(Dictionary, Hashset, Nullable, Tuple, etc...)をシリアル化/Inspectorで編集可能
 
-## Setup
+## セットアップ
 
-### Requirements
+### 要件
 
-* Unity 2021.2 or later (2022.1 or later recommended for serialization extension)
-* Serialization 2.0 or later (for serialization extension)
+* Unity 2021.2 以上 (シリアル化拡張を使用する場合、2022.1以上を推奨)
+* Serialization 2.0 以上 (シリアル化拡張を使用する場合)
 
-### Installation
+### インストール
 
-1. Open Package Manager from Window > Package Manager.
-2. Click on the "+ Add package from git URL" button.
-3. Enter the following URL:
+1. Window > Package ManagerからPackage Managerを開く
+2. 「+」ボタン > Add package from git URL
+3. 以下のURLを入力する
 
 ```
 https://github.com/AnnulusGames/Alchemy.git?path=/Alchemy/Assets/Alchemy
 ```
 
-Alternatively, open Packages/manifest.json and add the following to the dependencies block:
+あるいはPackages/manifest.jsonを開き、dependenciesブロックに以下を追記
 
 ```json
 {
@@ -47,14 +47,14 @@ Alternatively, open Packages/manifest.json and add the following to the dependen
 }
 ```
 
-## Basic Usage
+## 基本的な使い方
 
-To customize the display in the Inspector, add attributes to the fields of the class.
+Inspectorでの表示をカスタマイズしたい場合には、クラスが持つフィールドに属性を付加します。
 
 ```cs
 using UnityEngine;
 using UnityEngine.UIElements;
-using Alchemy.Inspector;  // Added Alchemy.Inspector namespace
+using Alchemy.Inspector;  // Alchemy.Inspector名前空間をusingに追加
 
 public class BasicAttributesSample : MonoBehaviour
 {
@@ -76,7 +76,7 @@ public class BasicAttributesSample : MonoBehaviour
 
 <img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/img1.png" width="600">
 
-Several attributes are provided to group each field. Each group can be nested by separating with a slash.
+各フィールドをグループ化する属性もいくつか用意されています。各グループはスラッシュで区切ることでネストできます。
 
 ```cs
 using UnityEngine;
@@ -104,7 +104,7 @@ public class GroupAttributesSample : MonoBehaviour
 
 <img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/img2.png" width="600">
 
-By adding the `[Button]` attribute to a method, the method can be executed from the Inspector.
+メソッドに`[Button]`属性を付加することで、メソッドをInspectorから実行することが可能になります。
 
 ```cs
 using System.Text;
@@ -148,11 +148,11 @@ public class ButtonSample : MonoBehaviour
 
 <img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/img3.png" width="600">
 
-Available attributes can be checked [here](URL) (currently creating a wiki).
+利用可能な属性はこちらから確認できます。(現在wikiを作成中です)
 
-## Editing Interfaces/Abstract Classes
+## インターフェース/抽象クラスを編集する
 
-By adding the `[SerializeReference]` attribute, you can edit interfaces or abstract classes in the Inspector.
+`[SerializeReference]`属性を付加することでインターフェースや抽象クラスをInspector上で編集できるようになります。
 
 ```cs
 using UnityEngine;
@@ -186,30 +186,30 @@ public class SerializeReferenceSample : MonoBehaviour
 
 <img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/img4.png" width="600">
 
-Interfaces/abstract classes are displayed as shown above, and you can select and instantiate child classes from the dropdown.
+インターフェース・抽象クラスは上のように表示され、ドロップダウンから子クラスを選択して生成することができます。
 
-For SerializeReference serialization details, refer to the Unity official manual.
+SerializeReferenceのシリアル化についてはUnityの公式マニュアルを参照してください。
 
-## Using Serialization Extensions
+## シリアル化拡張を使用する
 
-If you want to edit types that Unity cannot serialize by default, like Dictionary, you can use `[AlchemySerialize]` attribute to perform serialization.
+Dictionaryなどの通常のUnityがシリアル化できない型を編集したい場合、`[AlchemySerialize]`属性を使用してシリアル化を行うことができます。
 
-When using serialization extensions, the [Unity.Serialization](https://docs.unity3d.com/Packages/com.unity.serialization@3.1/manual/index.html) package is required. Additionally, Unity.Serialization serialization using reflection may not work in AOT environments before Unity 2022.1. Please refer to the package manual for details.
+シリアル化拡張を使用したい場合、[Unity.Serialization](https://docs.unity3d.com/Packages/com.unity.serialization@3.1/manual/index.html)パッケージが必要になります。また、リフレクションを用いたUnity.Serializationのシリアル化はUnity2022.1以前のAOT環境で動作しない可能性があります。詳細はパッケージのマニュアルを確認してください。
 
-The following is a sample using Alchemy's serialization extensions to make various types serializable/editable in the Inspector.
+以下は、Alchemyのシリアル化拡張を用いて様々な型をシリアル化/Inspectorで編集可能にするサンプルです。
 
 ```cs
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Alchemy.Serialization; // Added Alchemy.Serialization namespace
+using Alchemy.Serialization; // Alchemy.Serialization名前空間をusingに追加
 
-// Adding the [AlchemySerialize] attribute enables Alchemy's serialization extensions.
-// It can be used with any type that has a base class, but the target type must be partial as the SourceGenerator generates code.
+// [AlchemySerialize]属性を付加することでAlchemyのシリアル化拡張が有効化されます。
+// 任意の基底クラスを持つ型に使用できますが、SourceGeneratorがコード生成を行うため対象型はpartialである必要があります。
 [AlchemySerialize]
 public partial class AlchemySerializationSample : MonoBehaviour
 {
-    // Add [AlchemySerializeField] attribute and [NonSerialized] attribute to the target fields.
+    // 対象のフィールドに[AlchemySerializeField]属性と[NonSerialized]属性を付加します。
     [AlchemySerializeField, NonSerialized]
     public HashSet<GameObject> hashset = new();
 
@@ -226,25 +226,25 @@ public partial class AlchemySerializationSample : MonoBehaviour
 
 <img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/img5.png" width="600">
 
-Currently, the following types are editable in the Inspector:
+現在Inspectorで編集可能な型は以下の通りです。
 
-* Primitive types
+* プリミティブ型
 * UnityEngine.Object
-* Arrays
+* 配列
 * List<>
-* HashSet<>
+* Hashset<>
 * Dictionary<,>
 * ValueTuple<>
 * Nullable<>
-* class/struct composed of the above types' fields
+* 以上の型のフィールドで構成されるclass/struct
 
-Refer to the following section for technical details of the serialization process.
+シリアル化プロセスの技術的な詳細については下の項目を参照してください。
 
-## Alchemy's Serialization Process
+## Alchemyのシリアル化プロセス
 
-In Alchemy, adding the `[AlchemySerialize]` attribute to the target type automatically implements `ISerializationCallbackReceiver` using a dedicated Source Generator. Within this process, all fields with the `[AlchemySerializeField]` attribute are retrieved, and Unity.Serialization package is used to convert them into Json format. However, for UnityEngine.Object fields, they cannot be handled in Json format. Therefore, their instances are saved into a single List, and their indexes are written into Json.
+Alchemyでは、対象の型に`[AlchemySerialize]`属性を付加することで専用のSource Generatorが`ISerializationCallbackReceiver`を自動で実装します。この処理の中で`[AlchemySerializeField]`属性が付加されたフィールドを全て取得し、Unity.Serializationパッケージを用いてJson形式に変換します。ただし、UnityEngine.Objectのフィールドに関してはJson形式で扱うことができないため、単一のListに実体を保存しJsonにはそのindexを書き込みます。
 
-For instance, consider having a class like this:
+例えば、以下のようなクラスがあったとします。
 
 ```cs
 using System;
@@ -260,7 +260,7 @@ public partial class AlchemySerializationSample : MonoBehaviour
 }
 ```
 
-Alchemy would generate code like this:
+これに対し、Alchemyは以下のようなコードを生成します。
 
 ```cs
 partial class AlchemySerializationSample : global::UnityEngine.ISerializationCallbackReceiver
@@ -319,9 +319,9 @@ partial class AlchemySerializationSample : global::UnityEngine.ISerializationCal
 }
 ```
 
-Using `[AlchemySerializeField]` increases the processing load for serialization/deserialization. Therefore, it's recommended to avoid using `[AlchemySerializeField]` as much as possible.
+このような手法を取っているため`[AlchemySerializeField]`を使用するとシリアライズ/デシリアライズにかかる処理負荷が増加します。そのため可能な限り`[AlchemySerializeField]`の使用を避けることが推奨されます。
 
-Additionally, adding `[ShowAlchemySerializationData]` attribute allows viewing serialization data from the Inspector.
+また`[ShowAlchemySerializationData]`属性を付加することで、Inspector上からシリアル化データを確認することができるようになります。
 
 ```cs
 using System;
@@ -340,6 +340,6 @@ public partial class AlchemySerializationSample : MonoBehaviour
 
 <img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/img6.png" width="600">
 
-## License
+## ライセンス
 
 [MIT License](LICENSE)
