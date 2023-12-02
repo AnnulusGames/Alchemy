@@ -41,8 +41,11 @@ namespace Alchemy.Editor.Elements
 
                 try
                 {
-                    buttonLabel.text = (property.managedReferenceValue == null ? "Null" : property.managedReferenceValue.GetType().Name) +
-                        $" ({property.GetManagedReferenceFieldTypeName()})";
+                    if (property != null)
+                    {
+                        buttonLabel.text = (property.managedReferenceValue == null ? "Null" : property.managedReferenceValue.GetType().Name) +
+                            $" ({property.GetManagedReferenceFieldTypeName()})";
+                    }
                 }
                 catch (InvalidOperationException)
                 {
