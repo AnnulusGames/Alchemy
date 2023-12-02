@@ -220,7 +220,8 @@ namespace Alchemy.Editor.Drawers
         {
             var att = (HorizontalLineAttribute)Attribute;
             var parent = Element.parent;
-            var line = GUIHelper.CreateLine(att.Color, EditorGUIUtility.standardVerticalSpacing * 4f);
+            var lineColor = att.Color == default ? GUIHelper.LineColor : att.Color;
+            var line = GUIHelper.CreateLine(lineColor, EditorGUIUtility.standardVerticalSpacing * 4f);
             parent.Insert(parent.IndexOf(Element), line);
         }
     }

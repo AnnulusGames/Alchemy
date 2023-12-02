@@ -1,5 +1,4 @@
 using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -135,7 +134,7 @@ namespace Alchemy.Inspector
     {
         public HorizontalLineAttribute()
         {
-            Color = EditorGUIUtility.isProSkin ? new Color(0.4f, 0.4f, 0.4f) : new Color(0.6f, 0.6f, 0.6f);
+            Color = default;
         }
 
         public HorizontalLineAttribute(float r, float g, float b)
