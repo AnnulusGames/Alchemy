@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Assertions;
 using Alchemy.Inspector;
+using System;
 
 namespace Alchemy.Editor.Internal
 {
@@ -50,7 +51,7 @@ namespace Alchemy.Editor.Internal
             };
         }
 
-        public static PropertyField CreateObjectField(SerializedProperty property)
+        public static PropertyField CreateObjectField(SerializedProperty property, Type type)
         {
             Assert.IsTrue(property.propertyType == SerializedPropertyType.ObjectReference);
 
@@ -61,7 +62,7 @@ namespace Alchemy.Editor.Internal
             propertyField.RegisterValueChangeCallback(x =>
             {
                 var objectField = propertyField.Q<ObjectField>();
-                objectField.objectType = fieldInfo.FieldType;
+                objectField.objectType = type;
                 objectField.allowSceneObjects = !isAssetsOnly;
             });
 

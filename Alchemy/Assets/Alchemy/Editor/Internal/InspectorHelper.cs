@@ -221,7 +221,14 @@ namespace Alchemy.Editor.Internal
                     // Create property field
                     if (property != null)
                     {
-                        return new AlchemyPropertyField(property, depth);
+                        if (memberInfo is FieldInfo fieldInfo)
+                        {
+                            return new AlchemyPropertyField(property, fieldInfo.FieldType, depth);
+                        }
+                        else
+                        {
+                            return new AlchemyPropertyField(property, ((PropertyInfo)memberInfo).PropertyType, depth);
+                        }
                     }
 
 #if ALCHEMY_SUPPORT_SERIALIZATION

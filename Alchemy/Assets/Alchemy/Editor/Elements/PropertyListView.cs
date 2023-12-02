@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -20,7 +21,7 @@ namespace Alchemy.Editor.Elements
             listView.bindItem = (element, index) =>
             {
                 var arrayElement = property.GetArrayElementAtIndex(index);
-                var e = new AlchemyPropertyField(arrayElement, depth + 1);
+                var e = new AlchemyPropertyField(arrayElement, property.GetPropertyType(true), depth + 1);
                 element.Add(e);
                 element.Bind(arrayElement.serializedObject);
             };

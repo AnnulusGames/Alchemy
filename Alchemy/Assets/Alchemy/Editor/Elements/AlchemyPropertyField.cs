@@ -1,9 +1,9 @@
+using System;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 using Alchemy.Editor.Internal;
 using Alchemy.Inspector;
-using UnityEngine;
 
 namespace Alchemy.Editor.Elements
 {
@@ -12,7 +12,7 @@ namespace Alchemy.Editor.Elements
     /// </summary>
     public sealed class AlchemyPropertyField : BindableElement
     {
-        public AlchemyPropertyField(SerializedProperty property, int depth)
+        public AlchemyPropertyField(SerializedProperty property, Type type, int depth)
         {
             if (depth > 20) return;
             var labelText = ObjectNames.NicifyVariableName(property.displayName);
@@ -25,11 +25,11 @@ namespace Alchemy.Editor.Elements
                 case SerializedPropertyType.ObjectReference:
                     if (property.GetAttribute<InlineEditorAttribute>() != null)
                     {
-                        element = new InlineEditorObjectField(property, depth);
+                        element = new InlineEditorObjectField(property, type, depth);
                     }
                     else
                     {
-                        element = GUIHelper.CreateObjectField(property);
+                        element = GUIHelper.CreateObjectField(property, type);
                     }
                     break;
                 case SerializedPropertyType.Generic:

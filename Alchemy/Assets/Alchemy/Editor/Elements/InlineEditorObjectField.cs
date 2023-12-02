@@ -1,3 +1,4 @@
+using System;
 using UnityEngine.Assertions;
 using UnityEngine.UIElements;
 using UnityEditor;
@@ -11,7 +12,7 @@ namespace Alchemy.Editor.Elements
     /// </summary>
     public sealed class InlineEditorObjectField : BindableElement
     {
-        public InlineEditorObjectField(SerializedProperty property, int depth)
+        public InlineEditorObjectField(SerializedProperty property, Type type, int depth)
         {
             Assert.IsTrue(property.propertyType == SerializedPropertyType.ObjectReference);
 
@@ -27,7 +28,7 @@ namespace Alchemy.Editor.Elements
 
             foldout.BindProperty(property);
 
-            field = GUIHelper.CreateObjectField(property);
+            field = GUIHelper.CreateObjectField(property, type);
             field.style.position = Position.Absolute;
             field.style.width = Length.Percent(100f);
 
