@@ -11,7 +11,7 @@
     "samples": [
         {
             "displayName": "Alchemy Samples",
-            "description": "Aample Inspector extension using Alchemy attributes.",
+            "description": "Sample inspector extension using Alchemy attributes.",
             "path": "Samples~/Samples"
         }
     ]
