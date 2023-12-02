@@ -1,0 +1,23 @@
+{
+    "name": "Alchemy",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2765e68924a08a94ea0ea66b31c0168f",
+        "GUID:d8b63aba1907145bea998dd612889d6b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.serialization",
+            "expression": "",
+            "define": "ALCHEMY_SUPPORT_SERIALIZATION"
+        }
+    ],
+    "noEngineReferences": false
+}

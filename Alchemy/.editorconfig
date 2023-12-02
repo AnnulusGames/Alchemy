@@ -1,0 +1,4 @@
+[*.cs]
+
+# IDE0027: アクセサーに式本体を使用する
+csharp_style_expression_bodied_accessors = false
