@@ -20,21 +20,21 @@ namespace Alchemy.Editor.Internal
 
         public sealed class GroupNode
         {
-            public GroupNode(string name, PropertyGroupDrawer drawer)
+            public GroupNode(string name, AlchemyGroupDrawer drawer)
             {
                 this.name = name;
                 this.drawer = drawer;
             }
 
             readonly string name;
-            readonly PropertyGroupDrawer drawer;
+            readonly AlchemyGroupDrawer drawer;
 
             readonly List<MemberInfo> members = new();
             readonly List<GroupNode> children = new();
 
             public string Name => name;
             public IEnumerable<MemberInfo> Members => members;
-            public PropertyGroupDrawer Drawer => drawer;
+            public AlchemyGroupDrawer Drawer => drawer;
             public VisualElement VisualElement { get; set; }
             public GroupNode Parent { get; private set; }
 
@@ -147,7 +147,7 @@ namespace Alchemy.Editor.Internal
 
                     if (e == null) node.VisualElement.Add(element);
                     else e.Add(element);
-                    PropertyProcessor.ExecuteProcessors(serializedObject, property, target, member, element);
+                    AlchemyAttributeDrawer.ExecutePropertyDrawers(serializedObject, property, target, member, element);
                 }
             }
         }
@@ -182,10 +182,10 @@ namespace Alchemy.Editor.Internal
                         if (next == null)
                         {
                             // Find drawer type
-                            var drawerType = TypeCache.GetTypesWithAttribute<CustomPropertyGroupDrawerAttribute>()
-                                .FirstOrDefault(x => x.GetCustomAttribute<CustomPropertyGroupDrawerAttribute>().targetAttributeType == groupAttribute.GetType());
+                            var drawerType = TypeCache.GetTypesWithAttribute<CustomGroupDrawerAttribute>()
+                                .FirstOrDefault(x => x.GetCustomAttribute<CustomGroupDrawerAttribute>().targetAttributeType == groupAttribute.GetType());
 
-                            var drawer = (PropertyGroupDrawer)Activator.CreateInstance(drawerType);
+                            var drawer = (AlchemyGroupDrawer)Activator.CreateInstance(drawerType);
                             drawer._uniqueId = "AlchemyGroupId_" + targetType.FullName + "_" + groupAttribute.GroupPath;
 
                             next = new GroupNode(groupName, drawer);

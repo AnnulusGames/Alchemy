@@ -5,23 +5,23 @@ using Alchemy.Editor.Internal;
 using Alchemy.Editor.Elements;
 using UnityEditor;
 
-namespace Alchemy.Editor.Processors
+namespace Alchemy.Editor.Drawers
 {
-    [CustomPropertyProcessor(typeof(ReadOnlyAttribute))]
-    public sealed class ReadOnlyProcessor : PropertyProcessor
+    [CustomAttributeDrawer(typeof(ReadOnlyAttribute))]
+    public sealed class ReadOnlyDrawer : AlchemyAttributeDrawer
     {
-        public override void Execute()
+        public override void OnCreateElement()
         {
             Element.SetEnabled(false);
         }
     }
 
-    [CustomPropertyProcessor(typeof(IndentAttribute))]
-    public sealed class IndentProcessor : PropertyProcessor
+    [CustomAttributeDrawer(typeof(IndentAttribute))]
+    public sealed class IndentDrawer : AlchemyAttributeDrawer
     {
         const float IndentPadding = 15f;
 
-        public override void Execute()
+        public override void OnCreateElement()
         {
             Element.RegisterCallback<GeometryChangedEvent>(x => AddPadding());
         }
@@ -34,46 +34,46 @@ namespace Alchemy.Editor.Processors
         }
     }
 
-    [CustomPropertyProcessor(typeof(HideInPlayModeAttribute))]
-    public sealed class HideInPlayModeProcessor : PropertyProcessor
+    [CustomAttributeDrawer(typeof(HideInPlayModeAttribute))]
+    public sealed class HideInPlayModeDrawer : AlchemyAttributeDrawer
     {
-        public override void Execute()
+        public override void OnCreateElement()
         {
             Element.style.display = Application.isPlaying ? DisplayStyle.None : DisplayStyle.Flex;
         }
     }
 
-    [CustomPropertyProcessor(typeof(HideInEditModeAttribute))]
-    public sealed class HideInEditModeProcessor : PropertyProcessor
+    [CustomAttributeDrawer(typeof(HideInEditModeAttribute))]
+    public sealed class HideInEditModeDrawer : AlchemyAttributeDrawer
     {
-        public override void Execute()
+        public override void OnCreateElement()
         {
             Element.style.display = !Application.isPlaying ? DisplayStyle.None : DisplayStyle.Flex;
         }
     }
 
-    [CustomPropertyProcessor(typeof(DisableInPlayModeAttribute))]
-    public sealed class DisableInPlayModeProcessor : PropertyProcessor
+    [CustomAttributeDrawer(typeof(DisableInPlayModeAttribute))]
+    public sealed class DisableInPlayModeDrawer : AlchemyAttributeDrawer
     {
-        public override void Execute()
+        public override void OnCreateElement()
         {
             if (Application.isPlaying) Element.SetEnabled(false);
         }
     }
 
-    [CustomPropertyProcessor(typeof(DisableInEditModeAttribute))]
-    public sealed class DisableInEditModeProcessor : PropertyProcessor
+    [CustomAttributeDrawer(typeof(DisableInEditModeAttribute))]
+    public sealed class DisableInEditModeDrawer : AlchemyAttributeDrawer
     {
-        public override void Execute()
+        public override void OnCreateElement()
         {
             if (!Application.isPlaying) Element.SetEnabled(false);
         }
     }
 
-    [CustomPropertyProcessor(typeof(HideLabelAttribute))]
-    public sealed class HideLabelProcessor : PropertyProcessor
+    [CustomAttributeDrawer(typeof(HideLabelAttribute))]
+    public sealed class HideLabelDrawer : AlchemyAttributeDrawer
     {
-        public override void Execute()
+        public override void OnCreateElement()
         {
             if (Element is AlchemyPropertyField field)
             {
@@ -87,10 +87,10 @@ namespace Alchemy.Editor.Processors
         }
     }
 
-    [CustomPropertyProcessor(typeof(LabelTextAttribute))]
-    public sealed class LabelTextProcessor : PropertyProcessor
+    [CustomAttributeDrawer(typeof(LabelTextAttribute))]
+    public sealed class LabelTextDrawer : AlchemyAttributeDrawer
     {
-        public override void Execute()
+        public override void OnCreateElement()
         {
             var labelTextAttribute = (LabelTextAttribute)Attribute;
 
@@ -111,8 +111,8 @@ namespace Alchemy.Editor.Processors
         }
     }
 
-    [CustomPropertyProcessor(typeof(HideIfAttribute))]
-    public sealed class HideIfProcessor : TrackSerializedObjectPropertyProcessor
+    [CustomAttributeDrawer(typeof(HideIfAttribute))]
+    public sealed class HideIfDrawer : TrackSerializedObjectAttributeDrawer
     {
         protected override void OnInspectorChanged()
         {
@@ -121,8 +121,8 @@ namespace Alchemy.Editor.Processors
         }
     }
 
-    [CustomPropertyProcessor(typeof(ShowIfAttribute))]
-    public sealed class ShowIfProcessor : TrackSerializedObjectPropertyProcessor
+    [CustomAttributeDrawer(typeof(ShowIfAttribute))]
+    public sealed class ShowIfDrawer : TrackSerializedObjectAttributeDrawer
     {
         protected override void OnInspectorChanged()
         {
@@ -131,8 +131,8 @@ namespace Alchemy.Editor.Processors
         }
     }
 
-    [CustomPropertyProcessor(typeof(DisableIfAttribute))]
-    public sealed class DisableIfProcessor : TrackSerializedObjectPropertyProcessor
+    [CustomAttributeDrawer(typeof(DisableIfAttribute))]
+    public sealed class DisableIfDrawer : TrackSerializedObjectAttributeDrawer
     {
         protected override void OnInspectorChanged()
         {
@@ -141,8 +141,8 @@ namespace Alchemy.Editor.Processors
         }
     }
 
-    [CustomPropertyProcessor(typeof(EnableIfAttribute))]
-    public sealed class EnableIfProcessor : TrackSerializedObjectPropertyProcessor
+    [CustomAttributeDrawer(typeof(EnableIfAttribute))]
+    public sealed class EnableIfDrawer : TrackSerializedObjectAttributeDrawer
     {
         protected override void OnInspectorChanged()
         {
@@ -151,12 +151,12 @@ namespace Alchemy.Editor.Processors
         }
     }
 
-    [CustomPropertyProcessor(typeof(RequiredAttribute))]
-    public sealed class RequiredProcessor : TrackSerializedObjectPropertyProcessor
+    [CustomAttributeDrawer(typeof(RequiredAttribute))]
+    public sealed class RequiredDrawer : TrackSerializedObjectAttributeDrawer
     {
         HelpBox helpBox;
 
-        public override void Execute()
+        public override void OnCreateElement()
         {
             if (SerializedProperty.propertyType != SerializedPropertyType.ObjectReference) return;
 
@@ -166,7 +166,7 @@ namespace Alchemy.Editor.Processors
             var parent = Element.parent;
             parent.Insert(parent.IndexOf(Element), helpBox);
 
-            base.Execute();
+            base.OnCreateElement();
         }
 
         protected override void OnInspectorChanged()
@@ -175,12 +175,12 @@ namespace Alchemy.Editor.Processors
         }
     }
 
-    [CustomPropertyProcessor(typeof(ValidateInputAttribute))]
-    public sealed class ValidateInputProcessor : TrackSerializedObjectPropertyProcessor
+    [CustomAttributeDrawer(typeof(ValidateInputAttribute))]
+    public sealed class ValidateInputDrawer : TrackSerializedObjectAttributeDrawer
     {
         HelpBox helpBox;
 
-        public override void Execute()
+        public override void OnCreateElement()
         {
             var message = ((ValidateInputAttribute)Attribute).Message ?? ObjectNames.NicifyVariableName(SerializedProperty.displayName) + " is not valid.";
             helpBox = new HelpBox(message, HelpBoxMessageType.Error);
@@ -188,7 +188,7 @@ namespace Alchemy.Editor.Processors
             var parent = Element.parent;
             parent.Insert(parent.IndexOf(Element), helpBox);
 
-            base.Execute();
+            base.OnCreateElement();
         }
 
         protected override void OnInspectorChanged()
@@ -198,12 +198,12 @@ namespace Alchemy.Editor.Processors
         }
     }
 
-    [CustomPropertyProcessor(typeof(HelpBoxAttribute))]
-    public sealed class HelpBoxProcessor : PropertyProcessor
+    [CustomAttributeDrawer(typeof(HelpBoxAttribute))]
+    public sealed class HelpBoxDrawer : AlchemyAttributeDrawer
     {
         HelpBox helpBox;
 
-        public override void Execute()
+        public override void OnCreateElement()
         {
             var att = (HelpBoxAttribute)Attribute;
             helpBox = new HelpBox(att.Message, att.MessageType);
@@ -213,10 +213,10 @@ namespace Alchemy.Editor.Processors
         }
     }
 
-    [CustomPropertyProcessor(typeof(HorizontalLineAttribute))]
-    public sealed class HorizontalLineProcessor : PropertyProcessor
+    [CustomAttributeDrawer(typeof(HorizontalLineAttribute))]
+    public sealed class HorizontalLineDrawer : AlchemyAttributeDrawer
     {
-        public override void Execute()
+        public override void OnCreateElement()
         {
             var att = (HorizontalLineAttribute)Attribute;
             var parent = Element.parent;
@@ -225,10 +225,10 @@ namespace Alchemy.Editor.Processors
         }
     }
 
-    [CustomPropertyProcessor(typeof(TitleAttribute))]
-    public sealed class TitleProcessor : PropertyProcessor
+    [CustomAttributeDrawer(typeof(TitleAttribute))]
+    public sealed class TitleDrawer : AlchemyAttributeDrawer
     {
-        public override void Execute()
+        public override void OnCreateElement()
         {
             var att = (TitleAttribute)Attribute;
             var parent = Element.parent;
@@ -264,10 +264,10 @@ namespace Alchemy.Editor.Processors
         }
     }
 
-    [CustomPropertyProcessor(typeof(BlockquoteAttribute))]
-    public sealed class BlockquoteProcessor : PropertyProcessor
+    [CustomAttributeDrawer(typeof(BlockquoteAttribute))]
+    public sealed class BlockquoteDrawer : AlchemyAttributeDrawer
     {
-        public BlockquoteProcessor()
+        public BlockquoteDrawer()
         {
             textStyle = EditorStyles.label;
             textStyle.wordWrap = true;
@@ -275,7 +275,7 @@ namespace Alchemy.Editor.Processors
 
         readonly GUIStyle textStyle;
 
-        public override void Execute()
+        public override void OnCreateElement()
         {
             var att = (BlockquoteAttribute)Attribute;
             var blockquote = new IMGUIContainer(() =>

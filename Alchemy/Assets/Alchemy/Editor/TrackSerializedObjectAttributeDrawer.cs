@@ -1,10 +1,10 @@
 using UnityEditor.UIElements;
 
-namespace Alchemy.Editor.Processors
+namespace Alchemy.Editor.Drawers
 {
-    public abstract class TrackSerializedObjectPropertyProcessor : PropertyProcessor
+    public abstract class TrackSerializedObjectAttributeDrawer : AlchemyAttributeDrawer
     {
-        public override void Execute()
+        public override void OnCreateElement()
         {
             Element.TrackSerializedObjectValue(SerializedObject, x =>
             {

@@ -9,10 +9,10 @@ using Alchemy.Inspector;
 using Alchemy.Editor.Internal;
 using Alchemy.Editor.Elements;
 
-namespace Alchemy.Editor.GroupDrawers
+namespace Alchemy.Editor.Drawers
 {
-    [CustomPropertyGroupDrawer(typeof(GroupAttribute))]
-    public sealed class GroupDrawer : PropertyGroupDrawer
+    [CustomGroupDrawer(typeof(GroupAttribute))]
+    public sealed class GroupDrawer : AlchemyGroupDrawer
     {
         public override VisualElement CreateRootElement(string label)
         {
@@ -29,8 +29,8 @@ namespace Alchemy.Editor.GroupDrawers
         }
     }
 
-    [CustomPropertyGroupDrawer(typeof(BoxGroupAttribute))]
-    public sealed class BoxGroupDrawer : PropertyGroupDrawer
+    [CustomGroupDrawer(typeof(BoxGroupAttribute))]
+    public sealed class BoxGroupDrawer : AlchemyGroupDrawer
     {
         public override VisualElement CreateRootElement(string label)
         {
@@ -59,8 +59,8 @@ namespace Alchemy.Editor.GroupDrawers
         }
     }
 
-    [CustomPropertyGroupDrawer(typeof(TabGroupAttribute))]
-    public sealed class TabGroupDrawer : PropertyGroupDrawer
+    [CustomGroupDrawer(typeof(TabGroupAttribute))]
+    public sealed class TabGroupDrawer : AlchemyGroupDrawer
     {
         VisualElement rootElement;
         readonly Dictionary<string, VisualElement> tabElements = new();
@@ -149,8 +149,8 @@ namespace Alchemy.Editor.GroupDrawers
         }
     }
 
-    [CustomPropertyGroupDrawer(typeof(FoldoutGroupAttribute))]
-    public sealed class FoldoutGroupDrawer : PropertyGroupDrawer
+    [CustomGroupDrawer(typeof(FoldoutGroupAttribute))]
+    public sealed class FoldoutGroupDrawer : AlchemyGroupDrawer
     {
         public override VisualElement CreateRootElement(string label)
         {
@@ -175,8 +175,8 @@ namespace Alchemy.Editor.GroupDrawers
         }
     }
 
-    [CustomPropertyGroupDrawer(typeof(HorizontalGroupAttribute))]
-    public sealed class HorizontalGroupDrawer : PropertyGroupDrawer
+    [CustomGroupDrawer(typeof(HorizontalGroupAttribute))]
+    public sealed class HorizontalGroupDrawer : AlchemyGroupDrawer
     {
         public override VisualElement CreateRootElement(string label)
         {

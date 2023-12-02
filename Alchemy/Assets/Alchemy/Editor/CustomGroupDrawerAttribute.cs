@@ -2,9 +2,9 @@ using System;
 
 namespace Alchemy.Editor
 {
-    public sealed class CustomPropertyGroupDrawerAttribute : Attribute
+    public sealed class CustomGroupDrawerAttribute : Attribute
     {
-        public CustomPropertyGroupDrawerAttribute(Type targetAttributeType)
+        public CustomGroupDrawerAttribute(Type targetAttributeType)
         {
             this.targetAttributeType = targetAttributeType;
         }

@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 namespace Alchemy.Editor
 {
-    public abstract class PropertyProcessor
+    public abstract class AlchemyAttributeDrawer
     {
         internal SerializedObject _serializedObject;
         internal SerializedProperty _serializedProperty;
@@ -22,18 +22,18 @@ namespace Alchemy.Editor
         public Attribute Attribute => _attribute;
         public VisualElement Element => _element;
 
-        public abstract void Execute();
+        public abstract void OnCreateElement();
 
-        internal static void ExecuteProcessors(SerializedObject serializedObject, SerializedProperty property, object target, MemberInfo memberInfo, VisualElement memberElement)
+        internal static void ExecutePropertyDrawers(SerializedObject serializedObject, SerializedProperty property, object target, MemberInfo memberInfo, VisualElement memberElement)
         {
             var attributes = memberInfo.GetCustomAttributes();
-            var processorTypes = TypeCache.GetTypesWithAttribute(typeof(CustomPropertyProcessorAttribute));
+            var processorTypes = TypeCache.GetTypesWithAttribute(typeof(CustomAttributeDrawerAttribute));
             foreach (var attribute in attributes)
             {
-                var processorType = processorTypes.FirstOrDefault(x => x.IsSubclassOf(typeof(PropertyProcessor)) && x.GetCustomAttribute<CustomPropertyProcessorAttribute>().targetAttributeType == attribute.GetType());
+                var processorType = processorTypes.FirstOrDefault(x => x.IsSubclassOf(typeof(AlchemyAttributeDrawer)) && x.GetCustomAttribute<CustomAttributeDrawerAttribute>().targetAttributeType == attribute.GetType());
                 if (processorType == null) continue;
 
-                var processor = (PropertyProcessor)Activator.CreateInstance(processorType);
+                var processor = (AlchemyAttributeDrawer)Activator.CreateInstance(processorType);
                 processor._serializedObject = serializedObject;
                 processor._serializedProperty = property;
                 processor._target = target;
@@ -41,7 +41,7 @@ namespace Alchemy.Editor
                 processor._attribute = attribute;
                 processor._element = memberElement;
 
-                processor.Execute();
+                processor.OnCreateElement();
             }
         }
     }
