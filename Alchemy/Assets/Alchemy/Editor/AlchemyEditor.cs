@@ -61,6 +61,8 @@ namespace Alchemy.Editor
         }
     }
 
+#if !ALCHEMY_DISABLE_DEFAULT_EDITOR
+
     [CustomEditor(typeof(MonoBehaviour), editorForChildClasses: true, isFallback = true)]
     [CanEditMultipleObjects]
     internal sealed class MonoBehaviourEditor : AlchemyEditor { }
@@ -68,4 +70,6 @@ namespace Alchemy.Editor
     [CustomEditor(typeof(ScriptableObject), editorForChildClasses: true, isFallback = true)]
     [CanEditMultipleObjects]
     internal sealed class ScriptableObjectEditor : AlchemyEditor { }
+#endif
+
 }
