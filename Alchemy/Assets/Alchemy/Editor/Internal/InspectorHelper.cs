@@ -14,7 +14,7 @@ using Alchemy.Serialization;
 
 namespace Alchemy.Editor.Internal
 {
-    public static class InspectorHelper
+    internal static class InspectorHelper
     {
         public const int MaxDepth = 15;
 
