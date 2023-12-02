@@ -338,6 +338,33 @@ public partial class AlchemySerializationSample : MonoBehaviour
 
 <img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/img6.png" width="600">
 
+## Extending AlchemyEditor
+
+When a MonoBehaviour or ScriptableObject has its own Editor class, Alchemy attributes won't function as expected. If you wish to combine custom editor extensions with Alchemy, you need to inherit from the `AlchemyEditor` class rather than the `UnityEngine.Editor` class.
+
+```cs
+using UnityEditor;
+using Alchemy.Editor;
+
+[CustomEditor(typeof(Example))]
+public class EditorExample : AlchemyEditor
+{
+   public override VisualElement CreateInspectorGUI()
+    {
+        // Always call the base class's CreateInspectorGUI
+        base.CreateInspectorGUI();
+
+        // Add your custom logic here
+    }
+}
+```
+
+## Disabling Default Editor
+
+By default, Alchemy uses its own Editor class to render all types. However, it's possible to disable this behavior to avoid conflicts with other libraries or assets.
+
+To disable the default editor, add `ALCHEMY_DISABLE_DEFAULT_EDITOR` to `Project Settings > Player > Scripting Define Symbols`. When this is added, if you want to use Alchemy's features, you'll need to define your custom Editor class inheriting from `AlchemyEditor`.
+
 ## License
 
 [MIT License](LICENSE)

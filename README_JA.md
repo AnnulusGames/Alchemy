@@ -338,6 +338,33 @@ public partial class AlchemySerializationSample : MonoBehaviour
 
 <img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/img6.png" width="600">
 
+## AlchemyEditorを拡張する
+対象のMonoBehaviourやScriptableObjectが独自のEditorクラスを持つ場合、Alchemyの属性は動作しません。
+独自のエディタ拡張とAlchemyを組み合わせたい場合には、`UnityEngine.Editor`クラスではなく`AlchemyEditor`クラスを継承する必要があります。
+
+```cs
+using UnityEditor;
+using Alchemy.Editor;
+
+[CustomEditor(typeof(Example))]
+public class EditorExample : AlchemyEditor
+{
+   public override VisualElement CreateInspectorGUI()
+    {
+        // 必ず継承元のCreateInspectorGUIを呼び出す
+        base.CreateInspectorGUI();
+
+        // ここに独自の処理を記述する
+    }
+}
+```
+
+## デフォルトのエディタを無効化する
+
+デフォルトではAlchemyでは独自のEditorクラスを使用して全ての型の描画を行います。ただし、他ライブラリやアセットとの競合を避けるためこれを無効化することもできます。
+
+デフォルトのエディタを無効化するには、`Project Settings > Player > Scripting Define Symbols`の項目に`ALCHEMY_DISABLE_DEFAULT_EDITOR`を追加します。これを追加した状態でAlchemyの機能を使用したい場合には、`AlchemyEditor`を継承した独自のEditorクラスを定義する必要があります。
+
 ## ライセンス
 
 [MIT License](LICENSE)
