@@ -14,12 +14,12 @@ namespace Alchemy.Serialization.Internal
                 return string.Empty;
             }
 
-            if (IsUnityObject<T>())
+            if (target is UnityEngine.Object unityObject)
             {
-                var index = unityObjectReferences.IndexOf(target as UnityEngine.Object);
+                var index = unityObjectReferences.IndexOf(unityObject);
                 if (index == -1)
                 {
-                    unityObjectReferences.Add(target as UnityEngine.Object);
+                    unityObjectReferences.Add(unityObject);
                     index = unityObjectReferences.Count - 1;
                 }
                 return index.ToString();
@@ -97,12 +97,6 @@ namespace Alchemy.Serialization.Internal
             configuration.StripStringEscapeCharacters = parameters.StringEscapeHandling;
 
             return configuration;
-        }
-
-        static bool IsUnityObject<T>()
-        {
-            var type = typeof(T);
-            return type == typeof(UnityEngine.Object) || type.IsSubclassOf(typeof(UnityEngine.Object));
         }
     }
 }
