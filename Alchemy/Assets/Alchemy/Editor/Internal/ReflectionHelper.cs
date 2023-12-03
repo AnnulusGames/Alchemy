@@ -23,7 +23,7 @@ namespace Alchemy.Editor.Internal
             if (fieldInfo == null) return null;
             if (fieldInfo.IsStatic)
             {
-                Expression body = Expression.Convert(Expression.MakeMemberAccess(null, fieldInfo), typeof(object));
+                var body = Expression.Convert(Expression.MakeMemberAccess(null, fieldInfo), typeof(object));
                 var lambda = Expression.Lambda<Func<object>>(body).Compile();
                 return _ => lambda();
             }
@@ -31,7 +31,7 @@ namespace Alchemy.Editor.Internal
             {
                 var objParam = Expression.Parameter(typeof(object), "obj");
                 var tParam = Expression.Convert(objParam, fieldInfo.DeclaringType);
-                Expression body = Expression.Convert(Expression.MakeMemberAccess(tParam, fieldInfo), typeof(object));
+                var body = Expression.Convert(Expression.MakeMemberAccess(tParam, fieldInfo), typeof(object));
                 return Expression.Lambda<Func<object, object>>(body, objParam).Compile();
             }
             return null;
@@ -42,7 +42,7 @@ namespace Alchemy.Editor.Internal
             if (propertyInfo == null) return null;
             if (propertyInfo.GetGetMethod(true).IsStatic)
             {
-                Expression body = Expression.Convert(Expression.MakeMemberAccess(null, propertyInfo), typeof(object));
+                var body = Expression.Convert(Expression.MakeMemberAccess(null, propertyInfo), typeof(object));
                 var lambda = Expression.Lambda<Func<object>>(body).Compile();
                 return _ => lambda();
             }
@@ -50,7 +50,7 @@ namespace Alchemy.Editor.Internal
             {
                 var objParam = Expression.Parameter(typeof(object), "obj");
                 var tParam = Expression.Convert(objParam, propertyInfo.DeclaringType);
-                Expression body = Expression.Convert(Expression.MakeMemberAccess(tParam, propertyInfo), typeof(object));
+                var body = Expression.Convert(Expression.MakeMemberAccess(tParam, propertyInfo), typeof(object));
                 return Expression.Lambda<Func<object, object>>(body, objParam).Compile();
             }
             return null;
@@ -61,7 +61,7 @@ namespace Alchemy.Editor.Internal
             if (methodInfo == null) return null;
             if (methodInfo.IsStatic)
             {
-                Expression body = Expression.Convert(Expression.Call(null, methodInfo), typeof(object));
+                var body = Expression.Convert(Expression.Call(null, methodInfo), typeof(object));
                 var lambda = Expression.Lambda<Func<object>>(body).Compile();
                 return _ => lambda();
             }
@@ -69,7 +69,7 @@ namespace Alchemy.Editor.Internal
             {
                 var objParam = Expression.Parameter(typeof(object), "obj");
                 var tParam = Expression.Convert(objParam, methodInfo.DeclaringType);
-                Expression body = Expression.Convert(Expression.Call(tParam, methodInfo), typeof(object));
+                var body = Expression.Convert(Expression.Call(tParam, methodInfo), typeof(object));
                 return Expression.Lambda<Func<object, object>>(body, objParam).Compile();
             }
             return null;
@@ -79,7 +79,7 @@ namespace Alchemy.Editor.Internal
         {
             if (!cacheGetFieldValue.TryGetValue((type, name), out var value))
             {
-                FieldInfo info = type.GetField(name, bindingAttr);
+                var info = type.GetField(name, bindingAttr);
                 value = CreateGetter(info);
                 cacheGetFieldValue.Add((type, name), value);
             }
@@ -90,7 +90,7 @@ namespace Alchemy.Editor.Internal
         {
             if (!cacheGetPropertyValue.TryGetValue((type, name), out var value))
             {
-                PropertyInfo info = type.GetProperty(name, bindingAttr);
+                var info = type.GetProperty(name, bindingAttr);
                 value = CreateGetter(info);
                 cacheGetPropertyValue.Add((type, name), value);
             }
@@ -101,7 +101,7 @@ namespace Alchemy.Editor.Internal
         {
             if (!cacheGetMethodValue.TryGetValue((type, name), out var value))
             {
-                MethodInfo info = type.GetMethod(name, bindingAttr);
+                var info = type.GetMethod(name, bindingAttr);
                 value = CreateGetter(info);
                 cacheGetMethodValue.Add((type, name), value);
             }
@@ -110,12 +110,7 @@ namespace Alchemy.Editor.Internal
 
         public static FieldInfo GetField(Type type, string name, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, bool inherit = false)
         {
-            FieldInfo info;
-            if (cacheFieldInfo.ContainsKey((type, name, bindingAttr, inherit)))
-            {
-                info = cacheFieldInfo[(type, name, bindingAttr, inherit)];
-            }
-            else
+            if (!cacheFieldInfo.TryGetValue((type, name, bindingAttr, inherit), out var info))
             {
                 if (inherit)
                 {
@@ -138,12 +133,7 @@ namespace Alchemy.Editor.Internal
 
         public static PropertyInfo GetProperty(Type type, string name, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, bool inherit = false)
         {
-            PropertyInfo info;
-            if (cachePropertyInfo.ContainsKey((type, name, bindingAttr, inherit)))
-            {
-                info = cachePropertyInfo[(type, name, bindingAttr, inherit)];
-            }
-            else
+            if (!cachePropertyInfo.TryGetValue((type, name, bindingAttr, inherit), out var info))
             {
                 if (inherit)
                 {
@@ -166,12 +156,7 @@ namespace Alchemy.Editor.Internal
 
         public static MethodInfo GetMethod(Type type, string name, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, bool inherit = false)
         {
-            MethodInfo info;
-            if (cacheMethodInfo.ContainsKey((type, name, bindingAttr, inherit)))
-            {
-                info = cacheMethodInfo[(type, name, bindingAttr, inherit)];
-            }
-            else
+            if (!cacheMethodInfo.TryGetValue((type, name, bindingAttr, inherit), out var info))
             {
                 if (inherit)
                 {
@@ -243,23 +228,22 @@ namespace Alchemy.Editor.Internal
 
         public static MemberInfo[] GetMembers(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, bool inherit = false)
         {
-            if (cacheAllMembers.ContainsKey((type, bindingAttr, inherit)))
+            if (cacheAllMembers.TryGetValue((type, bindingAttr, inherit), out var memberInfoArray))
             {
-                return cacheAllMembers[(type, bindingAttr, inherit)];
+                return memberInfoArray;
             }
             else
             {
-                MemberInfo[] memberInfos;
                 if (inherit)
                 {
-                    memberInfos = GetMembersIncludingInherited(type, bindingAttr).ToArray();
+                    memberInfoArray = GetMembersIncludingInherited(type, bindingAttr).ToArray();
                 }
                 else
                 {
-                    memberInfos = type.GetMembers(bindingAttr);
+                    memberInfoArray = type.GetMembers(bindingAttr);
                 }
-                cacheAllMembers.Add((type, bindingAttr, inherit), memberInfos);
-                return memberInfos;
+                cacheAllMembers.Add((type, bindingAttr, inherit), memberInfoArray);
+                return memberInfoArray;
             }
         }
 
