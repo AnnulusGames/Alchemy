@@ -372,6 +372,10 @@ public class EditorExample : AlchemyEditor
 
 デフォルトのエディタを無効化するには、`Project Settings > Player > Scripting Define Symbols`の項目に`ALCHEMY_DISABLE_DEFAULT_EDITOR`を追加します。これを追加した状態でAlchemyの機能を使用したい場合には、`AlchemyEditor`を継承した独自のEditorクラスを定義する必要があります。
 
+## ヘルプ
+
+Unity forum: https://forum.unity.com/threads/released-alchemy-inspector-serialization-extensions.1523665/
+
 ## ライセンス
 
 [MIT License](LICENSE)

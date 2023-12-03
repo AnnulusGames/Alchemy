@@ -371,6 +371,10 @@ By default, Alchemy uses its own Editor class to render all types. However, it's
 
 To disable the default editor, add `ALCHEMY_DISABLE_DEFAULT_EDITOR` to `Project Settings > Player > Scripting Define Symbols`. When this is added, if you want to use Alchemy's features, you'll need to define your custom Editor class inheriting from `AlchemyEditor`.
 
+## Help
+
+Unity forum: https://forum.unity.com/threads/released-alchemy-inspector-serialization-extensions.1523665/
+
 ## License
 
 [MIT License](LICENSE)
