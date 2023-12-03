@@ -14,6 +14,8 @@ namespace Alchemy.Editor.Elements
     /// </summary>
     public sealed class GenericField : VisualElement
     {
+        const string CreateButtonText = "Create...";
+
         public GenericField(object obj, Type type, string label, int depth, bool isDelayed = false)
         {
             Build(obj, type, label, depth, isDelayed);
@@ -25,6 +27,7 @@ namespace Alchemy.Editor.Elements
             if (depth > InspectorHelper.MaxDepth) return;
             Clear();
 
+            // Add [Create...] button
             if (obj == null && !typeof(UnityEngine.Object).IsAssignableFrom(type))
             {
                 var nullLabelElement = new VisualElement()
@@ -46,7 +49,19 @@ namespace Alchemy.Editor.Elements
                 });
 
                 // TODO: support polymorphism
-                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                if (type == typeof(string))
+                {
+                    nullLabelElement.Add(new Button(() =>
+                    {
+                        var instance = "";
+                        Build(instance, type, label, depth, isDelayed);
+                        OnValueChanged?.Invoke(instance);
+                    })
+                    {
+                        text = CreateButtonText
+                    });
+                }
+                else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>)) // nullable
                 {
                     nullLabelElement.Add(new Button(() =>
                     {
@@ -55,7 +70,7 @@ namespace Alchemy.Editor.Elements
                         OnValueChanged?.Invoke(instance);
                     })
                     {
-                        text = "Create..."
+                        text = CreateButtonText
                     });
                 }
                 else if (TypeHelper.HasDefaultConstructor(type))
@@ -67,7 +82,7 @@ namespace Alchemy.Editor.Elements
                         OnValueChanged?.Invoke(instance);
                     })
                     {
-                        text = "Create..."
+                        text = CreateButtonText
                     });
                 }
 

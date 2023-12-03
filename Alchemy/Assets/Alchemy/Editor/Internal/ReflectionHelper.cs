@@ -23,7 +23,7 @@ namespace Alchemy.Editor.Internal
             if (fieldInfo == null) return null;
             if (fieldInfo.IsStatic)
             {
-                Expression body = Expression.Convert(Expression.MakeMemberAccess(null, fieldInfo), typeof(object));
+                var body = Expression.Convert(Expression.MakeMemberAccess(null, fieldInfo), typeof(object));
                 var lambda = Expression.Lambda<Func<object>>(body).Compile();
                 return _ => lambda();
             }
@@ -31,7 +31,7 @@ namespace Alchemy.Editor.Internal
             {
                 var objParam = Expression.Parameter(typeof(object), "obj");
                 var tParam = Expression.Convert(objParam, fieldInfo.DeclaringType);
-                Expression body = Expression.Convert(Expression.MakeMemberAccess(tParam, fieldInfo), typeof(object));
+                var body = Expression.Convert(Expression.MakeMemberAccess(tParam, fieldInfo), typeof(object));
                 return Expression.Lambda<Func<object, object>>(body, objParam).Compile();
             }
             return null;
@@ -42,7 +42,7 @@ namespace Alchemy.Editor.Internal
             if (propertyInfo == null) return null;
             if (propertyInfo.GetGetMethod(true).IsStatic)
             {
-                Expression body = Expression.Convert(Expression.MakeMemberAccess(null, propertyInfo), typeof(object));
+                var body = Expression.Convert(Expression.MakeMemberAccess(null, propertyInfo), typeof(object));
                 var lambda = Expression.Lambda<Func<object>>(body).Compile();
                 return _ => lambda();
             }
@@ -50,7 +50,7 @@ namespace Alchemy.Editor.Internal
             {
                 var objParam = Expression.Parameter(typeof(object), "obj");
                 var tParam = Expression.Convert(objParam, propertyInfo.DeclaringType);
-                Expression body = Expression.Convert(Expression.MakeMemberAccess(tParam, propertyInfo), typeof(object));
+                var body = Expression.Convert(Expression.MakeMemberAccess(tParam, propertyInfo), typeof(object));
                 return Expression.Lambda<Func<object, object>>(body, objParam).Compile();
             }
             return null;
@@ -61,7 +61,7 @@ namespace Alchemy.Editor.Internal
             if (methodInfo == null) return null;
             if (methodInfo.IsStatic)
             {
-                Expression body = Expression.Convert(Expression.Call(null, methodInfo), typeof(object));
+                var body = Expression.Convert(Expression.Call(null, methodInfo), typeof(object));
                 var lambda = Expression.Lambda<Func<object>>(body).Compile();
                 return _ => lambda();
             }
@@ -69,7 +69,7 @@ namespace Alchemy.Editor.Internal
             {
                 var objParam = Expression.Parameter(typeof(object), "obj");
                 var tParam = Expression.Convert(objParam, methodInfo.DeclaringType);
-                Expression body = Expression.Convert(Expression.Call(tParam, methodInfo), typeof(object));
+                var body = Expression.Convert(Expression.Call(tParam, methodInfo), typeof(object));
                 return Expression.Lambda<Func<object, object>>(body, objParam).Compile();
             }
             return null;
@@ -79,7 +79,7 @@ namespace Alchemy.Editor.Internal
         {
             if (!cacheGetFieldValue.TryGetValue((type, name), out var value))
             {
-                FieldInfo info = type.GetField(name, bindingAttr);
+                var info = type.GetField(name, bindingAttr);
                 value = CreateGetter(info);
                 cacheGetFieldValue.Add((type, name), value);
             }
@@ -90,7 +90,7 @@ namespace Alchemy.Editor.Internal
         {
             if (!cacheGetPropertyValue.TryGetValue((type, name), out var value))
             {
-                PropertyInfo info = type.GetProperty(name, bindingAttr);
+                var info = type.GetProperty(name, bindingAttr);
                 value = CreateGetter(info);
                 cacheGetPropertyValue.Add((type, name), value);
             }
@@ -101,95 +101,80 @@ namespace Alchemy.Editor.Internal
         {
             if (!cacheGetMethodValue.TryGetValue((type, name), out var value))
             {
-                MethodInfo info = type.GetMethod(name, bindingAttr);
+                var info = type.GetMethod(name, bindingAttr);
                 value = CreateGetter(info);
                 cacheGetMethodValue.Add((type, name), value);
             }
             return value?.Invoke(target);
         }
 
-        public static FieldInfo GetField(Type type, string name, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, bool inherit = false)
+        public static FieldInfo GetField(Type type, string name, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, bool includingBaseNonPublic = false)
         {
-            FieldInfo info;
-            if (cacheFieldInfo.ContainsKey((type, name, bindingAttr, inherit)))
+            if (!cacheFieldInfo.TryGetValue((type, name, bindingAttr, includingBaseNonPublic), out var info))
             {
-                info = cacheFieldInfo[(type, name, bindingAttr, inherit)];
-            }
-            else
-            {
-                if (inherit)
+                if (includingBaseNonPublic)
                 {
-                    info = GetAllFieldsIncludingInherited(type, bindingAttr).FirstOrDefault(x => x.Name == name);
+                    info = GetAllFieldsIncludingBaseNonPublic(type, bindingAttr).FirstOrDefault(x => x.Name == name);
                 }
                 else
                 {
                     info = type.GetField(name, bindingAttr);
                 }
-                cacheFieldInfo.Add((type, name, bindingAttr, inherit), info);
+                cacheFieldInfo.Add((type, name, bindingAttr, includingBaseNonPublic), info);
             }
             return info;
         }
 
-        static IEnumerable<FieldInfo> GetAllFieldsIncludingInherited(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
+        static IEnumerable<FieldInfo> GetAllFieldsIncludingBaseNonPublic(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
         {
             if (type == null) return Enumerable.Empty<FieldInfo>();
-            return type.GetFields(bindingAttr).Concat(GetAllFieldsIncludingInherited(type.BaseType));
+            return type.GetFields(bindingAttr).Concat(GetAllFieldsIncludingBaseNonPublic(type.BaseType));
         }
 
-        public static PropertyInfo GetProperty(Type type, string name, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, bool inherit = false)
+        public static PropertyInfo GetProperty(Type type, string name, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, bool includingBaseNonPublic = false)
         {
-            PropertyInfo info;
-            if (cachePropertyInfo.ContainsKey((type, name, bindingAttr, inherit)))
+            if (!cachePropertyInfo.TryGetValue((type, name, bindingAttr, includingBaseNonPublic), out var info))
             {
-                info = cachePropertyInfo[(type, name, bindingAttr, inherit)];
-            }
-            else
-            {
-                if (inherit)
+                if (includingBaseNonPublic)
                 {
-                    info = GetAllPropertiesIncludingInherited(type, bindingAttr).FirstOrDefault(x => x.Name == name);
+                    info = GetAllPropertiesIncludingBaseNonPublic(type, bindingAttr).FirstOrDefault(x => x.Name == name);
                 }
                 else
                 {
                     info = type.GetProperty(name, bindingAttr);
                 }
-                cachePropertyInfo.Add((type, name, bindingAttr, inherit), info);
+                cachePropertyInfo.Add((type, name, bindingAttr, includingBaseNonPublic), info);
             }
             return info;
         }
 
-        static IEnumerable<PropertyInfo> GetAllPropertiesIncludingInherited(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
+        static IEnumerable<PropertyInfo> GetAllPropertiesIncludingBaseNonPublic(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
         {
             if (type == null) return Enumerable.Empty<PropertyInfo>();
-            return type.GetProperties(bindingAttr).Concat(GetAllPropertiesIncludingInherited(type.BaseType));
+            return type.GetProperties(bindingAttr).Concat(GetAllPropertiesIncludingBaseNonPublic(type.BaseType));
         }
 
-        public static MethodInfo GetMethod(Type type, string name, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, bool inherit = false)
+        public static MethodInfo GetMethod(Type type, string name, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, bool includingBaseNonPublic = false)
         {
-            MethodInfo info;
-            if (cacheMethodInfo.ContainsKey((type, name, bindingAttr, inherit)))
+            if (!cacheMethodInfo.TryGetValue((type, name, bindingAttr, includingBaseNonPublic), out var info))
             {
-                info = cacheMethodInfo[(type, name, bindingAttr, inherit)];
-            }
-            else
-            {
-                if (inherit)
+                if (includingBaseNonPublic)
                 {
-                    info = GetAllMethodsIncludingInherited(type, bindingAttr).FirstOrDefault(x => x.Name == name);
+                    info = GetAllMethodsIncludingBaseNonPublic(type, bindingAttr).FirstOrDefault(x => x.Name == name);
                 }
                 else
                 {
                     info = type.GetMethods(bindingAttr).Where(x => x.Name == name).FirstOrDefault();
                 }
-                cacheMethodInfo.Add((type, name, bindingAttr, inherit), info);
+                cacheMethodInfo.Add((type, name, bindingAttr, includingBaseNonPublic), info);
             }
             return info;
         }
 
-        static IEnumerable<MethodInfo> GetAllMethodsIncludingInherited(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
+        static IEnumerable<MethodInfo> GetAllMethodsIncludingBaseNonPublic(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
         {
             if (type == null) return Enumerable.Empty<MethodInfo>();
-            return type.GetMethods(bindingAttr).Concat(GetAllMethodsIncludingInherited(type.BaseType));
+            return type.GetMethods(bindingAttr).Concat(GetAllMethodsIncludingBaseNonPublic(type.BaseType));
         }
 
         public static object GetValue(object target, string name, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, bool allowProperty = true, bool allowMethod = true)
@@ -241,32 +226,31 @@ namespace Alchemy.Editor.Internal
             return false;
         }
 
-        public static MemberInfo[] GetMembers(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, bool inherit = false)
+        public static MemberInfo[] GetMembers(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, bool includingBaseNonPublic = false)
         {
-            if (cacheAllMembers.ContainsKey((type, bindingAttr, inherit)))
+            if (cacheAllMembers.TryGetValue((type, bindingAttr, includingBaseNonPublic), out var memberInfoArray))
             {
-                return cacheAllMembers[(type, bindingAttr, inherit)];
+                return memberInfoArray;
             }
             else
             {
-                MemberInfo[] memberInfos;
-                if (inherit)
+                if (includingBaseNonPublic)
                 {
-                    memberInfos = GetMembersIncludingInherited(type, bindingAttr).ToArray();
+                    memberInfoArray = GetMembersIncludingBaseNonPublic(type, bindingAttr).ToArray();
                 }
                 else
                 {
-                    memberInfos = type.GetMembers(bindingAttr);
+                    memberInfoArray = type.GetMembers(bindingAttr);
                 }
-                cacheAllMembers.Add((type, bindingAttr, inherit), memberInfos);
-                return memberInfos;
+                cacheAllMembers.Add((type, bindingAttr, includingBaseNonPublic), memberInfoArray);
+                return memberInfoArray;
             }
         }
 
-        static IEnumerable<MemberInfo> GetMembersIncludingInherited(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
+        static IEnumerable<MemberInfo> GetMembersIncludingBaseNonPublic(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
         {
             if (type == null) return Enumerable.Empty<MemberInfo>();
-            return type.GetMembers(bindingAttr).Concat(GetMembersIncludingInherited(type.BaseType));
+            return type.GetMembers(bindingAttr).Concat(GetMembersIncludingBaseNonPublic(type.BaseType));
         }
 
         public static object Invoke(object target, string name, params object[] parameters)

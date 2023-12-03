@@ -232,7 +232,8 @@ namespace Alchemy.Editor.Internal
                     }
 
 #if ALCHEMY_SUPPORT_SERIALIZATION
-                    if (serializedObject.targetObject.GetType().HasCustomAttribute<AlchemySerializeAttribute>() &&
+                    if (serializedObject.targetObject != null && 
+                        serializedObject.targetObject.GetType().HasCustomAttribute<AlchemySerializeAttribute>() &&
                         memberInfo.HasCustomAttribute<AlchemySerializeFieldAttribute>())
                     {
                         var element = default(VisualElement);
