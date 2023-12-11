@@ -12,7 +12,7 @@ namespace Alchemy.Editor.Elements
     /// </summary>
     public sealed class AlchemyPropertyField : BindableElement
     {
-        public AlchemyPropertyField(SerializedProperty property, Type type, int depth)
+        public AlchemyPropertyField(SerializedProperty property, Type type, int depth, bool isArrayElement = false)
         {
             if (depth > 20) return;
             var labelText = ObjectNames.NicifyVariableName(property.displayName);
@@ -33,13 +33,18 @@ namespace Alchemy.Editor.Elements
                     }
                     break;
                 case SerializedPropertyType.Generic:
-                    if (property.isArray)
+                    var targetType = property.GetPropertyType(isArrayElement);
+                    
+                    if (InternalAPIHelper.GetDrawerTypeForType(targetType) != null)
+                    {
+                        element = new PropertyField(property);
+                    }
+                    else if (property.isArray)
                     {
                         element = new PropertyListView(property, depth);
                     }
                     else
                     {
-                        var targetType = property.GetPropertyType();
                         var foldout = new Foldout() { text = labelText };
 
                         var clickable = InternalAPIHelper.GetClickable(foldout.Q<Toggle>());
