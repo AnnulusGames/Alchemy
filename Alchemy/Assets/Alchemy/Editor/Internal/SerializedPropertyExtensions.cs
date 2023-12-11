@@ -115,7 +115,7 @@ namespace Alchemy.Editor.Internal
         {
             var fieldInfo = property.GetFieldInfo();
 
-            if (isCollectionType && property.isArray && property.propertyType != SerializedPropertyType.String)
+            if (isCollectionType && property.propertyType != SerializedPropertyType.String)
                 return fieldInfo.FieldType.IsArray ?
                     fieldInfo.FieldType.GetElementType() :
                     fieldInfo.FieldType.GetGenericArguments()[0];
