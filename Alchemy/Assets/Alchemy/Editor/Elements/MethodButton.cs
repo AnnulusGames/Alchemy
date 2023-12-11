@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using Alchemy.Editor.Internal;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -37,6 +38,9 @@ namespace Alchemy.Editor.Elements
                     flexGrow = 1f
                 }
             };
+            InternalAPIHelper.SetAcceptClicksIfDisabled(
+                InternalAPIHelper.GetClickable(foldout.Q<Toggle>()), true
+            );
 
             button = new Button(() => methodInfo.Invoke(target, parameterObjects))
             {
