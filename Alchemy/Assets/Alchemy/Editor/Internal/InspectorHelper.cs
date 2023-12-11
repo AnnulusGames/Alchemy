@@ -157,7 +157,7 @@ namespace Alchemy.Editor.Internal
             var rootNode = new GroupNode("Inspector-Group-Root", null);
 
             // Get all members
-            var members = targetType.GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var members = ReflectionHelper.GetMembers(targetType, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, true);
 
             // Build member nodes
             foreach (var member in members)
