@@ -17,7 +17,7 @@ namespace Alchemy.Editor.Elements
             // Create parameterless button
             if (parameters.Length == 0)
             {
-                button = new Button((Action)methodInfo.CreateDelegate(typeof(Action), target))
+                button = new Button(() => methodInfo.Invoke(target, null))
                 {
                     text = methodInfo.Name
                 };
