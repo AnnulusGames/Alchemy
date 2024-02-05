@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using UnityEngine;
 
 namespace Alchemy.Editor.Internal
 {
@@ -125,10 +126,33 @@ namespace Alchemy.Editor.Internal
             return info;
         }
 
+        static IEnumerable<Type> EnumerateTypeHierarchy(Type type)
+        {
+            while (type != null)
+            {
+                yield return type;
+                type = type.BaseType;
+            }
+        }
+
+        class FieldInfoEqualityComparer : IEqualityComparer<FieldInfo>
+        {
+            public static readonly FieldInfoEqualityComparer Instance = new();
+
+            public bool Equals(FieldInfo x, FieldInfo y)
+            {
+                return x.Name == y.Name && x.DeclaringType == y.DeclaringType;
+            }
+
+            public int GetHashCode(FieldInfo obj)
+            {
+                return HashCode.Combine(obj.Name, obj.DeclaringType);
+            }
+        }
+
         static IEnumerable<FieldInfo> GetAllFieldsIncludingBaseNonPublic(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
         {
-            if (type == null) return Enumerable.Empty<FieldInfo>();
-            return type.GetFields(bindingAttr).Concat(GetAllFieldsIncludingBaseNonPublic(type.BaseType));
+            return EnumerateTypeHierarchy(type).Reverse().SelectMany(t => t.GetFields(bindingAttr)).Distinct(FieldInfoEqualityComparer.Instance);
         }
 
         public static PropertyInfo GetProperty(Type type, string name, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, bool includingBaseNonPublic = false)
@@ -148,10 +172,24 @@ namespace Alchemy.Editor.Internal
             return info;
         }
 
+        class PropertyInfoEqualityComparer : IEqualityComparer<PropertyInfo>
+        {
+            public static readonly PropertyInfoEqualityComparer Instance = new();
+
+            public bool Equals(PropertyInfo x, PropertyInfo y)
+            {
+                return x.Name == y.Name && x.DeclaringType == y.DeclaringType;
+            }
+
+            public int GetHashCode(PropertyInfo obj)
+            {
+                return HashCode.Combine(obj.Name, obj.DeclaringType);
+            }
+        }
+
         static IEnumerable<PropertyInfo> GetAllPropertiesIncludingBaseNonPublic(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
         {
-            if (type == null) return Enumerable.Empty<PropertyInfo>();
-            return type.GetProperties(bindingAttr).Concat(GetAllPropertiesIncludingBaseNonPublic(type.BaseType));
+            return EnumerateTypeHierarchy(type).Reverse().SelectMany(t => t.GetProperties(bindingAttr)).Distinct(PropertyInfoEqualityComparer.Instance);
         }
 
         public static MethodInfo GetMethod(Type type, string name, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, bool includingBaseNonPublic = false)
@@ -171,10 +209,24 @@ namespace Alchemy.Editor.Internal
             return info;
         }
 
+        class MethodInfoEqualityComparer : IEqualityComparer<MethodInfo>
+        {
+            public static readonly MethodInfoEqualityComparer Instance = new();
+
+            public bool Equals(MethodInfo x, MethodInfo y)
+            {
+                return x.Name == y.Name && x.DeclaringType == y.DeclaringType;
+            }
+
+            public int GetHashCode(MethodInfo obj)
+            {
+                return HashCode.Combine(obj.Name, obj.DeclaringType);
+            }
+        }
+
         static IEnumerable<MethodInfo> GetAllMethodsIncludingBaseNonPublic(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
         {
-            if (type == null) return Enumerable.Empty<MethodInfo>();
-            return type.GetMethods(bindingAttr).Concat(GetAllMethodsIncludingBaseNonPublic(type.BaseType));
+            return EnumerateTypeHierarchy(type).Reverse().SelectMany(t => t.GetMethods(bindingAttr)).Distinct(MethodInfoEqualityComparer.Instance);
         }
 
         public static object GetValue(object target, string name, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static, bool allowProperty = true, bool allowMethod = true)
@@ -247,10 +299,24 @@ namespace Alchemy.Editor.Internal
             }
         }
 
+        class MemberInfoEqualityComparer : IEqualityComparer<MemberInfo>
+        {
+            public static readonly MemberInfoEqualityComparer Instance = new();
+
+            public bool Equals(MemberInfo x, MemberInfo y)
+            {
+                return x.Name == y.Name && x.DeclaringType == y.DeclaringType;
+            }
+
+            public int GetHashCode(MemberInfo obj)
+            {
+                return HashCode.Combine(obj.Name, obj.DeclaringType);
+            }
+        }
+
         static IEnumerable<MemberInfo> GetMembersIncludingBaseNonPublic(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
         {
-            if (type == null) return Enumerable.Empty<MemberInfo>();
-            return type.GetMembers(bindingAttr).Concat(GetMembersIncludingBaseNonPublic(type.BaseType));
+            return EnumerateTypeHierarchy(type).Reverse().SelectMany(t => t.GetMembers(bindingAttr)).Distinct(MemberInfoEqualityComparer.Instance);
         }
 
         public static object Invoke(object target, string name, params object[] parameters)
