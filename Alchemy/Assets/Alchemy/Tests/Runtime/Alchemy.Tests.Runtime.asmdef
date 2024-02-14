@@ -1,0 +1,29 @@
+{
+    "name": "Alchemy.Tests.Runtime",
+    "rootNamespace": "Alchemy.Tests.Runtime",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.Serialization",
+        "Alchemy"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.unity.serialization",
+            "expression": "",
+            "define": "ALCHEMY_SUPPORT_SERIALIZATION"
+        }
+    ],
+    "noEngineReferences": false
+}

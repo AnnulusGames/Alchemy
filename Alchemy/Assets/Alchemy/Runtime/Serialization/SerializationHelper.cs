@@ -29,7 +29,7 @@ namespace Alchemy.Serialization.Internal
             {
                 UserDefinedAdapters = new()
                 {
-                    new UnityObjectAdapter(unityObjectReferences)
+                    new AlchemyJsonAdapter(unityObjectReferences)
                 },
                 SerializedType = target.GetType()
             });
@@ -42,7 +42,7 @@ namespace Alchemy.Serialization.Internal
             {
                 UserDefinedAdapters = new()
                 {
-                    new UnityObjectAdapter(unityObjectReferences)
+                    new AlchemyJsonAdapter(unityObjectReferences)
                 },
                 SerializedType = typeof(T)
             });
@@ -55,7 +55,7 @@ namespace Alchemy.Serialization.Internal
             {
                 UserDefinedAdapters = new()
                 {
-                    new UnityObjectAdapter(unityObjectReferences)
+                    new AlchemyJsonAdapter(unityObjectReferences)
                 }
             });
         }

@@ -5,9 +5,9 @@ using Unity.Serialization.Json;
 
 namespace Alchemy.Serialization.Internal
 {
-    public sealed class UnityObjectAdapter : IContravariantJsonAdapter<UnityEngine.Object>, IJsonAdapter<UnityEngine.Object>
+    partial class AlchemyJsonAdapter : IContravariantJsonAdapter<UnityEngine.Object>, IJsonAdapter<UnityEngine.Object>
     {
-        public UnityObjectAdapter(IList<UnityEngine.Object> objectReferenceList)
+        public AlchemyJsonAdapter(IList<UnityEngine.Object> objectReferenceList)
         {
             this.ObjectReferenceList = objectReferenceList;
         }
