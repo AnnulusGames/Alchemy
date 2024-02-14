@@ -4,10 +4,8 @@ using UnityEngine;
 
 namespace Alchemy.Serialization.Internal
 {
-    public sealed class UnityBuiltinAdapters : IJsonAdapter<AnimationCurve>, IJsonAdapter<Gradient>, IJsonAdapter<Keyframe>
+    partial class AlchemyJsonAdapter : IJsonAdapter<AnimationCurve>, IJsonAdapter<Keyframe>
     {
-        public static readonly UnityBuiltinAdapters Instance = new();
-
         public AnimationCurve Deserialize(in JsonDeserializationContext<AnimationCurve> context)
         {
             var view = context.SerializedValue.AsObjectView();
@@ -20,16 +18,11 @@ namespace Alchemy.Serialization.Internal
             return animationCurve;
         }
 
-        public Gradient Deserialize(in JsonDeserializationContext<Gradient> context)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public Keyframe Deserialize(in JsonDeserializationContext<Keyframe> context)
         {
             var view = context.SerializedValue.AsObjectView();
             var keyframe = default(Keyframe);
-            
+
             if (view.TryGetMember("time", out var time)) keyframe.time = time.Value().AsFloat();
             if (view.TryGetMember("value", out var value)) keyframe.value = value.Value().AsFloat();
             if (view.TryGetMember("inTangent", out var inTangent)) keyframe.inTangent = inTangent.Value().AsFloat();
@@ -45,11 +38,6 @@ namespace Alchemy.Serialization.Internal
             context.SerializeValue("postWrapMode", value.postWrapMode);
             context.SerializeValue("preWrapMode", value.preWrapMode);
             context.Writer.WriteEndObject();
-        }
-
-        public void Serialize(in JsonSerializationContext<Gradient> context, Gradient value)
-        {
-            
         }
 
         public void Serialize(in JsonSerializationContext<Keyframe> context, Keyframe value)
