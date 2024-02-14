@@ -235,6 +235,8 @@ public partial class AlchemySerializationSample : MonoBehaviour
 
 * プリミティブ型
 * UnityEngine.Object
+* AnimationCurve
+* Gradient
 * 配列
 * List<>
 * Hashset<>

@@ -234,6 +234,8 @@ Currently, the following types are editable in the Inspector:
 
 * Primitive types
 * UnityEngine.Object
+* AnimationCurve
+* Gradient
 * Arrays
 * List<>
 * HashSet<>
