@@ -8,6 +8,11 @@ namespace Alchemy.Serialization.Internal
     {
         public AnimationCurve Deserialize(in JsonDeserializationContext<AnimationCurve> context)
         {
+            if (context.SerializedValue.IsNull())
+            {
+                return null;
+            }
+            
             var view = context.SerializedValue.AsObjectView();
             var animationCurve = new AnimationCurve();
 
@@ -33,6 +38,12 @@ namespace Alchemy.Serialization.Internal
 
         public void Serialize(in JsonSerializationContext<AnimationCurve> context, AnimationCurve value)
         {
+            if (value == null)
+            {
+                context.Writer.WriteNull();
+                return;
+            }
+
             context.Writer.WriteBeginObject();
             context.SerializeValue("keys", value.keys);
             context.SerializeValue("postWrapMode", value.postWrapMode);
