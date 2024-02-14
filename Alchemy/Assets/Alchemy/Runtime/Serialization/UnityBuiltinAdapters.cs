@@ -6,6 +6,8 @@ namespace Alchemy.Serialization.Internal
 {
     public sealed class UnityBuiltinAdapters : IJsonAdapter<AnimationCurve>, IJsonAdapter<Gradient>, IJsonAdapter<Keyframe>
     {
+        public static readonly UnityBuiltinAdapters Instance = new();
+
         public AnimationCurve Deserialize(in JsonDeserializationContext<AnimationCurve> context)
         {
             var view = context.SerializedValue.AsObjectView();

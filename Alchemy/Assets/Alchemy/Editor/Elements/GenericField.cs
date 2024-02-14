@@ -185,6 +185,10 @@ namespace Alchemy.Editor.Elements
             {
                 AddField(new Hash128Field(label), (Hash128)obj);
             }
+            else if (type == typeof(AnimationCurve))
+            {
+                AddField(new CurveField(label), (AnimationCurve)obj);
+            }
             else if (typeof(UnityEngine.Object).IsAssignableFrom(type))
             {
                 AddField(new ObjectField(label) { objectType = type }, (UnityEngine.Object)obj);
