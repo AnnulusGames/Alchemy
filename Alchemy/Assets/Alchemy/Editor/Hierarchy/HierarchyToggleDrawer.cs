@@ -1,12 +1,12 @@
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using System.Linq;
 using Alchemy.Hierarchy;
 using Alchemy.Editor.Internal;
 
 namespace Alchemy.Editor
 {
-    public sealed class HierarchyButtonDrawer : HierarchyDrawer
+    public sealed class HierarchyToggleDrawer : HierarchyDrawer
     {
         public override void OnGUI(int instanceID, Rect selectionRect)
         {
