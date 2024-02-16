@@ -7,7 +7,5 @@ namespace Alchemy.Hierarchy
     {
         [SerializeField] HierarchyObjectMode hierarchyObjectMode = HierarchyObjectMode.RemoveInBuild;
         public HierarchyObjectMode HierarchyObjectMode => hierarchyObjectMode;
-
-        public virtual void OnObjectRemoved() { }
     }
 }
