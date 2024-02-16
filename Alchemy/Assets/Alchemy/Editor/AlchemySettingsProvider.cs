@@ -7,7 +7,6 @@ namespace Alchemy.Editor
     internal static class AlchemySettingsProvider
     {
         static readonly string MenuName = "Project/Alchemy";
-        static SerializedObject serializedObject;
 
         [SettingsProvider]
         public static SettingsProvider CreateSettingsProvider()
@@ -18,8 +17,7 @@ namespace Alchemy.Editor
                 keywords = new HashSet<string>(new[] { "Alchemy, Inspector, Hierarchy" }),
                 guiHandler = searchContext =>
                 {
-                    if (serializedObject == null) serializedObject = new(AlchemySettings.GetOrCreateSettings());
-                    else serializedObject.Update();
+                    var serializedObject = new SerializedObject(AlchemySettings.GetOrCreateSettings());
 
                     using (new EditorGUILayout.HorizontalScope())
                     {
