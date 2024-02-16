@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Alchemy.SourceGenerator
@@ -25,6 +26,21 @@ namespace Alchemy.SourceGenerator
             {
                 foreach (var typeSyntax in receiver.TargetTypes)
                 {
+                    var typeSymbol = context.Compilation.GetSemanticModel(typeSyntax.SyntaxTree)
+                        .GetDeclaredSymbol(typeSyntax);
+
+                    if (!IsPartial(typeSyntax))
+                    {
+                        context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.MustBePartial, typeSyntax.Identifier.GetLocation(), typeSymbol.Name));
+                        continue;
+                    }
+
+                    if (IsNested(typeSyntax))
+                    {
+                        context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.NestedNotAllow, typeSyntax.Identifier.GetLocation(), typeSymbol.Name));
+                        continue;
+                    }
+
                     var fieldSymbols = new List<IFieldSymbol>();
                     var fields = typeSyntax.Members
                         .Where(x => x is FieldDeclarationSyntax)
@@ -35,22 +51,32 @@ namespace Alchemy.SourceGenerator
                         foreach (var variable in field.Declaration.Variables)
                         {
                             var fieldSymbol = model.GetDeclaredSymbol(variable) as IFieldSymbol;
-                            var attribute = fieldSymbol.GetAttributes()
+                            var alchemySerializeAttribute = fieldSymbol.GetAttributes()
                                 .FirstOrDefault(x =>
                                     x.AttributeClass.Name is "AlchemySerializeField"
                                                           or "AlchemySerializeFieldAttribute"
                                                           or "Alchemy.Serialization.AlchemySerializeField"
                                                           or "Alchemy.Serialization.AlchemySerializeFieldAttribute");
-                            if (attribute != null)
+
+                            var nonSerializedAttribute = fieldSymbol.GetAttributes()
+                                .FirstOrDefault(x =>
+                                    x.AttributeClass.Name is "NonSerialized"
+                                                          or "NonSerializedAttribute"
+                                                          or "System.NonSerialized"
+                                                          or "System.NonSerializedAttribute");
+
+                            if (alchemySerializeAttribute != null)
                             {
+                                if (nonSerializedAttribute == null)
+                                {
+                                    context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.ShouldBeNonSerialized, variable.Identifier.GetLocation(), fieldSymbol.Name));
+                                }
+
                                 fieldSymbols.Add(fieldSymbol);
                             }
                         }
                     }
 
-                    var typeSymbol = context.Compilation.GetSemanticModel(typeSyntax.SyntaxTree)
-                        .GetDeclaredSymbol(typeSyntax);
-                    
                     var sourceText = ProcessClass((INamedTypeSymbol)typeSymbol, fieldSymbols);
                     var fullType = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
                         .Replace("global::", "")
@@ -157,6 +183,16 @@ catch (global::System.Exception ex)
 
 {(string.IsNullOrEmpty(ns) ? "" : "}")}
 ";
+        }
+
+        static bool IsPartial(TypeDeclarationSyntax typeDeclaration)
+        {
+            return typeDeclaration.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
+        }
+
+        static bool IsNested(TypeDeclarationSyntax typeDeclaration)
+        {
+            return typeDeclaration.Parent is TypeDeclarationSyntax;
         }
 
         sealed class SyntaxReceiver : ISyntaxReceiver
