@@ -3,7 +3,8 @@ using UnityEngine;
 namespace Alchemy.Hierarchy
 {
     [DisallowMultipleComponent]
-    public abstract class HierarchyObject : MonoBehaviour
+    [AddComponentMenu("Alchemy/Hierarchy Object")]
+    public class HierarchyObject : MonoBehaviour
     {
         [SerializeField] HierarchyObjectMode hierarchyObjectMode = HierarchyObjectMode.RemoveInBuild;
         public HierarchyObjectMode HierarchyObjectMode => hierarchyObjectMode;
