@@ -63,7 +63,7 @@ namespace Alchemy.Editor
 
         static void DrawIcon(ref Rect rect, Texture image, Color color)
         {
-            var defaultColor = color;
+            var defaultColor = GUI.color;
             GUI.color = color;
 
             GUI.DrawTexture(rect, image, ScaleMode.ScaleToFit);
