@@ -51,6 +51,18 @@ namespace Alchemy.Editor
             return rect;
         }
 
+        public static Rect AddYMin(this Rect rect, float value)
+        {
+            rect.yMin += value;
+            return rect;
+        }
+
+        public static Rect AddYMax(this Rect rect, float value)
+        {
+            rect.yMax += value;
+            return rect;
+        }
+
         public static Rect SetWidth(this Rect rect, float value)
         {
             rect.width = value;

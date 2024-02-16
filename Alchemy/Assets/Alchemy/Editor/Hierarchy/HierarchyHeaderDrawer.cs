@@ -26,7 +26,7 @@ namespace Alchemy.Editor
 
             DrawBackground(instanceID, selectionRect);
 
-            var headerRect = selectionRect.AddXMax(10f);
+            var headerRect = selectionRect.AddXMax(10f).AddYMax(-1f);
             EditorGUI.DrawRect(headerRect, HeaderColor);
             EditorGUI.LabelField(headerRect, gameObject.name, labelStyle);
         }
