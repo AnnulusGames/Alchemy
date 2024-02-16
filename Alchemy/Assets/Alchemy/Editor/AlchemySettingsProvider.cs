@@ -57,6 +57,12 @@ namespace Alchemy.Editor
                     var hierarchyObjectModeField = new PropertyField(serializedObject.FindProperty("hierarchyObjectMode"));
                     root.Add(hierarchyObjectModeField);
 
+                    var showHierarchyTogglesField = new PropertyField(serializedObject.FindProperty("showHierarchyToggles"))
+                    {
+                        label = "Show Toggles"
+                    };
+                    root.Add(showHierarchyTogglesField);
+
                     root.Bind(serializedObject);
                     root.TrackSerializedObjectValue(serializedObject, so =>
                     {

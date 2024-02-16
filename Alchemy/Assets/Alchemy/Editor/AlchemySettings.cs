@@ -32,7 +32,9 @@ namespace Alchemy.Editor
         }
 
         [SerializeField] HierarchyObjectMode hierarchyObjectMode = HierarchyObjectMode.RemoveInBuild;
+        [SerializeField] bool showHierarchyToggles;
 
         public HierarchyObjectMode HierarchyObjectMode => hierarchyObjectMode;
+        public bool ShowHierarchyToggles => showHierarchyToggles;
     }
 }

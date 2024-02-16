@@ -1,7 +1,6 @@
-using System.Linq;
-using Alchemy.Editor.Internal;
 using UnityEditor;
 using UnityEngine;
+using Alchemy.Editor.Internal;
 
 namespace Alchemy.Editor
 {
