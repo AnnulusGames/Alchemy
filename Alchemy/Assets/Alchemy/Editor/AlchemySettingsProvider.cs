@@ -1,73 +1,47 @@
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Alchemy.Editor
 {
     internal static class AlchemySettingsProvider
     {
         static readonly string MenuName = "Project/Alchemy";
+        static SerializedObject serializedObject;
 
         [SettingsProvider]
         public static SettingsProvider CreateSettingsProvider()
         {
-            static Label CreateHeader(string text)
-            {
-                return new Label(text)
-                {
-                    style = {
-                        unityFontStyleAndWeight = FontStyle.Bold,
-                        marginLeft = 2f,
-                        marginTop = 3f,
-                    }
-                };
-            }
-
             return new SettingsProvider(MenuName, SettingsScope.Project)
             {
+                label = "Alchemy",
                 keywords = new HashSet<string>(new[] { "Alchemy, Inspector, Hierarchy" }),
-                activateHandler = (searchContext, rootElement) =>
+                guiHandler = searchContext =>
                 {
-                    var serializedObject = new SerializedObject(AlchemySettings.GetOrCreateSettings());
+                    if (serializedObject == null) serializedObject = new(AlchemySettings.GetOrCreateSettings());
+                    else serializedObject.Update();
 
-                    var root = new VisualElement
+                    using (new EditorGUILayout.HorizontalScope())
                     {
-                        style = {
-                            marginLeft = 10f
+                        GUILayout.Space(10f);
+                        using (new EditorGUILayout.VerticalScope())
+                        {
+                            EditorGUILayout.LabelField("Hierarchy", EditorStyles.boldLabel);
+
+                            using (var changeCheck = new EditorGUI.ChangeCheckScope())
+                            {
+                                EditorGUILayout.PropertyField(serializedObject.FindProperty("hierarchyObjectMode"));
+                                EditorGUILayout.PropertyField(serializedObject.FindProperty("showHierarchyToggles"), new GUIContent("Show Toggles"));
+                                EditorGUILayout.PropertyField(serializedObject.FindProperty("showComponentIcons"));
+
+                                if (changeCheck.changed)
+                                {
+                                    serializedObject.ApplyModifiedProperties();
+                                    AlchemySettings.SaveSettings();
+                                }
+                            }
                         }
-                    };
-                    rootElement.Add(root);
-
-                    var label = new Label("Alchemy")
-                    {
-                        style = {
-                            unityFontStyleAndWeight = FontStyle.Bold,
-                            fontSize = 20,
-                            marginTop = 3f,
-                            marginBottom = 5f
-                        }
-                    };
-                    root.Add(label);
-
-                    var hierarchyHeader = CreateHeader("Hierarchy");
-                    root.Add(hierarchyHeader);
-
-                    var hierarchyObjectModeField = new PropertyField(serializedObject.FindProperty("hierarchyObjectMode"));
-                    root.Add(hierarchyObjectModeField);
-
-                    var showHierarchyTogglesField = new PropertyField(serializedObject.FindProperty("showHierarchyToggles"))
-                    {
-                        label = "Show Toggles"
-                    };
-                    root.Add(showHierarchyTogglesField);
-
-                    root.Bind(serializedObject);
-                    root.TrackSerializedObjectValue(serializedObject, so =>
-                    {
-                        AlchemySettings.SaveSettings();
-                    });
+                    }
                 },
             };
         }
