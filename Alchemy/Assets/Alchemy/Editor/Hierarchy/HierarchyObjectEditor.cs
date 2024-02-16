@@ -6,6 +6,7 @@ using UnityEditor.UIElements;
 namespace Alchemy.Editor
 {
     [CustomEditor(typeof(HierarchyObject), true)]
+    [CanEditMultipleObjects]
     public sealed class HierarchyObjectEditor : UnityEditor.Editor
     {
         public override VisualElement CreateInspectorGUI()
