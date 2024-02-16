@@ -19,7 +19,7 @@ namespace Alchemy.Editor
             if (settings.ShowHierarchyToggles)
             {
                 var rect = selectionRect;
-                rect.x = rect.xMax - 5f;
+                rect.x = rect.xMax - 2.7f;
                 rect.width = 16f;
 
                 var active = GUI.Toggle(rect, gameObject.activeSelf, string.Empty);
@@ -34,7 +34,7 @@ namespace Alchemy.Editor
             if (settings.ShowComponentIcons)
             {
                 var rect = selectionRect;
-                rect.x = rect.xMax - (settings.ShowHierarchyToggles ? 21f : 5f);
+                rect.x = rect.xMax - (settings.ShowHierarchyToggles ? 18.7f : 2.7f);
                 rect.y += 1f;
                 rect.width = 14f;
                 rect.height = 14f;

@@ -16,7 +16,7 @@ namespace Alchemy.Editor
 
             DrawBackground(instanceID, selectionRect);
 
-            var lineRect = selectionRect.AddY(selectionRect.height * 0.5f).AddXMax(10f).SetHeight(1f);
+            var lineRect = selectionRect.AddY(selectionRect.height * 0.5f).AddXMax(14f).SetHeight(1f);
             EditorGUI.DrawRect(lineRect, SeparatorColor);
         }
     }
