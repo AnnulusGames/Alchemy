@@ -9,8 +9,9 @@ namespace Alchemy.Hierarchy
         public enum Mode
         {
             UseSettings = 0,
-            RemoveInPlayMode = 1,
-            RemoveInBuild = 2
+            None = 1,
+            RemoveInPlayMode = 2,
+            RemoveInBuild = 3
         }
 
         [SerializeField] Mode hierarchyObjectMode = Mode.UseSettings;

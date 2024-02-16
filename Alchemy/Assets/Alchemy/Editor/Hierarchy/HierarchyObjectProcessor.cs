@@ -45,7 +45,7 @@ namespace Alchemy.Editor
         static HierarchyObjectMode GetHierarchyObjectMode(HierarchyObject obj)
         {
             return obj.HierarchyObjectMode != HierarchyObject.Mode.UseSettings
-                ? (HierarchyObjectMode)obj.HierarchyObjectMode
+                ? (HierarchyObjectMode)(obj.HierarchyObjectMode - 1)
                 : AlchemySettings.GetOrCreateSettings().HierarchyObjectMode;
         }
 
