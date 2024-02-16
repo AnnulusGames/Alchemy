@@ -19,22 +19,7 @@ namespace Alchemy.Editor
             var hierarchyObjects = scene.GetRootGameObjects()
                 .SelectMany(x => x.GetComponentsInChildren<HierarchyObject>())
                 .Where(x => x != null)
-                .ToArray();
-
-            foreach (var obj in hierarchyObjects)
-            {
-                switch (GetHierarchyObjectMode(obj))
-                {
-                    case HierarchyObjectMode.None: break;
-                    case HierarchyObjectMode.RemoveInPlayMode:
-                        PreRemove(obj);
-                        break;
-                    case HierarchyObjectMode.RemoveInBuild:
-                        if (EditorApplication.isPlaying) break;
-                        PreRemove(obj);
-                        break;
-                }
-            }
+                .OrderByDescending(x => GetDepth(x.transform));
 
             foreach (var obj in hierarchyObjects)
             {
@@ -42,12 +27,15 @@ namespace Alchemy.Editor
 
                 switch (GetHierarchyObjectMode(obj))
                 {
-                    case HierarchyObjectMode.None: break;
+                    case HierarchyObjectMode.None:
+                        break;
                     case HierarchyObjectMode.RemoveInPlayMode:
+                        obj.transform.DetachChildren();
                         Object.DestroyImmediate(obj.gameObject);
                         break;
                     case HierarchyObjectMode.RemoveInBuild:
                         if (EditorApplication.isPlaying) break;
+                        obj.transform.DetachChildren();
                         Object.DestroyImmediate(obj.gameObject);
                         break;
                 }
@@ -61,34 +49,16 @@ namespace Alchemy.Editor
                 : AlchemySettings.GetOrCreateSettings().HierarchyObjectMode;
         }
 
-        static void PreRemove(HierarchyObject obj)
+        static int GetDepth(Transform transform)
         {
-            if (obj == null) return;
-
-            Transform root = obj.transform;
-            while (true)
+            var depth = 0;
+            var parent = transform.parent;
+            while (parent != null)
             {
-                root = root.parent;
-                if (root == null) goto LOOP_END;
-                if (!root.TryGetComponent<HierarchyObject>(out var hierarchyObject)) goto LOOP_END;
-
-                switch (GetHierarchyObjectMode(hierarchyObject))
-                {
-                    case HierarchyObjectMode.None:
-                        goto LOOP_END;
-                    case HierarchyObjectMode.RemoveInPlayMode:
-                        break;
-                    case HierarchyObjectMode.RemoveInBuild:
-                        if (EditorApplication.isPlaying) goto LOOP_END;
-                        break;
-                }
+                depth++;
+                parent = parent.parent;
             }
-
-        LOOP_END:
-            foreach (Transform child in obj.transform)
-            {
-                child.SetParent(root);
-            }
+            return depth;
         }
     }
 }
