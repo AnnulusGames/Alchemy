@@ -34,12 +34,13 @@ namespace Alchemy.Editor.Elements
             field.RegisterValueChangeCallback(x =>
             {
                 isNull = x.changedProperty.objectReferenceValue == null;
-                if (!isNull) field.Q<Label>().text = string.Empty;
-                else field.Q<Label>().text = ObjectNames.NicifyVariableName(property.displayName);
 
+                field.Q<Label>().text = isNull ? ObjectNames.NicifyVariableName(property.displayName) : string.Empty;
                 field.pickingMode = PickingMode.Ignore;
+
                 var objectField = field.Q<ObjectField>();
                 objectField.pickingMode = PickingMode.Ignore;
+                
                 var label = objectField.Q<Label>();
                 label.pickingMode = PickingMode.Ignore;
 
