@@ -6,7 +6,14 @@ namespace Alchemy.Hierarchy
     [AddComponentMenu("Alchemy/Hierarchy Object")]
     public class HierarchyObject : MonoBehaviour
     {
-        [SerializeField] HierarchyObjectMode hierarchyObjectMode = HierarchyObjectMode.RemoveInBuild;
-        public HierarchyObjectMode HierarchyObjectMode => hierarchyObjectMode;
+        public enum Mode
+        {
+            UseSettings = 0,
+            RemoveInPlayMode = 1,
+            RemoveInBuild = 2
+        }
+
+        [SerializeField] Mode hierarchyObjectMode = Mode.UseSettings;
+        public Mode HierarchyObjectMode => hierarchyObjectMode;
     }
 }

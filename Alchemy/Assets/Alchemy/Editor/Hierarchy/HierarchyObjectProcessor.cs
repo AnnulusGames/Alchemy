@@ -2,9 +2,9 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using Alchemy.Hierarchy;
-using UnityEngine;
 
 namespace Alchemy.Editor
 {
@@ -14,14 +14,16 @@ namespace Alchemy.Editor
 
         public void OnProcessScene(Scene scene, BuildReport report)
         {
+            var settings = AlchemySettings.GetOrCreateSettings();
+
             var hierarchyObjects = scene.GetRootGameObjects()
                 .SelectMany(x => x.GetComponentsInChildren<HierarchyObject>())
                 .Where(x => x != null)
                 .ToArray();
-            
+
             foreach (var obj in hierarchyObjects)
             {
-                switch (obj.HierarchyObjectMode)
+                switch (GetHierarchyObjectMode(obj))
                 {
                     case HierarchyObjectMode.None: break;
                     case HierarchyObjectMode.RemoveInPlayMode:
@@ -37,7 +39,8 @@ namespace Alchemy.Editor
             foreach (var obj in hierarchyObjects)
             {
                 if (obj == null) continue;
-                switch (obj.HierarchyObjectMode)
+
+                switch (GetHierarchyObjectMode(obj))
                 {
                     case HierarchyObjectMode.None: break;
                     case HierarchyObjectMode.RemoveInPlayMode:
@@ -51,6 +54,13 @@ namespace Alchemy.Editor
             }
         }
 
+        static HierarchyObjectMode GetHierarchyObjectMode(HierarchyObject obj)
+        {
+            return obj.HierarchyObjectMode != HierarchyObject.Mode.UseSettings
+                ? (HierarchyObjectMode)obj.HierarchyObjectMode
+                : AlchemySettings.GetOrCreateSettings().HierarchyObjectMode;
+        }
+
         static void PreRemove(HierarchyObject obj)
         {
             if (obj == null) return;
@@ -62,7 +72,7 @@ namespace Alchemy.Editor
                 if (root == null) goto LOOP_END;
                 if (!root.TryGetComponent<HierarchyObject>(out var hierarchyObject)) goto LOOP_END;
 
-                switch (hierarchyObject.HierarchyObjectMode)
+                switch (GetHierarchyObjectMode(hierarchyObject))
                 {
                     case HierarchyObjectMode.None:
                         goto LOOP_END;
