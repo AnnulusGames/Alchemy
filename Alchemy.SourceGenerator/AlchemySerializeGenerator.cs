@@ -51,14 +51,27 @@ namespace Alchemy.SourceGenerator
                         foreach (var variable in field.Declaration.Variables)
                         {
                             var fieldSymbol = model.GetDeclaredSymbol(variable) as IFieldSymbol;
-                            var attribute = fieldSymbol.GetAttributes()
+                            var alchemySerializeAttribute = fieldSymbol.GetAttributes()
                                 .FirstOrDefault(x =>
                                     x.AttributeClass.Name is "AlchemySerializeField"
                                                           or "AlchemySerializeFieldAttribute"
                                                           or "Alchemy.Serialization.AlchemySerializeField"
                                                           or "Alchemy.Serialization.AlchemySerializeFieldAttribute");
-                            if (attribute != null)
+
+                            var nonSerializedAttribute = fieldSymbol.GetAttributes()
+                                .FirstOrDefault(x =>
+                                    x.AttributeClass.Name is "NonSerialized"
+                                                          or "NonSerializedAttribute"
+                                                          or "System.NonSerialized"
+                                                          or "System.NonSerializedAttribute");
+
+                            if (alchemySerializeAttribute != null)
                             {
+                                if (nonSerializedAttribute == null)
+                                {
+                                    context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.ShouldBeNonSerialized, variable.Identifier.GetLocation(), fieldSymbol.Name));
+                                }
+
                                 fieldSymbols.Add(fieldSymbol);
                             }
                         }

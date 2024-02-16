@@ -21,7 +21,16 @@ namespace Alchemy.SourceGenerator
             messageFormat: "The AlchemySerialize class '{0}' must be not nested type.",
             category: Category,
             defaultSeverity: DiagnosticSeverity.Error,
-            isEnabledByDefault: true);
+            isEnabledByDefault: true
+        );
 
+        public static readonly DiagnosticDescriptor ShouldBeNonSerialized = new(
+            id: "ALCHEMY003",
+            title: "AlchemySerializeField should be NonSerialized to avoid duplicate serialization.",
+            messageFormat: "AlchemySerializeField '{0}' should be NonSerialized to avoid duplicate serialization.",
+            category: Category,
+            defaultSeverity: DiagnosticSeverity.Warning,
+            isEnabledByDefault: true
+        );
     }
 }
