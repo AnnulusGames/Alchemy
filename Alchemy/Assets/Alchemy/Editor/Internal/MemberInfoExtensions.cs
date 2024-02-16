@@ -1,9 +1,9 @@
 using System;
 using System.Reflection;
 
-namespace Alchemy.Editor.Internal
+namespace Alchemy.Editor
 {
-    public static class MemberInfoExtensions
+    internal static class MemberInfoExtensions
     {
         public static bool HasCustomAttribute<T>(this MemberInfo memberInfo) where T : Attribute
         {

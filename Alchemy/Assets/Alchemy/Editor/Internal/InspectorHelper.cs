@@ -12,7 +12,7 @@ using Alchemy.Editor.Elements;
 using Alchemy.Serialization;
 #endif
 
-namespace Alchemy.Editor.Internal
+namespace Alchemy.Editor
 {
     internal static class InspectorHelper
     {

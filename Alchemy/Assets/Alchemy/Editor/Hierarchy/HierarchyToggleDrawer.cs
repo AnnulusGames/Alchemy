@@ -2,7 +2,6 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Alchemy.Hierarchy;
-using Alchemy.Editor.Internal;
 
 namespace Alchemy.Editor
 {

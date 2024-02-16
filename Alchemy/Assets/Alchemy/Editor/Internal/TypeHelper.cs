@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Alchemy.Editor.Internal
+namespace Alchemy.Editor
 {
     internal static class TypeHelper
     {

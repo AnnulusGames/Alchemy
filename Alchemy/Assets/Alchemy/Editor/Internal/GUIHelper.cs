@@ -6,7 +6,7 @@ using UnityEngine.Assertions;
 using Alchemy.Inspector;
 using System;
 
-namespace Alchemy.Editor.Internal
+namespace Alchemy.Editor
 {
     internal static class GUIHelper
     {

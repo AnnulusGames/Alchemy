@@ -7,9 +7,9 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEditor;
 
-namespace Alchemy.Editor.Internal
+namespace Alchemy.Editor
 {
-    public static class SerializedPropertyExtensions
+    internal static class SerializedPropertyExtensions
     {
         public static bool TryGetAttribute<TAttribute>(this SerializedProperty property, out TAttribute result) where TAttribute : Attribute
         {

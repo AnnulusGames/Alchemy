@@ -1,9 +1,8 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-using Alchemy.Inspector;
-using Alchemy.Editor.Internal;
-using Alchemy.Editor.Elements;
 using UnityEditor;
+using Alchemy.Inspector;
+using Alchemy.Editor.Elements;
 
 namespace Alchemy.Editor.Drawers
 {

@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Alchemy.Editor.Internal
+namespace Alchemy.Editor
 {
     internal static class EditorIcons
     {

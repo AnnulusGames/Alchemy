@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Assertions;
-using Alchemy.Editor.Internal;
 
 namespace Alchemy.Editor.Elements
 {
