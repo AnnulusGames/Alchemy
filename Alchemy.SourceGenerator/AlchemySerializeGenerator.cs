@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Alchemy.SourceGenerator
@@ -25,6 +26,15 @@ namespace Alchemy.SourceGenerator
             {
                 foreach (var typeSyntax in receiver.TargetTypes)
                 {
+                    var typeSymbol = context.Compilation.GetSemanticModel(typeSyntax.SyntaxTree)
+                        .GetDeclaredSymbol(typeSyntax);
+
+                    if (!IsPartial(typeSyntax))
+                    {
+                        context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.MustBePartial, typeSyntax.Identifier.GetLocation(), typeSymbol.Name));
+                        return;
+                    }
+
                     var fieldSymbols = new List<IFieldSymbol>();
                     var fields = typeSyntax.Members
                         .Where(x => x is FieldDeclarationSyntax)
@@ -48,9 +58,6 @@ namespace Alchemy.SourceGenerator
                         }
                     }
 
-                    var typeSymbol = context.Compilation.GetSemanticModel(typeSyntax.SyntaxTree)
-                        .GetDeclaredSymbol(typeSyntax);
-                    
                     var sourceText = ProcessClass((INamedTypeSymbol)typeSymbol, fieldSymbols);
                     var fullType = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
                         .Replace("global::", "")
@@ -157,6 +164,11 @@ catch (global::System.Exception ex)
 
 {(string.IsNullOrEmpty(ns) ? "" : "}")}
 ";
+        }
+
+        static bool IsPartial(TypeDeclarationSyntax typeDeclaration)
+        {
+            return typeDeclaration.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
         }
 
         sealed class SyntaxReceiver : ISyntaxReceiver
