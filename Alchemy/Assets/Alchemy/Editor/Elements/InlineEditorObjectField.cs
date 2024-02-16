@@ -15,6 +15,8 @@ namespace Alchemy.Editor.Elements
         {
             Assert.IsTrue(property.propertyType == SerializedPropertyType.ObjectReference);
 
+            this.depth = depth;
+
             style.minHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
             foldout = new Foldout()
@@ -31,30 +33,19 @@ namespace Alchemy.Editor.Elements
             field.style.position = Position.Absolute;
             field.style.width = Length.Percent(100f);
 
-            field.RegisterValueChangeCallback(x =>
+            field.schedule.Execute(() =>
             {
-                isNull = x.changedProperty.objectReferenceValue == null;
-
-                field.Q<Label>().text = isNull ? ObjectNames.NicifyVariableName(property.displayName) : string.Empty;
-                field.pickingMode = PickingMode.Ignore;
-
-                var objectField = field.Q<ObjectField>();
-                objectField.pickingMode = PickingMode.Ignore;
-                
-                var label = objectField.Q<Label>();
-                label.pickingMode = PickingMode.Ignore;
-
-                Build(x.changedProperty, depth);
+                OnPropertyChanged(property);
+                field.RegisterValueChangeCallback(x => OnPropertyChanged(x.changedProperty));
             });
 
             Add(foldout);
             Add(field);
-
-            Build(property, depth);
         }
 
         readonly Foldout foldout;
         readonly PropertyField field;
+        readonly int depth;
         bool isNull;
 
         public bool IsObjectNull => isNull;
@@ -73,7 +64,23 @@ namespace Alchemy.Editor.Elements
             }
         }
 
-        void Build(SerializedProperty property, int depth)
+        void OnPropertyChanged(SerializedProperty property)
+        {
+            isNull = property.objectReferenceValue == null;
+
+            field.Q<Label>().text = isNull ? ObjectNames.NicifyVariableName(property.displayName) : string.Empty;
+            field.pickingMode = PickingMode.Ignore;
+
+            var objectField = field.Q<ObjectField>();
+            objectField.pickingMode = PickingMode.Ignore;
+
+            var label = objectField.Q<Label>();
+            label.pickingMode = PickingMode.Ignore;
+
+            Build(property);
+        }
+
+        void Build(SerializedProperty property)
         {
             foldout.Clear();
             var toggle = foldout.Q<Toggle>();
