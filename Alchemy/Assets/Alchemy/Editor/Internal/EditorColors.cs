@@ -1,124 +1,70 @@
 using UnityEngine;
 using UnityEditor;
+using System;
 
 namespace Alchemy.Editor.Internal
 {
-    public static class EditorColors
+    // Rererence: https://www.foundations.unity.com/fundamentals/color-palette
+
+    internal static class EditorColors
     {
-        public static Color Background
+        static Color GetColor(string htmlColor)
+        {
+            if (!ColorUtility.TryParseHtmlString(htmlColor, out var color)) throw new ArgumentException();
+            return color;
+        }
+
+        public static Color DefaultBackground
         {
             get
             {
-                if (EditorGUIUtility.isProSkin) return new Color(0.219f, 0.219f, 0.219f);
-                else return new Color(0.784f, 0.784f, 0.784f);
+                if (EditorGUIUtility.isProSkin) return GetColor("#282828");
+                else return GetColor("#A5A5A5");
             }
         }
 
-        public static Color Field
+        public static Color HighlightBackgroundInactive
         {
             get
             {
-                if (EditorGUIUtility.isProSkin) return new Color(0.165f, 0.165f, 0.165f);
-                else return new Color(0.941f, 0.941f, 0.941f);
+                if (EditorGUIUtility.isProSkin) return GetColor("#4D4D4D");
+                else return GetColor("#AEAEAE");
             }
         }
 
-        public static Color Tab
+        public static Color HighlightBackground
         {
             get
             {
-                if (EditorGUIUtility.isProSkin) return new Color(0.235f, 0.235f, 0.235f);
-                else return new Color(0.8f, 0.8f, 0.8f);
+                if (EditorGUIUtility.isProSkin) return GetColor("#2C5D87");
+                else return GetColor("#3A72B0");
             }
         }
 
-        public static Color Text
+        public static Color WindowBackground
         {
             get
             {
-                if (EditorGUIUtility.isProSkin) return new Color(0.725f, 0.725f, 0.725f);
-                else return new Color(0.141f, 0.141f, 0.141f);
+                if (EditorGUIUtility.isProSkin) return GetColor("#383838");
+                else return GetColor("#C8C8C8");
             }
         }
 
-        public static Color TextSelected
+        public static Color InspectorTitlebarBorder
         {
             get
             {
-                if (EditorGUIUtility.isProSkin) return new Color(0.486f, 0.675f, 0.945f);
-                else return new Color(0.05f, 0.275f, 0.552f);
+                if (EditorGUIUtility.isProSkin) return GetColor("#1A1A1A");
+                else return GetColor("#7F7F7F");
             }
         }
 
-        public static Color Line
+        public static Color DefaultText
         {
             get
             {
-                if (EditorGUIUtility.isProSkin) return new Color(0.1f, 0.1f, 0.1f);
-                else return new Color(0.5f, 0.5f, 0.5f);
-            }
-        }
-
-        public static Color ThinLine
-        {
-            get
-            {
-                if (EditorGUIUtility.isProSkin) return new Color(0.188f, 0.188f, 0.188f);
-                else return new Color(0.73f, 0.73f, 0.73f);
-            }
-        }
-
-        public static Color Button
-        {
-            get
-            {
-                if (EditorGUIUtility.isProSkin) return new Color(0.345f, 0.345f, 0.345f);
-                else return new Color(0.894f, 0.894f, 0.894f);
-            }
-        }
-
-        public static Color ButtonSelected
-        {
-            get
-            {
-                if (EditorGUIUtility.isProSkin) return new Color(0.27f, 0.376f, 0.49f);
-                else return new Color(0.549f, 0.725f, 0.752f);
-            }
-        }
-
-        public static Color Box
-        {
-            get
-            {
-                if (EditorGUIUtility.isProSkin) return new Color(0.27f, 0.27f, 0.27f);
-                else return new Color(0.73f, 0.73f, 0.73f);
-            }
-        }
-
-        public static Color helpBox
-        {
-            get
-            {
-                if (EditorGUIUtility.isProSkin) return new Color(0.25f, 0.25f, 0.25f);
-                else return new Color(0.81f, 0.81f, 0.81f);
-            }
-        }
-
-        public static Color Warning
-        {
-            get
-            {
-                if (EditorGUIUtility.isProSkin) return new Color(1f, 0.755f, 0.035f);
-                else return new Color(0.788f, 0.592f, 0f);
-            }
-        }
-
-        public static Color Error
-        {
-            get
-            {
-                if (EditorGUIUtility.isProSkin) return new Color(1f, 0.431f, 0.247f);
-                else return new Color(0.695f, 0.040f, 0.053f);
+                if (EditorGUIUtility.isProSkin) return GetColor("#D2D2D2");
+                else return GetColor("#090909");
             }
         }
     }
