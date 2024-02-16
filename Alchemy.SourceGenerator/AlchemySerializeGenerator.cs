@@ -32,7 +32,13 @@ namespace Alchemy.SourceGenerator
                     if (!IsPartial(typeSyntax))
                     {
                         context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.MustBePartial, typeSyntax.Identifier.GetLocation(), typeSymbol.Name));
-                        return;
+                        continue;
+                    }
+
+                    if (IsNested(typeSyntax))
+                    {
+                        context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.NestedNotAllow, typeSyntax.Identifier.GetLocation(), typeSymbol.Name));
+                        continue;
                     }
 
                     var fieldSymbols = new List<IFieldSymbol>();
@@ -169,6 +175,11 @@ catch (global::System.Exception ex)
         static bool IsPartial(TypeDeclarationSyntax typeDeclaration)
         {
             return typeDeclaration.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
+        }
+
+        static bool IsNested(TypeDeclarationSyntax typeDeclaration)
+        {
+            return typeDeclaration.Parent is TypeDeclarationSyntax;
         }
 
         sealed class SyntaxReceiver : ISyntaxReceiver
