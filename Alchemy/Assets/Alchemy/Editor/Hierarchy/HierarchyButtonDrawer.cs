@@ -34,7 +34,7 @@ namespace Alchemy.Editor
             if (settings.ShowComponentIcons)
             {
                 var rect = selectionRect;
-                rect.x = rect.xMax - (settings.ShowHierarchyToggles ? 22f : 5f);
+                rect.x = rect.xMax - (settings.ShowHierarchyToggles ? 21f : 5f);
                 rect.y += 1f;
                 rect.width = 14f;
                 rect.height = 14f;
