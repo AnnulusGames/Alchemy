@@ -1,14 +1,13 @@
 using UnityEditor;
 using UnityEngine;
-using Alchemy.Hierarchy;
 using System.Linq;
+using Alchemy.Hierarchy;
+using Alchemy.Editor.Internal;
 
 namespace Alchemy.Editor
 {
     public sealed class HierarchyButtonDrawer : HierarchyDrawer
     {
-        static readonly GUIContent ScriptIcon = EditorGUIUtility.IconContent("cs Script Icon");
-
         public override void OnGUI(int instanceID, Rect selectionRect)
         {
             var gameObject = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
@@ -51,7 +50,7 @@ namespace Alchemy.Editor
                     var image = AssetPreview.GetMiniThumbnail(component);
                     if (image == null) continue;
 
-                    if (image == ScriptIcon.image)
+                    if (image == EditorIcons.CsScriptIcon.image)
                     {
                         if (existsScriptIcon) continue;
                         existsScriptIcon = true;
