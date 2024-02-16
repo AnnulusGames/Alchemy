@@ -11,7 +11,7 @@ namespace Alchemy.Editor
 
         protected static Rect GetBackgroundRect(Rect selectionRect)
         {
-            return selectionRect.AddXMin(-28f).AddXMax(20f);
+            return selectionRect.AddXMax(20f);
         }
 
         protected static void DrawBackground(int instanceID, Rect selectionRect)
