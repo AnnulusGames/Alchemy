@@ -4,11 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using UnityEngine;
 
-namespace Alchemy.Editor.Internal
+namespace Alchemy.Editor
 {
-    public static class ReflectionHelper
+    internal static class ReflectionHelper
     {
         static readonly Dictionary<(Type, string, BindingFlags, bool), FieldInfo> cacheFieldInfo = new();
         static readonly Dictionary<(Type, string, BindingFlags, bool), MethodInfo> cacheMethodInfo = new();

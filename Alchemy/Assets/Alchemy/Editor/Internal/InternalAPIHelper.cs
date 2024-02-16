@@ -2,14 +2,14 @@ using System;
 using System.Reflection;
 using UnityEngine.UIElements;
 
-namespace Alchemy.Editor.Internal
+namespace Alchemy.Editor
 {
     using Editor = UnityEditor.Editor;
 
     /// <summary>
     /// Call the Unity internal API using reflection. This may not work depending on your Unity version.
     /// </summary>
-    public static class InternalAPIHelper
+    internal static class InternalAPIHelper
     {
         static readonly Assembly EditorAssembly = Assembly.GetAssembly(typeof(Editor));
 

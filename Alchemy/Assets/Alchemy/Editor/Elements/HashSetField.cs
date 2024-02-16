@@ -1,7 +1,6 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Alchemy.Editor.Internal;
 
 namespace Alchemy.Editor.Elements
 {

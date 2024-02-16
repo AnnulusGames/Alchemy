@@ -5,9 +5,9 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 
-namespace Alchemy.Editor.Internal
+namespace Alchemy.Editor
 {
-    public sealed class SerializeReferenceDropdownItem : AdvancedDropdownItem
+    internal sealed class SerializeReferenceDropdownItem : AdvancedDropdownItem
     {
         public readonly Type type;
         public SerializeReferenceDropdownItem(Type type, string name) : base(name)
@@ -17,7 +17,7 @@ namespace Alchemy.Editor.Internal
         }
     }
 
-    public sealed class SerializeReferenceDropdown : AdvancedDropdown
+    internal sealed class SerializeReferenceDropdown : AdvancedDropdown
     {
         private static readonly float headerHeight = EditorGUIUtility.singleLineHeight * 2f;
         private static readonly int maxNamespaceNestCount = 16;

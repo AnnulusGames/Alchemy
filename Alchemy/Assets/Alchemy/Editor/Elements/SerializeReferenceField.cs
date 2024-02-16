@@ -6,7 +6,6 @@ using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UIElements;
-using Alchemy.Editor.Internal;
 
 namespace Alchemy.Editor.Elements
 {

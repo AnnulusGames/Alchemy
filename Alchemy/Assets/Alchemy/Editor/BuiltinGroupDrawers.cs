@@ -6,7 +6,6 @@ using UnityEngine.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
 using Alchemy.Inspector;
-using Alchemy.Editor.Internal;
 using Alchemy.Editor.Elements;
 
 namespace Alchemy.Editor.Drawers

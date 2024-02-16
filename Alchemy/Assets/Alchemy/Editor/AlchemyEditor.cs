@@ -1,10 +1,9 @@
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Alchemy.Inspector;
-using Alchemy.Editor.Internal;
-using UnityEditor.UIElements;
 #if ALCHEMY_SUPPORT_SERIALIZATION
 using Alchemy.Serialization;
 #endif

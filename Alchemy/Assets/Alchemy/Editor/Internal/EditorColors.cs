@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-namespace Alchemy.Editor.Internal
+namespace Alchemy.Editor
 {
     // Rererence: https://www.foundations.unity.com/fundamentals/color-palette
 

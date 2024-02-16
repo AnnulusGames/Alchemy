@@ -2,7 +2,6 @@ using System;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
-using Alchemy.Editor.Internal;
 using Alchemy.Inspector;
 
 namespace Alchemy.Editor.Elements
