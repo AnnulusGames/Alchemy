@@ -14,30 +14,51 @@ namespace Alchemy.Editor
 
         public void OnProcessScene(Scene scene, BuildReport report)
         {
-            foreach (var obj in scene.GetRootGameObjects()
+            var hierarchyObjects = scene.GetRootGameObjects()
                 .SelectMany(x => x.GetComponentsInChildren<HierarchyObject>())
-                .Where(x => x != null))
+                .Where(x => x != null)
+                .ToArray();
+            
+            foreach (var obj in hierarchyObjects)
             {
                 switch (obj.HierarchyObjectMode)
                 {
                     case HierarchyObjectMode.None: break;
                     case HierarchyObjectMode.RemoveInPlayMode:
-                        OnObjectRemoved(obj);
+                        PreRemove(obj);
                         break;
                     case HierarchyObjectMode.RemoveInBuild:
                         if (EditorApplication.isPlaying) break;
-                        OnObjectRemoved(obj);
+                        PreRemove(obj);
+                        break;
+                }
+            }
+
+            foreach (var obj in hierarchyObjects)
+            {
+                if (obj == null) continue;
+                switch (obj.HierarchyObjectMode)
+                {
+                    case HierarchyObjectMode.None: break;
+                    case HierarchyObjectMode.RemoveInPlayMode:
+                        Object.DestroyImmediate(obj.gameObject);
+                        break;
+                    case HierarchyObjectMode.RemoveInBuild:
+                        if (EditorApplication.isPlaying) break;
+                        Object.DestroyImmediate(obj.gameObject);
                         break;
                 }
             }
         }
 
-        static void OnObjectRemoved(HierarchyObject obj)
+        static void PreRemove(HierarchyObject obj)
         {
-            Transform root;
+            if (obj == null) return;
+
+            Transform root = obj.transform;
             while (true)
             {
-                root = obj.transform.parent;
+                root = root.parent;
                 if (root == null) goto LOOP_END;
                 if (!root.TryGetComponent<HierarchyObject>(out var hierarchyObject)) goto LOOP_END;
 
@@ -58,8 +79,6 @@ namespace Alchemy.Editor
             {
                 child.SetParent(root);
             }
-
-            UnityEngine.Object.DestroyImmediate(obj.gameObject);
         }
     }
 }
