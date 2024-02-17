@@ -1,9 +1,11 @@
 using System.Reflection;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Alchemy.Inspector;
+
 #if ALCHEMY_SUPPORT_SERIALIZATION
 using Alchemy.Serialization;
 #endif
@@ -21,6 +23,42 @@ namespace Alchemy.Editor
 #if ALCHEMY_SUPPORT_SERIALIZATION
         const string AlchemySerializationWarning = "In the current version, fields with the [AlchemySerializedField] attribute do not support editing multiple objects.";
 #endif
+
+        void OnEnable()
+        {
+            foreach (var target in targets)
+            {
+                foreach (var method in ReflectionHelper.GetAllMethodsIncludingBaseNonPublic(target.GetType())
+                    .Where(x => x.HasCustomAttribute<OnInspectorEnableAttribute>()))
+                {
+                    method.Invoke(target, null);
+                }
+            }
+        }
+
+        void OnDisable()
+        {
+            foreach (var target in targets)
+            {
+                foreach (var method in ReflectionHelper.GetAllMethodsIncludingBaseNonPublic(target.GetType())
+                    .Where(x => x.HasCustomAttribute<OnInspectorDisableAttribute>()))
+                {
+                    method.Invoke(target, null);
+                }
+            }
+        }
+
+        void OnDestroy()
+        {
+            foreach (var target in targets)
+            {
+                foreach (var method in ReflectionHelper.GetAllMethodsIncludingBaseNonPublic(target.GetType())
+                    .Where(x => x.HasCustomAttribute<OnInspectorDestroyAttribute>()))
+                {
+                    method.Invoke(target, null);
+                }
+            }
+        }
 
         public override VisualElement CreateInspectorGUI()
         {
@@ -69,6 +107,7 @@ namespace Alchemy.Editor
     [CustomEditor(typeof(ScriptableObject), editorForChildClasses: true, isFallback = true)]
     [CanEditMultipleObjects]
     internal sealed class ScriptableObjectEditor : AlchemyEditor { }
+
 #endif
 
 }

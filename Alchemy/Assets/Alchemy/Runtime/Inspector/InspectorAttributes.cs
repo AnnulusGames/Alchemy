@@ -124,7 +124,7 @@ namespace Alchemy.Inspector
             Message = message;
             MessageType = messageType;
         }
-        
+
         public string Message { get; }
         public HelpBoxMessageType MessageType { get; }
     }
@@ -181,4 +181,20 @@ namespace Alchemy.Inspector
 
         public string Text { get; }
     }
+
+    [AttributeUsage(AttributeTargets.Field)]
+    public sealed class OnValueChangedAttribute : Attribute
+    {
+        public OnValueChangedAttribute(string methodName) => MethodName = methodName;
+        public string MethodName { get; }
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class OnInspectorEnableAttribute : Attribute { }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class OnInspectorDisableAttribute : Attribute { }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class OnInspectorDestroyAttribute : Attribute { }
 }

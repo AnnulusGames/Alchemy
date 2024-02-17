@@ -1,6 +1,8 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor;
+using UnityEditor.UIElements;
 using Alchemy.Inspector;
 using Alchemy.Editor.Elements;
 
@@ -303,4 +305,33 @@ namespace Alchemy.Editor.Drawers
         }
     }
 
+    [CustomAttributeDrawer(typeof(OnValueChangedAttribute))]
+    public sealed class OnValueChangedDrawer : AlchemyAttributeDrawer
+    {
+        public override void OnCreateElement()
+        {
+            Element.TrackPropertyValue(SerializedProperty, property =>
+            {
+                var methodName = ((OnValueChangedAttribute)Attribute).MethodName;
+
+                var methods = ReflectionHelper.GetAllMethodsIncludingBaseNonPublic(Target.GetType())
+                    .Where(x => x.Name == methodName);
+                
+                foreach (var methodInfo in methods)
+                {
+                    if (methodInfo.Name != methodName) continue;
+
+                    var parameters = methodInfo.GetParameters();
+                    if (parameters.Length == 1 && parameters[0].GetType() == property.GetPropertyType())
+                    {
+                        methodInfo.Invoke(Target, new object[] { property.GetValue<object>() });
+                    }
+                    else if (parameters.Length == 0)
+                    {
+                        methodInfo.Invoke(Target, null);
+                    }
+                }
+            });
+        }
+    }
 }
