@@ -188,4 +188,10 @@ namespace Alchemy.Inspector
         public OnValueChangedAttribute(string methodName) => MethodName = methodName;
         public string MethodName { get; }
     }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class OnInspectorEnable : Attribute { }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class OnInspectorDisable : Attribute { }
 }
