@@ -98,7 +98,12 @@ namespace Alchemy.Editor
                 rect.height = 1f;
                 EditorGUI.DrawRect(rect, color);
             });
+        }
 
+        public static void SetMinAndCurrentWidth(VisualElement visualElement, float value)
+        {
+            visualElement.style.minWidth = value;
+            visualElement.style.width = value;
         }
     }
 }

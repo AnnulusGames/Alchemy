@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Reflection;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
@@ -72,6 +70,8 @@ namespace Alchemy.Editor.Elements
         }
 
         readonly VisualElement element;
+
+        public VisualElement FieldElement => element;
 
         public string Label
         {
