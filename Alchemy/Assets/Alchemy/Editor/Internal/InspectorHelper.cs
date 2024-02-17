@@ -211,18 +211,21 @@ namespace Alchemy.Editor
                     break;
                 case FieldInfo:
                 case PropertyInfo:
-                    var property = findPropertyFunc?.Invoke(memberInfo.Name);
-
-                    // Create property field
-                    if (property != null)
+                    if (memberInfo.IsPublic() || memberInfo.HasCustomAttribute<SerializeField>())
                     {
-                        if (memberInfo is FieldInfo fieldInfo)
+                        var property = findPropertyFunc?.Invoke(memberInfo.Name);
+
+                        // Create property field
+                        if (property != null)
                         {
-                            return new AlchemyPropertyField(property, fieldInfo.FieldType, depth);
-                        }
-                        else
-                        {
-                            return new AlchemyPropertyField(property, ((PropertyInfo)memberInfo).PropertyType, depth);
+                            if (memberInfo is FieldInfo fieldInfo)
+                            {
+                                return new AlchemyPropertyField(property, fieldInfo.FieldType, depth);
+                            }
+                            else
+                            {
+                                return new AlchemyPropertyField(property, ((PropertyInfo)memberInfo).PropertyType, depth);
+                            }
                         }
                     }
 

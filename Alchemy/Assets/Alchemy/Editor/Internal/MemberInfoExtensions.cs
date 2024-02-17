@@ -15,5 +15,16 @@ namespace Alchemy.Editor
             result = memberInfo.GetCustomAttribute<T>();
             return result != null;
         }
+
+        public static bool IsPublic(this MemberInfo memberInfo)
+        {
+            switch (memberInfo)
+            {
+                case MethodInfo methodInfo: return methodInfo.IsPublic;
+                case FieldInfo fieldInfo: return fieldInfo.IsPublic;
+                case PropertyInfo propertyInfo: return propertyInfo.GetMethod != null && propertyInfo.GetMethod.IsPublic && propertyInfo.SetMethod != null && propertyInfo.SetMethod.IsPublic;
+                default: throw new NotSupportedException();
+            }
+        }
     }
 }
