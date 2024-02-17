@@ -211,7 +211,11 @@ namespace Alchemy.Editor
                     break;
                 case FieldInfo:
                 case PropertyInfo:
-                    if (memberInfo.IsPublic() || memberInfo.HasCustomAttribute<SerializeField>())
+                    var isSerializedMember = false;
+                    if (memberInfo is FieldInfo f) isSerializedMember = f.IsPublic | f.HasCustomAttribute<SerializeField>();
+                    else if (memberInfo is PropertyInfo p) isSerializedMember = p.HasCustomAttribute<SerializeField>();
+
+                    if (isSerializedMember)
                     {
                         var property = findPropertyFunc?.Invoke(memberInfo.Name);
 
