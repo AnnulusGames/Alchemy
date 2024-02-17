@@ -149,7 +149,7 @@ namespace Alchemy.Editor
             }
         }
 
-        static IEnumerable<FieldInfo> GetAllFieldsIncludingBaseNonPublic(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
+        public static IEnumerable<FieldInfo> GetAllFieldsIncludingBaseNonPublic(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
         {
             return EnumerateTypeHierarchy(type).Reverse().SelectMany(t => t.GetFields(bindingAttr)).Distinct(FieldInfoEqualityComparer.Instance);
         }
@@ -186,7 +186,7 @@ namespace Alchemy.Editor
             }
         }
 
-        static IEnumerable<PropertyInfo> GetAllPropertiesIncludingBaseNonPublic(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
+        public static IEnumerable<PropertyInfo> GetAllPropertiesIncludingBaseNonPublic(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
         {
             return EnumerateTypeHierarchy(type).Reverse().SelectMany(t => t.GetProperties(bindingAttr)).Distinct(PropertyInfoEqualityComparer.Instance);
         }
@@ -223,7 +223,7 @@ namespace Alchemy.Editor
             }
         }
 
-        static IEnumerable<MethodInfo> GetAllMethodsIncludingBaseNonPublic(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
+        public static IEnumerable<MethodInfo> GetAllMethodsIncludingBaseNonPublic(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
         {
             return EnumerateTypeHierarchy(type).Reverse().SelectMany(t => t.GetMethods(bindingAttr)).Distinct(MethodInfoEqualityComparer.Instance);
         }
@@ -313,7 +313,7 @@ namespace Alchemy.Editor
             }
         }
 
-        static IEnumerable<MemberInfo> GetMembersIncludingBaseNonPublic(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
+        public static IEnumerable<MemberInfo> GetMembersIncludingBaseNonPublic(Type type, BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
         {
             return EnumerateTypeHierarchy(type).Reverse().SelectMany(t => t.GetMembers(bindingAttr)).Distinct(MemberInfoEqualityComparer.Instance);
         }
@@ -331,6 +331,33 @@ namespace Alchemy.Editor
 
                 type = type.BaseType;
             }
+            return false;
+        }
+
+        public static bool TryInvoke(object target, string name, object[] parameters, out object result)
+        {
+            if (target == null)
+            {
+                result = default;
+                return false;
+            }
+
+            Type type = target.GetType();
+            BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
+
+            while (type != null)
+            {
+                var m = GetMethod(type, name, bindingAttr);
+                if (m != null)
+                {
+                    result = m.Invoke(m.IsStatic ? null : target, parameters);
+                    return true;
+                }
+
+                type = type.BaseType;
+            }
+            
+            result = default;
             return false;
         }
 

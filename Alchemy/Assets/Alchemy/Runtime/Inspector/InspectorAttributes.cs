@@ -181,4 +181,11 @@ namespace Alchemy.Inspector
 
         public string Text { get; }
     }
+
+    [AttributeUsage(AttributeTargets.Field)]
+    public sealed class OnValueChangedAttribute : Attribute
+    {
+        public OnValueChangedAttribute(string methodName) => MethodName = methodName;
+        public string MethodName { get; }
+    }
 }
