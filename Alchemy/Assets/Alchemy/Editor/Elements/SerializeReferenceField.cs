@@ -85,13 +85,13 @@ namespace Alchemy.Editor.Elements
 
             schedule.Execute(() =>
             {
-                VisualElement visualElement = GetFirstAncestorOfType<InspectorElement>();
-                visualElement.RegisterCallback<GeometryChangedEvent>(x =>
+                var visualTree = panel.visualTree;
+                visualTree.RegisterCallback<GeometryChangedEvent>(x =>
                 {
-                    buttonContainer.style.width = GUIHelper.CalculateFieldWidth(buttonContainer, visualElement) -
+                    buttonContainer.style.width = GUIHelper.CalculateFieldWidth(buttonContainer, visualTree) -
                         (buttonContainer.GetFirstAncestorOfType<Foldout>() != null ? 18f : 0f);
                 });
-                buttonContainer.style.width = GUIHelper.CalculateFieldWidth(buttonContainer, visualElement) -
+                buttonContainer.style.width = GUIHelper.CalculateFieldWidth(buttonContainer, visualTree) -
                     (buttonContainer.GetFirstAncestorOfType<Foldout>() != null ? 18f : 0f);
             });
 

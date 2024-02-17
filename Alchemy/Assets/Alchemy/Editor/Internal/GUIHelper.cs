@@ -82,9 +82,9 @@ namespace Alchemy.Editor
             // Adjust label width
             element.schedule.Execute(() =>
             {
-                VisualElement visualElement = element.GetFirstAncestorOfType<InspectorElement>();
-                visualElement.RegisterCallback<GeometryChangedEvent>(x => Adjust(visualElement));
-                Adjust(visualElement);
+                var visualTree = element.panel.visualTree;
+                visualTree.RegisterCallback<GeometryChangedEvent>(x => Adjust(visualTree));
+                Adjust(visualTree);
             });
         }
 
