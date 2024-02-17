@@ -316,13 +316,13 @@ namespace Alchemy.Editor.Drawers
 
                 var methods = ReflectionHelper.GetAllMethodsIncludingBaseNonPublic(Target.GetType())
                     .Where(x => x.Name == methodName);
-                
+
                 foreach (var methodInfo in methods)
                 {
                     if (methodInfo.Name != methodName) continue;
 
                     var parameters = methodInfo.GetParameters();
-                    if (parameters.Length == 1 && parameters[0].GetType() == property.GetPropertyType())
+                    if (parameters.Length == 1 && parameters[0].ParameterType.IsAssignableFrom(property.GetPropertyType()))
                     {
                         methodInfo.Invoke(Target, new object[] { property.GetValue<object>() });
                     }
