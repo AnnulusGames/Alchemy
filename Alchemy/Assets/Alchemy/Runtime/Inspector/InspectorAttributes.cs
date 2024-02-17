@@ -62,6 +62,13 @@ namespace Alchemy.Inspector
     }
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method)]
+    public sealed class LabelWidthAttribute : Attribute
+    {
+        public LabelWidthAttribute(float width) => Width = width;
+        public float Width { get; }
+    }
+
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method)]
     public sealed class HideIfAttribute : Attribute
     {
         public HideIfAttribute(string condition) => Condition = condition;

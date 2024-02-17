@@ -112,6 +112,31 @@ namespace Alchemy.Editor.Drawers
         }
     }
 
+    [CustomAttributeDrawer(typeof(LabelWidthAttribute))]
+    public sealed class LabelWidthDrawer : AlchemyAttributeDrawer
+    {
+        public override void OnCreateElement()
+        {
+            var width = ((LabelWidthAttribute)Attribute).Width;
+
+            if (Element is AlchemyPropertyField field && field.FieldElement is PropertyField)
+            {
+                var executed = false;
+                field.schedule.Execute(() =>
+                {
+                    var label = field.Q<Label>();
+                    if (label == null) return;
+                    GUIHelper.SetMinAndCurrentWidth(label, width);
+                    executed = true;
+                }).Until(() => executed);
+                
+                return;
+            }
+
+            Debug.LogWarning("The LabelWidth attribute currently only supports PropertyField and is ignored for other visual elements.");
+        }
+    }
+
     [CustomAttributeDrawer(typeof(HideIfAttribute))]
     public sealed class HideIfDrawer : TrackSerializedObjectAttributeDrawer
     {
