@@ -9,6 +9,11 @@ namespace Alchemy.Editor
         public virtual VisualElement GetGroupElement(Attribute attribute) => null;
 
         public string UniqueId => _uniqueId;
-        internal string _uniqueId;
+        string _uniqueId;
+
+        internal void SetUniqueId(string id)
+        {
+            this._uniqueId = id;
+        }
     }
 }

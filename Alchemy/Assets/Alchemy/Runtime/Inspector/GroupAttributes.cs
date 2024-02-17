@@ -2,11 +2,13 @@ namespace Alchemy.Inspector
 {
     public sealed class GroupAttribute : PropertyGroupAttribute
     {
+        public GroupAttribute() : base() { }
         public GroupAttribute(string groupPath) : base(groupPath) { }
     }
 
     public sealed class BoxGroupAttribute : PropertyGroupAttribute
     {
+        public BoxGroupAttribute() : base() { }
         public BoxGroupAttribute(string groupPath) : base(groupPath) { }
     }
 
@@ -22,6 +24,7 @@ namespace Alchemy.Inspector
 
     public sealed class FoldoutGroupAttribute : PropertyGroupAttribute
     {
+        public FoldoutGroupAttribute() : base() { }
         public FoldoutGroupAttribute(string groupPath) : base(groupPath) { }
     }
 

@@ -157,7 +157,8 @@ namespace Alchemy.Editor
             var rootNode = new GroupNode("Inspector-Group-Root", null);
 
             // Get all members
-            var members = ReflectionHelper.GetMembers(targetType, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, true);
+            var members = ReflectionHelper.GetMembers(targetType, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, true)
+                .Where(x => x is MethodInfo or FieldInfo or PropertyInfo);
 
             // Build member nodes
             foreach (var member in members)
@@ -181,13 +182,7 @@ namespace Alchemy.Editor
                         var next = parentNode.Find(x => x.Name == groupName);
                         if (next == null)
                         {
-                            // Find drawer type
-                            var drawerType = TypeCache.GetTypesWithAttribute<CustomGroupDrawerAttribute>()
-                                .FirstOrDefault(x => x.GetCustomAttribute<CustomGroupDrawerAttribute>().targetAttributeType == groupAttribute.GetType());
-
-                            var drawer = (AlchemyGroupDrawer)Activator.CreateInstance(drawerType);
-                            drawer._uniqueId = "AlchemyGroupId_" + targetType.FullName + "_" + groupAttribute.GroupPath;
-
+                            var drawer = AlchemyEditorUtility.CreateGroupDrawer(groupAttribute, targetType);
                             next = new GroupNode(groupName, drawer);
                             parentNode.Add(next);
                         }
@@ -232,7 +227,7 @@ namespace Alchemy.Editor
                     }
 
 #if ALCHEMY_SUPPORT_SERIALIZATION
-                    if (serializedObject.targetObject != null && 
+                    if (serializedObject.targetObject != null &&
                         serializedObject.targetObject.GetType().HasCustomAttribute<AlchemySerializeAttribute>() &&
                         memberInfo.HasCustomAttribute<AlchemySerializeFieldAttribute>())
                     {
