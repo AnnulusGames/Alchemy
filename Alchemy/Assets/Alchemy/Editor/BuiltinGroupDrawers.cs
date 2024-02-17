@@ -207,14 +207,15 @@ namespace Alchemy.Editor.Drawers
             {
                 if (root.childCount <= 1) return;
 
-                var inspector = root.GetFirstAncestorOfType<InspectorElement>();
+                var visualTree = root.panel.visualTree;
+
                 foreach (var field in root.Query<PropertyField>().Build())
                 {
-                    AdjustLabel(field, inspector, root.childCount);
+                    AdjustLabel(field, visualTree, root.childCount);
                 }
                 foreach (var field in root.Query<GenericField>().Children<PropertyField>().Build())
                 {
-                    AdjustLabel(field, inspector, root.childCount);
+                    AdjustLabel(field, visualTree, root.childCount);
                 }
             });
 
