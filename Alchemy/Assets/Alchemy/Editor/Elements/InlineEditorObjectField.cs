@@ -29,15 +29,12 @@ namespace Alchemy.Editor.Elements
 
             foldout.BindProperty(property);
 
-            field = GUIHelper.CreateObjectField(property, type);
+            field = GUIHelper.CreateObjectPropertyField(property, type);
             field.style.position = Position.Absolute;
             field.style.width = Length.Percent(100f);
 
-            field.schedule.Execute(() =>
-            {
-                OnPropertyChanged(property);
-                field.RegisterValueChangeCallback(x => OnPropertyChanged(x.changedProperty));
-            });
+            // OnPropertyChanged(property);
+            field.RegisterValueChangeCallback(x => OnPropertyChanged(x.changedProperty));
 
             Add(foldout);
             Add(field);

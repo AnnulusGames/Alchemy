@@ -51,7 +51,7 @@ namespace Alchemy.Editor
             };
         }
 
-        public static PropertyField CreateObjectField(SerializedProperty property, Type type)
+        public static PropertyField CreateObjectPropertyField(SerializedProperty property, Type type)
         {
             Assert.IsTrue(property.propertyType == SerializedPropertyType.ObjectReference);
 
