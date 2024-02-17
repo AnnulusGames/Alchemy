@@ -124,7 +124,7 @@ namespace Alchemy.Inspector
             Message = message;
             MessageType = messageType;
         }
-        
+
         public string Message { get; }
         public HelpBoxMessageType MessageType { get; }
     }
@@ -190,8 +190,8 @@ namespace Alchemy.Inspector
     }
 
     [AttributeUsage(AttributeTargets.Method)]
-    public sealed class OnInspectorEnable : Attribute { }
+    public sealed class OnInspectorEnableAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Method)]
-    public sealed class OnInspectorDisable : Attribute { }
+    public sealed class OnInspectorDisableAttribute : Attribute { }
 }
