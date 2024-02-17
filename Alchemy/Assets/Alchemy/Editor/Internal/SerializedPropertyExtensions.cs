@@ -75,7 +75,7 @@ namespace Alchemy.Editor
             object target = property.serializedObject.targetObject;
             var splits = property.propertyPath.Split('.');
 
-            var fieldInfo = ReflectionHelper.GetField(target.GetType(), splits[0]);
+            var fieldInfo = ReflectionHelper.GetField(target.GetType(), splits[0], includingBaseNonPublic: true);
             target = fieldInfo.GetValue(target);
 
             for (var i = 1; i < splits.Length; i++)
