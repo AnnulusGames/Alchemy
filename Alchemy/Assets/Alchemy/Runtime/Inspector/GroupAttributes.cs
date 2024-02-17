@@ -33,4 +33,9 @@ namespace Alchemy.Inspector
         public HorizontalGroupAttribute(string groupPath) : base(groupPath) { }
     }
 
+    public sealed class InlineGroupAttribute : PropertyGroupAttribute
+    {
+        public InlineGroupAttribute() : base() { }
+        public InlineGroupAttribute(string groupPath) : base(groupPath) { }
+    }
 }
