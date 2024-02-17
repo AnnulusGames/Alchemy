@@ -222,4 +222,12 @@ namespace Alchemy.Editor.Drawers
             return root;
         }
     }
+    [CustomGroupDrawer(typeof(InlineGroupAttribute))]
+    public sealed class InlineGroupDrawer : AlchemyGroupDrawer
+    {
+        public override VisualElement CreateRootElement(string label)
+        {
+            return new VisualElement();
+        }
+    }
 }
