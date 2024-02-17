@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
@@ -41,6 +43,18 @@ namespace Alchemy.Editor.Elements
                     else if (property.isArray)
                     {
                         element = new PropertyListView(property, depth);
+                    }
+                    else if (targetType.TryGetCustomAttribute<PropertyGroupAttribute>(out var groupAttribute)) // custom group
+                    {
+                        var drawerType = TypeCache.GetTypesWithAttribute<CustomGroupDrawerAttribute>()
+                            .FirstOrDefault(x => x.GetCustomAttribute<CustomGroupDrawerAttribute>().targetAttributeType == groupAttribute.GetType());
+                        var drawer = (AlchemyGroupDrawer)Activator.CreateInstance(drawerType);
+                        drawer._uniqueId = "AlchemyGroupId_" + targetType.FullName + "_" + property.propertyPath;
+
+                        var root = drawer.CreateRootElement(labelText);
+                        InspectorHelper.BuildElements(property.serializedObject, root, property.GetValue<object>(), name => property.FindPropertyRelative(name), depth + 1);
+                        if (root is BindableElement bindableElement) bindableElement.BindProperty(property);
+                        element = root;
                     }
                     else
                     {

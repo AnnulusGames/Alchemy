@@ -157,7 +157,8 @@ namespace Alchemy.Editor
             var rootNode = new GroupNode("Inspector-Group-Root", null);
 
             // Get all members
-            var members = ReflectionHelper.GetMembers(targetType, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, true);
+            var members = ReflectionHelper.GetMembers(targetType, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, true)
+                .Where(x => x is MethodInfo or FieldInfo or PropertyInfo);
 
             // Build member nodes
             foreach (var member in members)
@@ -232,7 +233,7 @@ namespace Alchemy.Editor
                     }
 
 #if ALCHEMY_SUPPORT_SERIALIZATION
-                    if (serializedObject.targetObject != null && 
+                    if (serializedObject.targetObject != null &&
                         serializedObject.targetObject.GetType().HasCustomAttribute<AlchemySerializeAttribute>() &&
                         memberInfo.HasCustomAttribute<AlchemySerializeFieldAttribute>())
                     {
