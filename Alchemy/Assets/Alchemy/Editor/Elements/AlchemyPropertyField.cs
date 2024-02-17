@@ -46,10 +46,7 @@ namespace Alchemy.Editor.Elements
                     }
                     else if (targetType.TryGetCustomAttribute<PropertyGroupAttribute>(out var groupAttribute)) // custom group
                     {
-                        var drawerType = TypeCache.GetTypesWithAttribute<CustomGroupDrawerAttribute>()
-                            .FirstOrDefault(x => x.GetCustomAttribute<CustomGroupDrawerAttribute>().targetAttributeType == groupAttribute.GetType());
-                        var drawer = (AlchemyGroupDrawer)Activator.CreateInstance(drawerType);
-                        drawer._uniqueId = "AlchemyGroupId_" + targetType.FullName + "_" + property.propertyPath;
+                        var drawer = AlchemyEditorUtility.CreateGroupDrawer(groupAttribute, targetType);
 
                         var root = drawer.CreateRootElement(labelText);
                         InspectorHelper.BuildElements(property.serializedObject, root, property.GetValue<object>(), name => property.FindPropertyRelative(name), depth + 1);

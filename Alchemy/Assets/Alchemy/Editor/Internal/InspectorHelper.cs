@@ -182,13 +182,7 @@ namespace Alchemy.Editor
                         var next = parentNode.Find(x => x.Name == groupName);
                         if (next == null)
                         {
-                            // Find drawer type
-                            var drawerType = TypeCache.GetTypesWithAttribute<CustomGroupDrawerAttribute>()
-                                .FirstOrDefault(x => x.GetCustomAttribute<CustomGroupDrawerAttribute>().targetAttributeType == groupAttribute.GetType());
-
-                            var drawer = (AlchemyGroupDrawer)Activator.CreateInstance(drawerType);
-                            drawer._uniqueId = "AlchemyGroupId_" + targetType.FullName + "_" + groupAttribute.GroupPath;
-
+                            var drawer = AlchemyEditorUtility.CreateGroupDrawer(groupAttribute, targetType);
                             next = new GroupNode(groupName, drawer);
                             parentNode.Add(next);
                         }
