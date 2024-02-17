@@ -196,8 +196,11 @@ namespace Alchemy.Editor.Drawers
                 field.RemoveFromClassList("unity-base-field__aligned");
 
                 var labelElement = field.Q<Label>();
-                labelElement.style.minWidth = 0f;
-                labelElement.style.width = GUIHelper.CalculateLabelWidth(element, inspector) * 0.8f / childCount;
+                if (labelElement != null)
+                {
+                    labelElement.style.minWidth = 0f;
+                    labelElement.style.width = GUIHelper.CalculateLabelWidth(element, inspector) * 0.8f / childCount;
+                }
             }
 
             root.schedule.Execute(() =>
