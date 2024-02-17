@@ -28,10 +28,10 @@ namespace Alchemy.Editor
         {
             foreach (var target in targets)
             {
-                foreach (var onEnableMethod in ReflectionHelper.GetAllMethodsIncludingBaseNonPublic(target.GetType())
+                foreach (var method in ReflectionHelper.GetAllMethodsIncludingBaseNonPublic(target.GetType())
                     .Where(x => x.HasCustomAttribute<OnInspectorEnableAttribute>()))
                 {
-                    onEnableMethod.Invoke(target, null);
+                    method.Invoke(target, null);
                 }
             }
         }
@@ -40,10 +40,22 @@ namespace Alchemy.Editor
         {
             foreach (var target in targets)
             {
-                foreach (var onEnableMethod in ReflectionHelper.GetAllMethodsIncludingBaseNonPublic(target.GetType())
+                foreach (var method in ReflectionHelper.GetAllMethodsIncludingBaseNonPublic(target.GetType())
                     .Where(x => x.HasCustomAttribute<OnInspectorDisableAttribute>()))
                 {
-                    onEnableMethod.Invoke(target, null);
+                    method.Invoke(target, null);
+                }
+            }
+        }
+
+        void OnDestroy()
+        {
+            foreach (var target in targets)
+            {
+                foreach (var method in ReflectionHelper.GetAllMethodsIncludingBaseNonPublic(target.GetType())
+                    .Where(x => x.HasCustomAttribute<OnInspectorDestroyAttribute>()))
+                {
+                    method.Invoke(target, null);
                 }
             }
         }

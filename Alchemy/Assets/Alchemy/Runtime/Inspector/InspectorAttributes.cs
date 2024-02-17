@@ -194,4 +194,7 @@ namespace Alchemy.Inspector
 
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class OnInspectorDisableAttribute : Attribute { }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class OnInspectorDestroyAttribute : Attribute { }
 }
