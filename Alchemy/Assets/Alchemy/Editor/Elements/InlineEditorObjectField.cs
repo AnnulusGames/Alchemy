@@ -3,6 +3,7 @@ using UnityEngine.Assertions;
 using UnityEngine.UIElements;
 using UnityEditor;
 using UnityEditor.UIElements;
+using Alchemy.Inspector;
 
 namespace Alchemy.Editor.Elements
 {
@@ -29,14 +30,23 @@ namespace Alchemy.Editor.Elements
 
             foldout.BindProperty(property);
 
-            field = GUIHelper.CreateObjectField(property, type);
+            field = new ObjectField()
+            {
+                label = ObjectNames.NicifyVariableName(property.displayName),
+                objectType = type,
+                allowSceneObjects = property.GetFieldInfo().HasCustomAttribute<AssetsOnlyAttribute>(),
+                value = property.objectReferenceValue
+            };
             field.style.position = Position.Absolute;
             field.style.width = Length.Percent(100f);
+            GUIHelper.ScheduleAdjustLabelWidth(field);
 
-            field.schedule.Execute(() =>
+            OnPropertyChanged(property);
+            field.RegisterValueChangedCallback(x =>
             {
+                property.objectReferenceValue = x.newValue;
+                property.serializedObject.ApplyModifiedProperties();
                 OnPropertyChanged(property);
-                field.RegisterValueChangeCallback(x => OnPropertyChanged(x.changedProperty));
             });
 
             Add(foldout);
@@ -44,7 +54,7 @@ namespace Alchemy.Editor.Elements
         }
 
         readonly Foldout foldout;
-        readonly PropertyField field;
+        readonly ObjectField field;
         readonly int depth;
         bool isNull;
 

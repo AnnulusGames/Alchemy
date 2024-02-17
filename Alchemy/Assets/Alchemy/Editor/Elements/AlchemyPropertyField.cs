@@ -30,12 +30,12 @@ namespace Alchemy.Editor.Elements
                     }
                     else
                     {
-                        element = GUIHelper.CreateObjectField(property, type);
+                        element = GUIHelper.CreateObjectPropertyField(property, type);
                     }
                     break;
                 case SerializedPropertyType.Generic:
                     var targetType = property.GetPropertyType(isArrayElement);
-                    
+
                     if (InternalAPIHelper.GetDrawerTypeForType(targetType) != null)
                     {
                         element = new PropertyField(property);
