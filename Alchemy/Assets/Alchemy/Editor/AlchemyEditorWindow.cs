@@ -10,6 +10,8 @@ namespace Alchemy.Editor
         {
             var windowElement = new VisualElement();
             var serializedObject = new SerializedObject(this);
+
+            // Build visual elements and bind serialized object
             InspectorHelper.BuildElements(serializedObject, windowElement, this, name => serializedObject.FindProperty(name), 0);
             windowElement.Bind(serializedObject);
 
