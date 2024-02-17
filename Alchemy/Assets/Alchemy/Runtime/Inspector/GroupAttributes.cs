@@ -14,6 +14,11 @@ namespace Alchemy.Inspector
 
     public sealed class TabGroupAttribute : PropertyGroupAttribute
     {
+        public TabGroupAttribute(string tabName) : base()
+        {
+            TabName = tabName;
+        }
+
         public TabGroupAttribute(string groupPath, string tabName) : base(groupPath)
         {
             TabName = tabName;
@@ -30,6 +35,7 @@ namespace Alchemy.Inspector
 
     public sealed class HorizontalGroupAttribute : PropertyGroupAttribute
     {
+        public HorizontalGroupAttribute() : base() { }
         public HorizontalGroupAttribute(string groupPath) : base(groupPath) { }
     }
 
