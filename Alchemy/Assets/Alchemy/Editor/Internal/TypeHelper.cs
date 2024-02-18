@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Alchemy.Editor
 {
@@ -13,14 +14,14 @@ namespace Alchemy.Editor
                 return null;
             }
 
-            return Activator.CreateInstance(type);
+            return FormatterServices.GetUninitializedObject(type);
         }
 
         public static object CreateDefaultInstance(Type type)
         {
             if (type == typeof(string)) return "";
             if (type.IsSubclassOf(typeof(UnityEngine.Object))) return null;
-            return Activator.CreateInstance(type);
+            return FormatterServices.GetUninitializedObject(type);
         }
 
         public static IEnumerable<Type> GetBaseClassesAndInterfaces(Type type, bool includeSelf = false)
