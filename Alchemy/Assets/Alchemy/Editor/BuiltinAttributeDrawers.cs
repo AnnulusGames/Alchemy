@@ -13,7 +13,7 @@ namespace Alchemy.Editor.Drawers
     {
         public override void OnCreateElement()
         {
-            Element.SetEnabled(false);
+            TargetElement.SetEnabled(false);
         }
     }
 
@@ -24,12 +24,12 @@ namespace Alchemy.Editor.Drawers
 
         public override void OnCreateElement()
         {
-            Element.RegisterCallback<GeometryChangedEvent>(x => AddPadding());
+            TargetElement.RegisterCallback<GeometryChangedEvent>(x => AddPadding());
         }
 
         void AddPadding()
         {
-            var label = Element.Q<Label>();
+            var label = TargetElement.Q<Label>();
             if (label == null) return;
             label.style.paddingLeft = ((IndentAttribute)Attribute).indent * IndentPadding;
         }
@@ -40,7 +40,7 @@ namespace Alchemy.Editor.Drawers
     {
         public override void OnCreateElement()
         {
-            Element.style.display = Application.isPlaying ? DisplayStyle.None : DisplayStyle.Flex;
+            TargetElement.style.display = Application.isPlaying ? DisplayStyle.None : DisplayStyle.Flex;
         }
     }
 
@@ -49,7 +49,7 @@ namespace Alchemy.Editor.Drawers
     {
         public override void OnCreateElement()
         {
-            Element.style.display = !Application.isPlaying ? DisplayStyle.None : DisplayStyle.Flex;
+            TargetElement.style.display = !Application.isPlaying ? DisplayStyle.None : DisplayStyle.Flex;
         }
     }
 
@@ -58,7 +58,7 @@ namespace Alchemy.Editor.Drawers
     {
         public override void OnCreateElement()
         {
-            if (Application.isPlaying) Element.SetEnabled(false);
+            if (Application.isPlaying) TargetElement.SetEnabled(false);
         }
     }
 
@@ -67,7 +67,7 @@ namespace Alchemy.Editor.Drawers
     {
         public override void OnCreateElement()
         {
-            if (!Application.isPlaying) Element.SetEnabled(false);
+            if (!Application.isPlaying) TargetElement.SetEnabled(false);
         }
     }
 
@@ -76,13 +76,13 @@ namespace Alchemy.Editor.Drawers
     {
         public override void OnCreateElement()
         {
-            if (Element is AlchemyPropertyField field)
+            if (TargetElement is AlchemyPropertyField field)
             {
                 field.Label = string.Empty;
                 return;
             }
 
-            var labelElement = Element.Q<Label>();
+            var labelElement = TargetElement.Q<Label>();
             if (labelElement == null) return;
             labelElement.text = string.Empty;
         }
@@ -95,7 +95,7 @@ namespace Alchemy.Editor.Drawers
         {
             var labelTextAttribute = (LabelTextAttribute)Attribute;
 
-            switch (Element)
+            switch (TargetElement)
             {
                 case AlchemyPropertyField alchemyPropertyField:
                     alchemyPropertyField.Label = labelTextAttribute.Text;
@@ -104,7 +104,7 @@ namespace Alchemy.Editor.Drawers
                     button.text = labelTextAttribute.Text;
                     break;
                 default:
-                    var labelElement = Element.Q<Label>();
+                    var labelElement = TargetElement.Q<Label>();
                     if (labelElement == null) return;
                     labelElement.text = labelElement.text;
                     break;
@@ -119,7 +119,7 @@ namespace Alchemy.Editor.Drawers
         {
             var width = ((LabelWidthAttribute)Attribute).Width;
 
-            if (Element is AlchemyPropertyField field && field.FieldElement is PropertyField)
+            if (TargetElement is AlchemyPropertyField field && field.FieldElement is PropertyField)
             {
                 var executed = false;
                 field.schedule.Execute(() =>
@@ -129,7 +129,7 @@ namespace Alchemy.Editor.Drawers
                     GUIHelper.SetMinAndCurrentWidth(label, width);
                     executed = true;
                 }).Until(() => executed);
-                
+
                 return;
             }
 
@@ -143,7 +143,7 @@ namespace Alchemy.Editor.Drawers
         protected override void OnInspectorChanged()
         {
             var condition = ReflectionHelper.GetValueBool(Target, ((HideIfAttribute)Attribute).Condition);
-            Element.style.display = condition ? DisplayStyle.None : DisplayStyle.Flex;
+            TargetElement.style.display = condition ? DisplayStyle.None : DisplayStyle.Flex;
         }
     }
 
@@ -153,7 +153,7 @@ namespace Alchemy.Editor.Drawers
         protected override void OnInspectorChanged()
         {
             var condition = ReflectionHelper.GetValueBool(Target, ((ShowIfAttribute)Attribute).Condition);
-            Element.style.display = !condition ? DisplayStyle.None : DisplayStyle.Flex;
+            TargetElement.style.display = !condition ? DisplayStyle.None : DisplayStyle.Flex;
         }
     }
 
@@ -163,7 +163,7 @@ namespace Alchemy.Editor.Drawers
         protected override void OnInspectorChanged()
         {
             var condition = ReflectionHelper.GetValueBool(Target, ((DisableIfAttribute)Attribute).Condition);
-            Element.SetEnabled(!condition);
+            TargetElement.SetEnabled(!condition);
         }
     }
 
@@ -173,7 +173,7 @@ namespace Alchemy.Editor.Drawers
         protected override void OnInspectorChanged()
         {
             var condition = ReflectionHelper.GetValueBool(Target, ((EnableIfAttribute)Attribute).Condition);
-            Element.SetEnabled(condition);
+            TargetElement.SetEnabled(condition);
         }
     }
 
@@ -189,8 +189,8 @@ namespace Alchemy.Editor.Drawers
             var message = ((RequiredAttribute)Attribute).Message ?? ObjectNames.NicifyVariableName(SerializedProperty.displayName) + " is required.";
             helpBox = new HelpBox(message, HelpBoxMessageType.Error);
 
-            var parent = Element.parent;
-            parent.Insert(parent.IndexOf(Element), helpBox);
+            var parent = TargetElement.parent;
+            parent.Insert(parent.IndexOf(TargetElement), helpBox);
 
             base.OnCreateElement();
         }
@@ -211,8 +211,8 @@ namespace Alchemy.Editor.Drawers
             var message = ((ValidateInputAttribute)Attribute).Message ?? ObjectNames.NicifyVariableName(SerializedProperty.displayName) + " is not valid.";
             helpBox = new HelpBox(message, HelpBoxMessageType.Error);
 
-            var parent = Element.parent;
-            parent.Insert(parent.IndexOf(Element), helpBox);
+            var parent = TargetElement.parent;
+            parent.Insert(parent.IndexOf(TargetElement), helpBox);
 
             base.OnCreateElement();
         }
@@ -234,8 +234,8 @@ namespace Alchemy.Editor.Drawers
             var att = (HelpBoxAttribute)Attribute;
             helpBox = new HelpBox(att.Message, att.MessageType);
 
-            var parent = Element.parent;
-            parent.Insert(parent.IndexOf(Element), helpBox);
+            var parent = TargetElement.parent;
+            parent.Insert(parent.IndexOf(TargetElement), helpBox);
         }
     }
 
@@ -245,10 +245,10 @@ namespace Alchemy.Editor.Drawers
         public override void OnCreateElement()
         {
             var att = (HorizontalLineAttribute)Attribute;
-            var parent = Element.parent;
+            var parent = TargetElement.parent;
             var lineColor = att.Color == default ? GUIHelper.LineColor : att.Color;
             var line = GUIHelper.CreateLine(lineColor, EditorGUIUtility.standardVerticalSpacing * 4f);
-            parent.Insert(parent.IndexOf(Element), line);
+            parent.Insert(parent.IndexOf(TargetElement), line);
         }
     }
 
@@ -258,7 +258,7 @@ namespace Alchemy.Editor.Drawers
         public override void OnCreateElement()
         {
             var att = (TitleAttribute)Attribute;
-            var parent = Element.parent;
+            var parent = TargetElement.parent;
 
             var title = new Label(att.TitleText)
             {
@@ -269,7 +269,7 @@ namespace Alchemy.Editor.Drawers
                     marginBottom = -2f
                 }
             };
-            parent.Insert(parent.IndexOf(Element), title);
+            parent.Insert(parent.IndexOf(TargetElement), title);
 
             if (att.SubitleText != null)
             {
@@ -283,11 +283,11 @@ namespace Alchemy.Editor.Drawers
                         unityTextAlign = TextAnchor.MiddleLeft
                     }
                 };
-                parent.Insert(parent.IndexOf(Element), subtitle);
+                parent.Insert(parent.IndexOf(TargetElement), subtitle);
             }
 
             var line = GUIHelper.CreateLine(GUIHelper.LineColor, EditorGUIUtility.standardVerticalSpacing * 3f);
-            parent.Insert(parent.IndexOf(Element), line);
+            parent.Insert(parent.IndexOf(TargetElement), line);
         }
     }
 
@@ -325,8 +325,8 @@ namespace Alchemy.Editor.Drawers
                 EditorGUI.LabelField(labelPosition, labelContent, textStyle);
             });
 
-            var parent = Element.parent;
-            parent.Insert(parent.IndexOf(Element), blockquote);
+            var parent = TargetElement.parent;
+            parent.Insert(parent.IndexOf(TargetElement), blockquote);
         }
     }
 
@@ -335,7 +335,7 @@ namespace Alchemy.Editor.Drawers
     {
         public override void OnCreateElement()
         {
-            Element.TrackPropertyValue(SerializedProperty, property =>
+            TargetElement.TrackPropertyValue(SerializedProperty, property =>
             {
                 var methodName = ((OnValueChangedAttribute)Attribute).MethodName;
 

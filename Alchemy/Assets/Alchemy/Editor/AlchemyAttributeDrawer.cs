@@ -13,14 +13,14 @@ namespace Alchemy.Editor
         internal object _target;
         internal MemberInfo _memberInfo;
         internal Attribute _attribute;
-        internal VisualElement _element;
+        internal VisualElement _targetElement;
 
         public SerializedObject SerializedObject => _serializedObject;
         public SerializedProperty SerializedProperty => _serializedProperty;
         public object Target => _target;
         public MemberInfo MemberInfo => _memberInfo;
         public Attribute Attribute => _attribute;
-        public VisualElement Element => _element;
+        public VisualElement TargetElement => _targetElement;
 
         public abstract void OnCreateElement();
 
@@ -39,7 +39,7 @@ namespace Alchemy.Editor
                 processor._target = target;
                 processor._memberInfo = memberInfo;
                 processor._attribute = attribute;
-                processor._element = memberElement;
+                processor._targetElement = memberElement;
 
                 processor.OnCreateElement();
             }
