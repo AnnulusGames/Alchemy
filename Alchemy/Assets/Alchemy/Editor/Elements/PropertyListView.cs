@@ -3,6 +3,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UIElements;
+using Alchemy.Inspector;
 
 namespace Alchemy.Editor.Elements
 {
@@ -15,21 +16,37 @@ namespace Alchemy.Editor.Elements
         {
             Assert.IsTrue(property.isArray);
 
-            var listView = GUIHelper.CreateDefaultListView(ObjectNames.NicifyVariableName(property.displayName));
-            listView.bindItem = (element, index) =>
+            var settings = property.GetAttribute<ListViewSettingsAttribute>(true);
+
+            var listView = new ListView
             {
-                var arrayElement = property.GetArrayElementAtIndex(index);
-                var e = new AlchemyPropertyField(arrayElement, property.GetPropertyType(true), depth + 1, true);
-                element.Add(e);
-                element.Bind(arrayElement.serializedObject);
-            };
-            listView.unbindItem = (element, index) =>
-            {
-                element.Clear();
-                element.Unbind();
+                reorderable = settings == null ? true : settings.Reorderable,
+                reorderMode = settings == null ? ListViewReorderMode.Animated : settings.ReorderMode,
+                showBorder = settings == null ? true : settings.ShowBorder,
+                showFoldoutHeader = settings == null ? true : settings.ShowFoldoutHeader,
+                showBoundCollectionSize = settings == null ? true : (settings.ShowFoldoutHeader && settings.ShowBoundCollectionSize),
+                selectionType = settings == null ? SelectionType.Multiple : settings.SelectionType,
+                headerTitle = ObjectNames.NicifyVariableName(property.displayName),
+                showAddRemoveFooter = settings == null ? true : settings.ShowAddRemoveFooter,
+                fixedItemHeight = 20f,
+                virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight,
+                showAlternatingRowBackgrounds = settings == null ? AlternatingRowBackground.None : settings.ShowAlternatingRowBackgrounds,
+                bindItem = (element, index) =>
+                {
+                    var arrayElement = property.GetArrayElementAtIndex(index);
+                    var e = new AlchemyPropertyField(arrayElement, property.GetPropertyType(true), depth + 1, true);
+                    element.Add(e);
+                    element.Bind(arrayElement.serializedObject);
+                },
+                unbindItem = (element, index) =>
+                {
+                    element.Clear();
+                    element.Unbind();
+                }
             };
 
-            listView.Q<Label>().style.unityFontStyleAndWeight = FontStyle.Bold;
+            var label = listView.Q<Label>();
+            if (label != null) label.style.unityFontStyleAndWeight = FontStyle.Bold;
 
             listView.BindProperty(property);
             Add(listView);

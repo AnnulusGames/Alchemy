@@ -204,4 +204,17 @@ namespace Alchemy.Inspector
 
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class OnInspectorDestroyAttribute : Attribute { }
+
+    [AttributeUsage(AttributeTargets.Field)]
+    public sealed class ListViewSettingsAttribute : Attribute
+    {
+        public bool ShowAddRemoveFooter { get; set; } = true;
+        public AlternatingRowBackground ShowAlternatingRowBackgrounds { get; set; } = AlternatingRowBackground.None;
+        public bool ShowBorder { get; set; } = true;
+        public bool ShowBoundCollectionSize { get; set; } = true;
+        public bool ShowFoldoutHeader { get; set; } = true;
+        public SelectionType SelectionType { get; set; } = SelectionType.Multiple;
+        public bool Reorderable { get; set; } = true;
+        public ListViewReorderMode ReorderMode { get; set; } = ListViewReorderMode.Animated;
+    }
 }
