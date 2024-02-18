@@ -6,6 +6,9 @@ using UnityEngine.UIElements;
 
 namespace Alchemy.Editor
 {
+    /// <summary>
+    /// Base class for constructing EditorWindow using Alchemy attributes.
+    /// </summary>
     public abstract class AlchemyEditorWindow : EditorWindow
     {
         protected virtual void CreateGUI()
@@ -30,16 +33,27 @@ namespace Alchemy.Editor
             rootVisualElement.Add(windowElement);
         }
 
+        /// <summary>
+        /// Gets the path where the window data is saved. The default path is $"ProjectSettings/{GetType().FullName}.json".
+        /// </summary>
         protected virtual string GetWindowDataPath()
         {
             return $"ProjectSettings/{GetType().FullName}.json";
         }
 
+        /// <summary>
+        /// Saves the current window data.
+        /// </summary>
+        /// <param name="dataPath">Window data path</param>
         protected virtual void SaveWindowData(string dataPath)
         {
             File.WriteAllText(dataPath, JsonUtility.ToJson(this, true));
         }
 
+        /// <summary>
+        /// Loads saved window data.
+        /// </summary>
+        /// <param name="dataPath">Window data path</param>
         protected virtual void LoadWindowData(string dataPath)
         {
             if (File.Exists(dataPath))

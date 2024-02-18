@@ -6,11 +6,18 @@ using Alchemy.Hierarchy;
 
 namespace Alchemy.Editor
 {
+    /// <summary>
+    /// Alchemy project-level settings
+    /// </summary>
     public sealed class AlchemySettings : ScriptableObject
     {
         static readonly string SettingsPath = "ProjectSettings/AlchemySettings.json";
 
         static AlchemySettings instance;
+
+        /// <summary>
+        /// Get a cached instance. If the cache does not exist, returns a newly created one.
+        /// </summary>
         public static AlchemySettings GetOrCreateSettings()
         {
             if (instance != null) return instance;
@@ -28,6 +35,9 @@ namespace Alchemy.Editor
             return instance;
         }
 
+        /// <summary>
+        /// Save the settings to a file.
+        /// </summary>
         public static void SaveSettings()
         {
             File.WriteAllText(SettingsPath, JsonUtility.ToJson(instance, true));
