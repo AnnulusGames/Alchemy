@@ -7,7 +7,7 @@
             "Alchemy/Assets/Alchemy/Runtime/**/*.cs",
             "Alchemy/Assets/Alchemy/Editor/**/*.cs"
           ],
-          "src": "../src"
+          "src": "../"
         }
       ],
       "properties": {
