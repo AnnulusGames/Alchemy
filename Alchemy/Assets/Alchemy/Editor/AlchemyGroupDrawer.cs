@@ -8,12 +8,12 @@ namespace Alchemy.Editor
         public abstract VisualElement CreateRootElement(string label);
         public virtual VisualElement GetGroupElement(Attribute attribute) => null;
 
-        public string UniqueId => _uniqueId;
-        string _uniqueId;
+        public string UniqueId => uniqueId;
+        string uniqueId;
 
         internal void SetUniqueId(string id)
         {
-            this._uniqueId = id;
+            this.uniqueId = id;
         }
     }
 }

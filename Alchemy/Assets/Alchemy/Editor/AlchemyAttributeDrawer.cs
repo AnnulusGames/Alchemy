@@ -8,19 +8,19 @@ namespace Alchemy.Editor
 {
     public abstract class AlchemyAttributeDrawer
     {
-        SerializedObject _serializedObject;
-        SerializedProperty _serializedProperty;
-        object _target;
-        MemberInfo _memberInfo;
-        Attribute _attribute;
-        VisualElement _targetElement;
+        SerializedObject serializedObject;
+        SerializedProperty serializedProperty;
+        object target;
+        MemberInfo memberInfo;
+        Attribute attribute;
+        VisualElement targetElement;
 
-        public SerializedObject SerializedObject => _serializedObject;
-        public SerializedProperty SerializedProperty => _serializedProperty;
-        public object Target => _target;
-        public MemberInfo MemberInfo => _memberInfo;
-        public Attribute Attribute => _attribute;
-        public VisualElement TargetElement => _targetElement;
+        public SerializedObject SerializedObject => serializedObject;
+        public SerializedProperty SerializedProperty => serializedProperty;
+        public object Target => target;
+        public MemberInfo MemberInfo => memberInfo;
+        public Attribute Attribute => attribute;
+        public VisualElement TargetElement => targetElement;
 
         public abstract void OnCreateElement();
 
@@ -34,12 +34,12 @@ namespace Alchemy.Editor
                 if (processorType == null) continue;
 
                 var processor = (AlchemyAttributeDrawer)Activator.CreateInstance(processorType);
-                processor._serializedObject = serializedObject;
-                processor._serializedProperty = property;
-                processor._target = target;
-                processor._memberInfo = memberInfo;
-                processor._attribute = attribute;
-                processor._targetElement = memberElement;
+                processor.serializedObject = serializedObject;
+                processor.serializedProperty = property;
+                processor.target = target;
+                processor.memberInfo = memberInfo;
+                processor.attribute = attribute;
+                processor.targetElement = memberElement;
 
                 processor.OnCreateElement();
             }
