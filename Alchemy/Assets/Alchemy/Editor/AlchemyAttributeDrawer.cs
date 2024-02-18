@@ -6,6 +6,9 @@ using UnityEngine.UIElements;
 
 namespace Alchemy.Editor
 {
+    /// <summary>
+    /// Base class for extending drawing processing for fields with Alchemy attributes.
+    /// </summary>
     public abstract class AlchemyAttributeDrawer
     {
         SerializedObject serializedObject;
@@ -15,13 +18,39 @@ namespace Alchemy.Editor
         Attribute attribute;
         VisualElement targetElement;
 
+        /// <summary>
+        /// Target serialized object.
+        /// </summary>
         public SerializedObject SerializedObject => serializedObject;
+
+        /// <summary>
+        /// Target serialized property.
+        /// </summary>
         public SerializedProperty SerializedProperty => serializedProperty;
+
+        /// <summary>
+        /// Target object.
+        /// </summary>
         public object Target => target;
+
+        /// <summary>
+        /// MemberInfo of the target member.
+        /// </summary>
         public MemberInfo MemberInfo => memberInfo;
+
+        /// <summary>
+        /// Target attribute.
+        /// </summary>
         public Attribute Attribute => attribute;
+
+        /// <summary>
+        /// Target visual element.
+        /// </summary>
         public VisualElement TargetElement => targetElement;
 
+        /// <summary>
+        /// Called when the target visual element is created.
+        /// </summary>
         public abstract void OnCreateElement();
 
         internal static void ExecutePropertyDrawers(SerializedObject serializedObject, SerializedProperty property, object target, MemberInfo memberInfo, VisualElement memberElement)

@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace Alchemy.Hierarchy
 {
+    /// <summary>
+    /// A component used to decorate the appearance of a hierarchy.
+    /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("Alchemy/Hierarchy Object")]
     public class HierarchyObject : MonoBehaviour

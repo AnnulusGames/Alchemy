@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace Alchemy.Editor
 {
+    /// <summary>
+    /// Base class for adding custom drawing processing to hierarchy items.
+    /// </summary>
     public abstract class HierarchyDrawer
     {
         public abstract void OnGUI(int instanceID, Rect selectionRect);
