@@ -25,25 +25,25 @@ namespace Alchemy.Editor
 
         public static IEnumerable<Type> GetBaseClassesAndInterfaces(Type type, bool includeSelf = false)
         {
-            List<Type> allTypes = new();
-
-            if (includeSelf) allTypes.Add(type);
+            if (includeSelf) yield return type;
 
             if (type.BaseType == typeof(object))
             {
-                allTypes.AddRange(type.GetInterfaces());
+                foreach (var interfaceType in type.GetInterfaces())
+                {
+                    yield return interfaceType;
+                }
             }
             else
             {
-                allTypes.AddRange(
-                    Enumerable.Repeat(type.BaseType, 1)
-                        .Concat(type.GetInterfaces())
-                        .Concat(GetBaseClassesAndInterfaces(type.BaseType))
-                        .Distinct()
-                );
+                foreach (var baseType in Enumerable.Repeat(type.BaseType, 1)
+                    .Concat(type.GetInterfaces())
+                    .Concat(GetBaseClassesAndInterfaces(type.BaseType))
+                    .Distinct())
+                {
+                    yield return baseType;
+                }
             }
-
-            return allTypes;
         }
 
         public static bool HasDefaultConstructor(Type type)
