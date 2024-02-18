@@ -8,12 +8,12 @@ namespace Alchemy.Editor
 {
     public abstract class AlchemyAttributeDrawer
     {
-        internal SerializedObject _serializedObject;
-        internal SerializedProperty _serializedProperty;
-        internal object _target;
-        internal MemberInfo _memberInfo;
-        internal Attribute _attribute;
-        internal VisualElement _targetElement;
+        SerializedObject _serializedObject;
+        SerializedProperty _serializedProperty;
+        object _target;
+        MemberInfo _memberInfo;
+        Attribute _attribute;
+        VisualElement _targetElement;
 
         public SerializedObject SerializedObject => _serializedObject;
         public SerializedProperty SerializedProperty => _serializedProperty;
