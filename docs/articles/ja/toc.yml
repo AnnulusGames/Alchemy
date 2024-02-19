@@ -77,6 +77,12 @@
   - name: Tab Group
     href: attributes/tab-group.md
 
+- name: Hierarchy
+- name: トグルとアイコン
+  href: hierarchy-toggles-and-icons.md
+- name: Hierarchyの装飾
+  href: hierarchy-decoration.md
+
 - name: Others
 - name: 他ライブラリとの比較
   href: comparison-with-other-libraries.md
