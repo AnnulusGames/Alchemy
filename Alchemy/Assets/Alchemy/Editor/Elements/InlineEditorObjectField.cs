@@ -34,7 +34,7 @@ namespace Alchemy.Editor.Elements
             {
                 label = ObjectNames.NicifyVariableName(property.displayName),
                 objectType = type,
-                allowSceneObjects = property.GetFieldInfo().HasCustomAttribute<AssetsOnlyAttribute>(),
+                allowSceneObjects = !property.GetFieldInfo().HasCustomAttribute<AssetsOnlyAttribute>(),
                 value = property.objectReferenceValue
             };
             field.style.position = Position.Absolute;
