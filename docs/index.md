@@ -1,11 +1,11 @@
----
-_layout: landing
----
+# Alchemy
 
-# This is the **HOMEPAGE**.
+![header](images/header.png)
 
-Refer to [Markdown](http://daringfireball.net/projects/markdown/) for how to write markdown files.
+Alchemy is a library that adds a rich set of editor extensions for Unity. It provides inspector attributes, hierarchy extensions, editor window extensions, serialization extensions using source generators, and more.
 
-## Quick Start Notes:
+https://github.com/AnnulusGames/Alchemy
 
-1. Add images to the *images* folder if the file is referencing an image.
+### License
+
+This library is under the [MIT License](https://github.com/AnnulusGames/Alchemy/LICENSE).

@@ -1,6 +1,6 @@
 - name: Docs
-  href: en/
+  href: articles/en/
 - name: Docs (日本語)
-  href: ja/
+  href: articles/ja/
 - name: API
   href: api/
