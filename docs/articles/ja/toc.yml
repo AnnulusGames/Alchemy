@@ -1,9 +1,12 @@
+- name: Get Started
 - name: Alchemyとは
   href: about.md
 - name: インストール
   href: installation.md
 - name: クイックスタート
   href: quick-start.md
+
+- name: Inspector
 - name: 属性一覧
   items:
   - name: General
@@ -74,5 +77,6 @@
   - name: Tab Group
     href: attributes/tab-group.md
 
+- name: Others
 - name: 他ライブラリとの比較
   href: comparison-with-other-libraries.md
