@@ -83,6 +83,12 @@
 - name: Hierarchyの装飾
   href: hierarchy-decoration.md
 
+- name: Editor Window
+- name: AlchemyEditorWindow
+  href: alchemy-editor-window.md
+- name: EditorWindowのデータを保存する
+  href: saving-editor-window-data.md
+
 - name: Serialization
 - name: シリアル化拡張
   href: serialization-extension.md
