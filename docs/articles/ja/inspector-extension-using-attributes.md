@@ -1,6 +1,6 @@
-# クイックスタート
+# 属性を使用したInspector拡張
 
-Inspectorでの表示をカスタマイズしたい場合には、クラスが持つフィールドに属性を付加します。
+Alchemyでは属性を用いてInspectorを拡張することが可能です。Inspectorの表示をカスタマイズしたい場合には、クラスが持つフィールドに属性を付加します。
 
 ```cs
 using UnityEngine;
@@ -98,3 +98,5 @@ public class ButtonSample : MonoBehaviour
 ```
 
 ![img3](../../images/img3.png)
+
+他にもAlchemyでは数多くの属性が用意されています。詳細は属性一覧を参照してください。

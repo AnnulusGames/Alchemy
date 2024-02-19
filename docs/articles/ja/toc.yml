@@ -3,10 +3,12 @@
   href: about.md
 - name: インストール
   href: installation.md
-- name: クイックスタート
-  href: quick-start.md
 
 - name: Inspector
+- name: 属性を使用したInspector拡張
+  href: inspector-extension-using-attributes.md
+- name: SerializeReference
+  href: serialize-reference.md
 - name: 属性一覧
   items:
   - name: General
