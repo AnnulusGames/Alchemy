@@ -1,19 +1,19 @@
 - name: Get Started
-- name: Alchemyとは
+- name: Alchemy Overview
   href: about.md
-- name: インストール
+- name: Installation
   href: installation.md
 
 - name: Inspector
-- name: 属性を用いたInspector拡張
+- name: Inspector Extension with Attributes
   href: inspector-extension-with-attributes.md
-- name: グループ属性
+- name: Group Attributes
   href: group-attributes.md
-- name: Button属性
+- name: Button Attribute
   href: button-attribute.md
 - name: SerializeReference
   href: serialize-reference.md
-- name: 属性一覧
+- name: Attribute List
   items:
   - name: General
   - name: Assets Only
@@ -98,37 +98,37 @@
     href: attributes/tab-group.md
 
 - name: Hierarchy
-- name: トグルとアイコン
+- name: Toggles and Icons
   href: hierarchy-toggles-and-icons.md
-- name: Hierarchyの装飾
+- name: Decorating Hierarchy
   href: decorating-hierarchy.md
 
 - name: Editor Window
 - name: AlchemyEditorWindow
   href: alchemy-editor-window.md
-- name: EditorWindowのデータを保存する
+- name: Saving Editor Window Data
   href: saving-editor-window-data.md
 
 - name: Serialization
-- name: シリアル化拡張
+- name: Serialization Extension
   href: serialization-extension.md
-- name: Alchemyのシリアル化プロセス
+- name: Alchemy Serialization Process
   href: alchemy-serialization-process.md
-- name: シリアル化データのデバッグ
+- name: Debugging Serialized Data
   href: debugging-serialized-data.md
-- name: シリアル化コールバック
+- name: Serialization Callback
   href: serialization-callback.md
 
 - name: Extensions
-- name: AlchemyEditorを拡張する
+- name: Extending Alchemy Editor
   href: extending-alchemy-editor.md
-- name: カスタム属性を作成する
+- name: Creating Custom Attribute
   href: creating-custom-attribute.md
-- name: カスタムグループ属性を作成する
+- name: Creating Custom Group Attribute
   href: creating-custom-group-attribute.md
 
 - name: Others
-- name: デフォルトのエディタを無効化する
+- name: Disable Default Editor
   href: disable-default-editor.md
-- name: 他ライブラリとの比較
+- name: Comparison with Other Libraries
   href: comparison-with-other-libraries.md

@@ -10,7 +10,7 @@ using Alchemy.Editor;
 [CustomEditor(typeof(Example))]
 public class EditorExample : AlchemyEditor
 {
-   public override VisualElement CreateInspectorGUI()
+    public override VisualElement CreateInspectorGUI()
     {
         // 必ず継承元のCreateInspectorGUIを呼び出す
         base.CreateInspectorGUI();
