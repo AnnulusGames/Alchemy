@@ -20,12 +20,16 @@
     href: attributes/assets-only.md
   - name: Button
     href: attributes/button.md
+  - name: Disable Alchemy Editor
+    href: attributes/disable-alchemy-editor.md
   - name: Hide Script Field
     href: attributes/hide-script-field.md
   - name: Indent
     href: attributes/indent.md
   - name: Inline Editor
     href: attributes/inline-editor.md
+  - name: List View Settings
+    href: attributes/list-view-settings.md
   - name: Order
     href: attributes/order.md
   - name: Read Only
@@ -70,6 +74,16 @@
     href: attributes/required.md
   - name: Validate Input
     href: attributes/validate-input.md
+
+  - name: Events
+  - name: On Inspector Enable
+    href: attributes/on-inspector-enable.md
+  - name: On Inspector Destroy
+    href: attributes/on-inspector-destroy.md
+  - name: On Inspector Disable
+    href: attributes/on-inspector-disable.md
+  - name: On Value Changed
+    href: attributes/on-value-changed.md
     
   - name: Groups
   - name: Box Group
