@@ -1,6 +1,6 @@
 # Alchemy
 
-<img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/Header.png" width="800">
+<img src="https://github.com/AnnulusGames/Alchemy/blob/main/docs/images/header.png" width="800">
 
 [![license](https://img.shields.io/badge/LICENSE-MIT-green.svg)](LICENSE)
 
@@ -12,11 +12,18 @@ Alchemyは属性を使用したInspector拡張を提供するライブラリで�
 
 属性ベースの簡単かつ強力なエディタ拡張を追加するほか、独自のシリアル化プロセスを介してあらゆる型(Dictionary, Hashset, Nullable, Tuple, etc...)をシリアル化し、Inspector上で編集することが可能になります。Source Generatorを用いて必要なコードを動的に生成するため、partialにした対象型に属性を付加するだけで機能します。Odinのように専用のクラスを継承する必要はありません。
 
+<img src="https://github.com/AnnulusGames/Alchemy/blob/main/docs/images/img-v2.0.png" width="800">
+
+また、v2.0の新機能としてEditorWindow拡張とHierarchy拡張が追加されました。これらを用いることで、エディタでの開発フローを効率化するツールを簡単に作成できるようになります。
+
 ## 特徴
 
 * Inspectorを拡張する30以上の属性を追加
 * SerializeReferenceをサポートし、ドロップダウンから型を選択可能に
 * あらゆる型(Dictionary, Hashset, Nullable, Tuple, etc...)をシリアル化/Inspectorで編集可能
+* 属性を用いたEditorWindowの作成
+* Hierarchyの使い勝手を向上させる機能の提供
+* Alchemy上で動作するカスタム属性の作成
 
 ## セットアップ
 
@@ -45,12 +52,9 @@ https://github.com/AnnulusGames/Alchemy.git?path=/Alchemy/Assets/Alchemy
 }
 ```
 
-### サンプル
+## ドキュメント
 
-Package Managerから全属性の挙動を確認できるサンプルを入手できます。詳しい使用方法はこちらのサンプルを参考にしてみてください。
-
-<img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/img7.png" width="500">
-
+ドキュメントのフルバージョンは[こちら](https://annulusgames.github.io/Alchemy/)から確認できます。
 
 ## 基本的な使い方
 
@@ -61,7 +65,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Alchemy.Inspector;  // Alchemy.Inspector名前空間をusingに追加
 
-public class BasicAttributesSample : MonoBehaviour
+public class AttributesExample : MonoBehaviour
 {
     [LabelText("Custom Label")]
     public float foo;
@@ -79,35 +83,37 @@ public class BasicAttributesSample : MonoBehaviour
 }
 ```
 
-<img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/img1.png" width="600">
+<img src="https://github.com/AnnulusGames/Alchemy/blob/main/docs/images/img-attributes-example.png" width="600">
 
-各フィールドをグループ化する属性もいくつか用意されています。各グループはスラッシュで区切ることでネストできます。
+各フィールドをグループ化する属性も用意されています。各グループはスラッシュ`/`で区切ることでネストできます。
 
 ```cs
 using UnityEngine;
 using Alchemy.Inspector;
 
-public class GroupAttributesSample : MonoBehaviour
+public class GroupAttributesExample : MonoBehaviour
 {
-    [FoldoutGroup("Foldout")] public int a;
-    [FoldoutGroup("Foldout")] public int b;
-    [FoldoutGroup("Foldout")] public int c;
+    [FoldoutGroup("Foldout")]
+    public int a;
 
-    [TabGroup("Tab", "Tab1")] public int x;
-    [TabGroup("Tab", "Tab2")] public string y;
-    [TabGroup("Tab", "Tab3")] public Vector3 z;
+    [FoldoutGroup("Foldout")]
+    public int b;
 
-    [HorizontalGroup("Horizontal")][BoxGroup("Horizontal/Box1")] public float foo;
-    [HorizontalGroup("Horizontal")][BoxGroup("Horizontal/Box1")] public Vector3 bar;
-    [HorizontalGroup("Horizontal")][BoxGroup("Horizontal/Box1")] public GameObject baz;
+    [FoldoutGroup("Foldout")]
+    public int c;
 
-    [HorizontalGroup("Horizontal")][BoxGroup("Horizontal/Box2")] public float alpha;
-    [HorizontalGroup("Horizontal")][BoxGroup("Horizontal/Box2")] public Vector3 beta;
-    [HorizontalGroup("Horizontal")][BoxGroup("Horizontal/Box2")] public GameObject gamma;
+    [TabGroup("Tab", "Tab1")]
+    public int x;
+
+    [TabGroup("Tab", "Tab2")]
+    public string y;
+
+    [TabGroup("Tab", "Tab3")]
+    public Vector3 z;
 }
 ```
 
-<img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/img2.png" width="600">
+<img src="https://github.com/AnnulusGames/Alchemy/blob/main/docs/images/img-group-1.png" width="600">
 
 メソッドに`[Button]`属性を付加することで、メソッドをInspectorから実行することが可能になります。
 
@@ -117,14 +123,14 @@ using UnityEngine;
 using Alchemy.Inspector;
 
 [Serializable]
-public sealed class SampleClass : ISample
+public sealed class Example : IExample
 {
     public float foo;
     public Vector3 bar;
     public GameObject baz;
 }
 
-public class ButtonSample : MonoBehaviour
+public class ButtonExample : MonoBehaviour
 {
     [Button]
     public void Foo()
@@ -139,7 +145,7 @@ public class ButtonSample : MonoBehaviour
     }
 
     [Button]
-    public void Foo(SampleClass parameter)
+    public void Foo(Example parameter)
     {
         var builder = new StringBuilder();
         builder.AppendLine();
@@ -151,49 +157,126 @@ public class ButtonSample : MonoBehaviour
 }
 ```
 
-<img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/img3.png" width="600">
+<img src="https://github.com/AnnulusGames/Alchemy/blob/main/docs/images/img-button.png" width="600">
 
-利用可能な属性はこちらから確認できます。(現在wikiを作成中です)
+Alchemyでは他にも数多くの属性が提供されています。利用可能な属性の一覧は[ドキュメント](https://annulusgames.github.io/Alchemy/articles/ja/inspector-extension-with-attributes.html)から確認できます。
 
 ## インターフェース/抽象クラスを編集する
 
-`[SerializeReference]`属性を付加することでインターフェースや抽象クラスをInspector上で編集できるようになります。
+AlchemyはUnityのSerializeReferenceに対応しています。`[SerializeReference]`属性を付加することでインターフェースや抽象クラスをInspector上で編集できるようになります。
 
 ```cs
 using UnityEngine;
 
-public interface ISample { }
+public interface IExample { }
 
 [Serializable]
-public sealed class SampleA : ISample
+public sealed class ExampleA : IExample
 {
     public float alpha;
 }
 
 [Serializable]
-public sealed class SampleB : ISample
+public sealed class ExampleB : IExample
 {
     public Vector3 beta;
 }
 
 [Serializable]
-public sealed class SampleC : ISample
+public sealed class ExampleC : IExample
 {
     public GameObject gamma;
 }
 
-public class SerializeReferenceSample : MonoBehaviour
+public class SerializeReferenceExample : MonoBehaviour
 {
-    [SerializeReference] public ISample sample;
-    [SerializeReference] public ISample[] sampleArray;
+    [SerializeReference] public IExample Example;
+    [SerializeReference] public IExample[] ExampleArray;
 }
 ```
 
-<img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/img4.png" width="600">
+<img src="https://github.com/AnnulusGames/Alchemy/blob/main/docs/images/img-serialize-reference.png" width="600">
 
 インターフェース・抽象クラスは上のように表示され、ドロップダウンから子クラスを選択して生成することができます。
 
-SerializeReferenceのシリアル化についてはUnityの公式マニュアルを参照してください。
+詳細は[SerializeReference](https://annulusgames.github.io/Alchemy/articles/ja/serialize-reference.html)のページを参照してください。
+
+## Hierarchy
+
+Alchemyを導入することで、Hierarchyを拡張するいくつかの機能が追加されます。
+
+<img src="https://github.com/AnnulusGames/Alchemy/blob/main/docs/images/img-hierarchy.png" width="600">
+
+### トグルとアイコン
+
+<img src="https://github.com/AnnulusGames/Alchemy/blob/main/docs/images/gif-hierarchy-toggle.gif" width="600">
+
+Hierarchyにオブジェクトのアクティブ/非アクティブを切り替えるトグルと、オブジェクトの持つコンポーネントのアイコンの表示を追加できます。これらはProjectSettingsから設定が可能です。
+
+<img src="https://github.com/AnnulusGames/Alchemy/blob/main/docs/images/img-project-settings.png" width="600">
+
+### 装飾
+
+また、CreateメニューからHierarchyを装飾するためのオブジェクトを作成可能になります。
+
+<img src="https://github.com/AnnulusGames/Alchemy/blob/main/docs/images/img-create-hierarchy-object.png" width="600">
+
+これらのオブジェクトはビルド時に自動的に除外されます。(子オブジェクトを持つ場合は全てデタッチしてから削除されます。)
+詳細は[Hierarchyの装飾](https://annulusgames.github.io/Alchemy/articles/ja/decorating-hierarchy.html)を参照してください。
+
+## AlchemyEditorWindow
+
+通常の`Editor`クラスではなく`AlchemyEditorWindow`クラスを継承することで、Alchemyの属性を用いてエディタウィンドウを作成することができるようになります。
+
+```cs
+using System;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using Alchemy.Editor;
+using Alchemy.Inspector;
+
+public class EditorWindowExample : AlchemyEditorWindow
+{
+    [MenuItem("Window/Example")]
+    static void Open()
+    {
+        var window = GetWindow<EditorWindowExample>("Example");
+        window.Show();
+    }
+    
+    [Serializable]
+    [HorizontalGroup]
+    public class DatabaseItem
+    {
+        [LabelWidth(30f)]
+        public float foo;
+
+        [LabelWidth(30f)]
+        public Vector3 bar;
+        
+        [LabelWidth(30f)]
+        public GameObject baz;
+    }
+
+    [ListViewSettings(ShowAlternatingRowBackgrounds = AlternatingRowBackground.All, ShowFoldoutHeader = false)]
+    public List<DatabaseItem> items;
+
+    [Button, HorizontalGroup]
+    public void Button1() { }
+
+    [Button, HorizontalGroup]
+    public void Button2() { }
+
+    [Button, HorizontalGroup]
+    public void Button3() { }
+}
+```
+
+<img src="https://github.com/AnnulusGames/Alchemy/blob/main/docs/images/img-editor-window.png" width="600">
+
+`AlchemyEditorWindow`を継承して作成したウィンドウのデータは、プロジェクトのProjectSettingsフォルダにjson形式で保存されます。詳細は[EditorWindowのデータを保存する](https://annulusgames.github.io/Alchemy/articles/ja/saving-editor-window-data.html)のページを参照してください。
 
 ## シリアル化拡張を使用する
 
@@ -212,7 +295,7 @@ using Alchemy.Serialization; // Alchemy.Serialization名前空間をusingに追�
 // [AlchemySerialize]属性を付加することでAlchemyのシリアル化拡張が有効化されます。
 // 任意の基底クラスを持つ型に使用できますが、SourceGeneratorがコード生成を行うため対象型はpartialである必要があります。
 [AlchemySerialize]
-public partial class AlchemySerializationSample : MonoBehaviour
+public partial class AlchemySerializationExample : MonoBehaviour
 {
     // 対象のフィールドに[AlchemySerializeField]属性と[NonSerialized]属性を付加します。
     [AlchemySerializeField, NonSerialized]
@@ -229,150 +312,9 @@ public partial class AlchemySerializationSample : MonoBehaviour
 }
 ```
 
-<img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/img5.png" width="600">
+<img src="https://github.com/AnnulusGames/Alchemy/blob/main/docs/images/img-serialization-sample.png" width="600">
 
-現在Inspectorで編集可能な型は以下の通りです。
-
-* プリミティブ型
-* UnityEngine.Object
-* AnimationCurve
-* Gradient
-* 配列
-* List<>
-* Hashset<>
-* Dictionary<,>
-* ValueTuple<>
-* Nullable<>
-* 以上の型のフィールドで構成されるclass/struct
-
-シリアル化プロセスの技術的な詳細については下の項目を参照してください。
-
-## Alchemyのシリアル化プロセス
-
-Alchemyでは、対象の型に`[AlchemySerialize]`属性を付加することで専用のSource Generatorが`ISerializationCallbackReceiver`を自動で実装します。この処理の中で`[AlchemySerializeField]`属性が付加されたフィールドを全て取得し、Unity.Serializationパッケージを用いてJson形式に変換します。ただし、UnityEngine.Objectのフィールドに関してはJson形式で扱うことができないため、単一のListに実体を保存しJsonにはそのindexを書き込みます。
-
-例えば、以下のようなクラスがあったとします。
-
-```cs
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-using Alchemy.Serialization;
-
-[AlchemySerialize]
-public partial class AlchemySerializationSample : MonoBehaviour
-{
-    [AlchemySerializeField, NonSerialized]
-    public Dictionary<string, GameObject> dictionary = new();
-}
-```
-
-これに対し、Alchemyは以下のようなコードを生成します。
-
-```cs
-partial class AlchemySerializationSample : global::UnityEngine.ISerializationCallbackReceiver
-{
-    [global::System.Serializable]
-    sealed class AlchemySerializationData
-    {
-        [global::System.Serializable]
-        public sealed class Item
-        {
-            [global::UnityEngine.HideInInspector] public bool isCreated;
-            [global::UnityEngine.TextArea] public string data;
-        }
-
-        public Item dictionary = new();
-
-        [global::UnityEngine.SerializeField] private global::System.Collections.Generic.List<UnityEngine.Object> unityObjectReferences = new();
-
-        public global::System.Collections.Generic.IList<UnityEngine.Object> UnityObjectReferences => unityObjectReferences;
-    }
-
-    [global::UnityEngine.HideInInspector, global::UnityEngine.SerializeField] private AlchemySerializationData alchemySerializationData =  new();
-
-    void global::UnityEngine.ISerializationCallbackReceiver.OnBeforeSerialize()
-    {
-        if (this is global::Alchemy.Serialization.IAlchemySerializationCallbackReceiver receiver) receiver.OnBeforeSerialize();
-        alchemySerializationData.UnityObjectReferences.Clear();
-        
-        try
-        {
-            alchemySerializationData.dictionary.data = global::Alchemy.Serialization.Internal.SerializationHelper.ToJson(this.dictionary , alchemySerializationData.UnityObjectReferences);
-            alchemySerializationData.dictionary.isCreated = true;
-        }
-        catch (global::System.Exception ex)
-        {
-            global::UnityEngine.Debug.LogException(ex);
-        }
-    }
-
-    void global::UnityEngine.ISerializationCallbackReceiver.OnAfterDeserialize()
-    {
-        try 
-        {
-            if (alchemySerializationData.dictionary.isCreated)
-            {
-                this.dictionary = global::Alchemy.Serialization.Internal.SerializationHelper.FromJson<System.Collections.Generic.Dictionary<string, UnityEngine.GameObject>>(alchemySerializationData.dictionary.data, alchemySerializationData.UnityObjectReferences);
-            }
-        }
-        catch (global::System.Exception ex)
-        {
-            global::UnityEngine.Debug.LogException(ex);
-        }
-
-        if (this is global::Alchemy.Serialization.IAlchemySerializationCallbackReceiver receiver) receiver.OnAfterDeserialize();
-    }
-}
-```
-
-このような手法を取っているため`[AlchemySerializeField]`を使用するとシリアライズ/デシリアライズにかかる処理負荷が増加します。そのため可能な限り`[AlchemySerializeField]`の使用を避けることが推奨されます。
-
-また`[ShowAlchemySerializationData]`属性を付加することで、Inspector上からシリアル化データを確認することができるようになります。
-
-```cs
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-using Alchemy.Serialization;
-
-[AlchemySerialize]
-[ShowAlchemySerializationData]
-public partial class AlchemySerializationSample : MonoBehaviour
-{
-    [AlchemySerializeField, NonSerialized]
-    public Dictionary<string, GameObject> dictionary = new();
-}
-```
-
-<img src="https://github.com/AnnulusGames/Alchemy/blob/main/Alchemy/Assets/Alchemy/Documentation~/img6.png" width="600">
-
-## AlchemyEditorを拡張する
-対象のMonoBehaviourやScriptableObjectが独自のEditorクラスを持つ場合、Alchemyの属性は動作しません。
-独自のエディタ拡張とAlchemyを組み合わせたい場合には、`UnityEngine.Editor`クラスではなく`AlchemyEditor`クラスを継承する必要があります。
-
-```cs
-using UnityEditor;
-using Alchemy.Editor;
-
-[CustomEditor(typeof(Example))]
-public class EditorExample : AlchemyEditor
-{
-   public override VisualElement CreateInspectorGUI()
-    {
-        // 必ず継承元のCreateInspectorGUIを呼び出す
-        base.CreateInspectorGUI();
-
-        // ここに独自の処理を記述する
-    }
-}
-```
-
-## デフォルトのエディタを無効化する
-
-デフォルトではAlchemyでは独自のEditorクラスを使用して全ての型の描画を行います。ただし、他ライブラリやアセットとの競合を避けるためこれを無効化することもできます。
-
-デフォルトのエディタを無効化するには、`Project Settings > Player > Scripting Define Symbols`の項目に`ALCHEMY_DISABLE_DEFAULT_EDITOR`を追加します。これを追加した状態でAlchemyの機能を使用したい場合には、`AlchemyEditor`を継承した独自のEditorクラスを定義する必要があります。
+シリアル化プロセスの技術的な詳細についてはドキュメントの[Alchemyのシリアル化プロセス](https://annulusgames.github.io/Alchemy/articles/ja/alchemy-serialization-process.html)を参照してください。
 
 ## ヘルプ
 
