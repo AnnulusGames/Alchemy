@@ -102,5 +102,7 @@
   href: serialization-callback.md
 
 - name: Others
+- name: デフォルトのエディタを無効化する
+  href: disable-default-editor.md
 - name: 他ライブラリとの比較
   href: comparison-with-other-libraries.md
