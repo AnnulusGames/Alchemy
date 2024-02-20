@@ -1,8 +1,8 @@
 {
     "name": "com.annulusgames.alchemy",
-    "version": "1.0.4",
+    "version": "2.0.0",
     "displayName": "Alchemy",
-    "description": "Alchemy is a library that provides attribute-based Inspector extensions for Unity. Adds attributes that provide powerful inspector extensions and a source generator that extends Unity's serialization.",
+    "description": "Provides a rich set of editor and serialization extensions for Unity.",
     "unity": "2021.2",
     "author": {
         "name": "Annulus Games",
