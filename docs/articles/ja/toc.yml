@@ -101,6 +101,14 @@
 - name: シリアル化コールバック
   href: serialization-callback.md
 
+- name: Extensions
+- name: AlchemyEditorを拡張する
+  href: extending-alchemy-editor.md
+- name: カスタム属性を作成する
+  href: create-custom-attribute.md
+- name: カスタムグループ属性を作成する
+  href: create-custom-group-attribute.md
+
 - name: Others
 - name: デフォルトのエディタを無効化する
   href: disable-default-editor.md
