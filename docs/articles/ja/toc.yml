@@ -5,8 +5,12 @@
   href: installation.md
 
 - name: Inspector
-- name: 属性を使用したInspector拡張
+- name: 属性を用いたInspector拡張
   href: inspector-extension-using-attributes.md
+- name: グループ属性
+  href: group-attributes.md
+- name: Button属性
+  href: button-attribute.md
 - name: SerializeReference
   href: serialize-reference.md
 - name: 属性一覧
