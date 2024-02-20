@@ -9,7 +9,7 @@ using UnityEngine;
 using Alchemy.Inspector;
 
 [Serializable]
-public sealed class SampleClass
+public sealed class Example
 {
     public float foo;
     public Vector3 bar;
@@ -31,7 +31,7 @@ public class ButtonAttributeExample : MonoBehaviour
     }
 
     [Button]
-    public void Foo(SampleClass parameter)
+    public void Foo(Example parameter)
     {
         var builder = new StringBuilder();
         builder.AppendLine();
