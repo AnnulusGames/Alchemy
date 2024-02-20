@@ -59,3 +59,28 @@ public class GroupAttributesExample : MonoBehaviour
 ```
 
 ![img](../../images/img-group-2.png)
+
+また、定義したSerializableなクラスにグループ属性を追加することで、メンバーの表示を対応するグループに変更することも可能です。
+
+```cs
+using System;
+using UnityEngine;
+using Alchemy.Inspector;
+
+[Serializable]
+[BoxGroup]
+public sealed class Example
+{
+    public float foo;
+    public Vector3 bar;
+    public GameObject baz;
+}
+
+public class GroupAttributeExample : MonoBehaviour
+{
+    public Example example;
+}
+
+```
+
+![img](../../images/img-group-3.png)
