@@ -1,0 +1,72 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": [
+            "Alchemy/Assets/Alchemy/Runtime/**/*.cs",
+            "Alchemy/Assets/Alchemy/Editor/**/*.cs"
+          ],
+          "src": "../"
+        }
+      ],
+      "properties": {
+        "AllowUnsafeBlocks": true
+      },
+      "dest": "api",
+      "disableGitFeatures": false,
+      "disableDefaultFilter": false,
+      "allowCompilationErrors": true
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": "**/*.{md,yml}",
+        "src": "api",
+        "dest": "api"
+      },
+      {
+        "files": [
+          "articles/en/**.md",
+          "articles/en/toc.yml",
+          "articles/ja/**.md",
+          "articles/ja/toc.yml",
+          "toc.yml",
+          "*.md"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**"
+        ]
+      }
+    ],
+    "output": "_site",
+    "template": [
+      "default",
+      "modern"
+    ],
+    "globalMetadata": {
+      "_appName": "Alchemy",
+      "_appTitle": "Alchemy",
+      "_appFooter": "<span>Copyright © 2024 Annulus Games. Generated with <a href=\"https://dotnet.github.io/docfx\">DocFX</a></span>",
+      "_enableSearch": true,
+      "pdf": false,
+      "_appLogoPath": "images/icon.svg",
+      "_appFaviconPath": "images/favicon.svg",
+      "_gitContribute": {
+        "repo": "https://github.com/AnnulusGames/Alchemy"
+      },
+      "_gitUrlPattern": "github"
+    },
+    "xrefService": [
+      "https://xref.docs.microsoft.com/query?uid={uid}"
+    ],
+    "sitemap": {
+      "baseUrl": "https://AnnulusGames.github.io/Alchemy"
+    }
+  }
+}
