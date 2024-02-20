@@ -221,7 +221,7 @@ Additionally, objects to decorate the Hierarchy can be created from the Create m
 
 <img src="https://github.com/AnnulusGames/Alchemy/blob/main/docs/images/img-create-hierarchy-object.png" width="600">
 
-These objects are automatically excluded during build time. (If they have child objects, all child objects are detached before deletion.)
+These objects are automatically excluded in build. (If they have child objects, all child objects are detached before deletion.)
 For more details, refer to [Decorating Hierarchy](https://annulusgames.github.io/Alchemy/articles/en/decorating-hierarchy.html).
 
 ## AlchemyEditorWindow
