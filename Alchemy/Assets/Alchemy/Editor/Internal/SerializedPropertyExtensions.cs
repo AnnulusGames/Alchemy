@@ -227,6 +227,31 @@ namespace Alchemy.Editor
             return obj;
         }
 
+
+        public static object GetDeclaredObject(this SerializedProperty property)
+        {
+            if (property == null) return null;
+
+            var path = property.propertyPath.Replace(".Array.data[", "[");
+            object obj = property.serializedObject.targetObject;
+            var elements = path.Split('.');
+            for (int i = 0; i < elements.Length - 1; i++)
+            {
+                var element = elements[i];
+                if (element.Contains("["))
+                {
+                    var elementName = element[..element.IndexOf("[")];
+                    var index = Convert.ToInt32(element[element.IndexOf("[")..].Replace("[", "").Replace("]", ""));
+                    obj = ReflectionHelper.GetValue(obj, elementName, index);
+                }
+                else
+                {
+                    obj = ReflectionHelper.GetValue(obj, element);
+                }
+            }
+            return obj;
+        }
+
         static T GetFieldOrPropertyValue<T>(string fieldName, object obj, bool includeAllBases = false, BindingFlags bindings = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
         {
             var field = obj.GetType().GetField(fieldName, bindings);

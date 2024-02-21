@@ -262,7 +262,7 @@ namespace Alchemy.Editor
         {
             if (target == null) return false;
             Type type = target.GetType();
-            BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
+            BindingFlags bindingAttr = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly;
 
             while (type != null)
             {

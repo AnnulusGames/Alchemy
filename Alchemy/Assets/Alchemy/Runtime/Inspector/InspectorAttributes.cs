@@ -217,4 +217,17 @@ namespace Alchemy.Inspector
         public bool Reorderable { get; set; } = true;
         public ListViewReorderMode ReorderMode { get; set; } = ListViewReorderMode.Animated;
     }
+
+    [AttributeUsage(AttributeTargets.Field)]
+    public sealed class OnListViewChangedAttribute : Attribute
+    {
+        public string OnItemChanged { get; set; }
+        public string OnItemIndexChanged { get; set; }
+        public string OnItemsAdded { get; set; }
+        public string OnItemsRemoved { get; set; }
+        public string OnItemsChosen { get; set; }
+        public string OnItemsSourceChanged { get; set; }
+        public string OnSelectionChanged { get; set; }
+        public string OnSelectedIndicesChanged { get; set; }
+    }
 }
