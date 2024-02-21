@@ -31,15 +31,11 @@ namespace Alchemy.Editor.Elements
                 {
                     ReflectionHelper.Invoke(parentObj, events.OnItemChanged, new object[] { index, x.GetValue<object>() });
                 });
-
-                ReflectionHelper.Invoke(parentObj, events.OnBindItem, new object[] { index });
             };
             listView.unbindItem = (element, index) =>
             {
                 element.Clear();
                 element.Unbind();
-
-                ReflectionHelper.Invoke(parentObj, events.OnUnbindItem, new object[] { index });
             };
 
             var label = listView.Q<Label>();
