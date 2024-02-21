@@ -51,6 +51,23 @@ namespace Alchemy.Editor
             };
         }
 
+        public static ListView CreateListViewFromSettingsAttribute(ListViewSettingsAttribute settings)
+        {
+            return new ListView
+            {
+                reorderable = settings == null ? true : settings.Reorderable,
+                reorderMode = settings == null ? ListViewReorderMode.Animated : settings.ReorderMode,
+                showBorder = settings == null ? true : settings.ShowBorder,
+                showFoldoutHeader = settings == null ? true : settings.ShowFoldoutHeader,
+                showBoundCollectionSize = settings == null ? true : (settings.ShowFoldoutHeader && settings.ShowBoundCollectionSize),
+                selectionType = settings == null ? SelectionType.Multiple : settings.SelectionType,
+                showAddRemoveFooter = settings == null ? true : settings.ShowAddRemoveFooter,
+                fixedItemHeight = 20f,
+                virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight,
+                showAlternatingRowBackgrounds = settings == null ? AlternatingRowBackground.None : settings.ShowAlternatingRowBackgrounds,
+            };
+        }
+
         public static PropertyField CreateObjectPropertyField(SerializedProperty property, Type type)
         {
             Assert.IsTrue(property.propertyType == SerializedPropertyType.ObjectReference);
