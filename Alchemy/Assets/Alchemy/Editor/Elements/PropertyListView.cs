@@ -16,9 +16,10 @@ namespace Alchemy.Editor.Elements
         {
             Assert.IsTrue(property.isArray);
 
-            var settings = property.GetAttribute<ListViewSettingsAttribute>(true);
+            var parentObj = property.GetDeclaredObject();
+            var events = property.GetAttribute<OnListViewChangedAttribute>(true);
 
-            var listView = GUIHelper.CreateListViewFromFieldInfo(property.GetFieldInfo());
+            var listView = GUIHelper.CreateListViewFromFieldInfo(parentObj, property.GetFieldInfo());
             listView.headerTitle = ObjectNames.NicifyVariableName(property.displayName);
             listView.bindItem = (element, index) =>
             {
@@ -26,11 +27,19 @@ namespace Alchemy.Editor.Elements
                 var e = new AlchemyPropertyField(arrayElement, property.GetPropertyType(true), depth + 1, true);
                 element.Add(e);
                 element.Bind(arrayElement.serializedObject);
+                e.TrackPropertyValue(arrayElement, x =>
+                {
+                    ReflectionHelper.Invoke(parentObj, events.OnItemChanged, new object[] { index, x.GetValue<object>() });
+                });
+
+                ReflectionHelper.Invoke(parentObj, events.OnBindItem, new object[] { index });
             };
             listView.unbindItem = (element, index) =>
             {
                 element.Clear();
                 element.Unbind();
+
+                ReflectionHelper.Invoke(parentObj, events.OnUnbindItem, new object[] { index });
             };
 
             var label = listView.Q<Label>();

@@ -52,10 +52,10 @@ namespace Alchemy.Editor
             };
         }
 
-        public static ListView CreateListViewFromFieldInfo(FieldInfo fieldInfo)
+        public static ListView CreateListViewFromFieldInfo(object target, FieldInfo fieldInfo)
         {
             var settings = fieldInfo.GetCustomAttribute<ListViewSettingsAttribute>();
-            return new ListView
+            var listView = new ListView
             {
                 reorderable = settings == null ? true : settings.Reorderable,
                 reorderMode = settings == null ? ListViewReorderMode.Animated : settings.ReorderMode,
@@ -68,6 +68,48 @@ namespace Alchemy.Editor
                 virtualizationMethod = CollectionVirtualizationMethod.DynamicHeight,
                 showAlternatingRowBackgrounds = settings == null ? AlternatingRowBackground.None : settings.ShowAlternatingRowBackgrounds,
             };
+
+            var events = fieldInfo.GetCustomAttribute<OnListViewChangedAttribute>();
+            if (events != null)
+            {
+                listView.itemsAdded += indices =>
+                {
+                    if (events.OnItemsAdded == null) return;
+                    ReflectionHelper.Invoke(target, events.OnItemsAdded, new object[] { indices });
+                };
+                listView.itemsRemoved += indices =>
+                {
+                    if (events.OnItemsRemoved == null) return;
+                    ReflectionHelper.Invoke(target, events.OnItemsRemoved, new object[] { indices });
+                };
+                listView.itemsChosen += items =>
+                {
+                    if (events.OnItemsChosen == null) return;
+                    ReflectionHelper.Invoke(target, events.OnItemsChosen, new object[] { items });
+                };
+                listView.itemIndexChanged += (before, after) =>
+                {
+                    if (events.OnItemIndexChanged == null) return;
+                    ReflectionHelper.Invoke(target, events.OnItemIndexChanged, new object[] { before, after });
+                };
+                listView.selectionChanged += items =>
+                {
+                    if (events.OnSelectionChanged == null) return;
+                    ReflectionHelper.Invoke(target, events.OnSelectionChanged, new object[] { items });
+                };
+                listView.selectedIndicesChanged += indices =>
+                {
+                    if (events.OnSelectedIndicesChanged== null) return;
+                    ReflectionHelper.Invoke(target, events.OnSelectedIndicesChanged, new object[] { indices });
+                };
+                listView.itemsSourceChanged += () =>
+                {
+                    if (events.OnItemsSourceChanged == null) return;
+                    ReflectionHelper.Invoke(target, events.OnItemsSourceChanged, null);
+                };
+            }
+
+            return listView;
         }
 
         public static PropertyField CreateObjectPropertyField(SerializedProperty property, Type type)
