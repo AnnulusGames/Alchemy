@@ -32,7 +32,7 @@ namespace Alchemy.Editor.Elements
                 var value = list[index];
                 var listType = list.GetType();
                 var valueType = value != null ? value.GetType() : listType.IsGenericType ? listType.GenericTypeArguments[0] : typeof(object);
-                var fieldElement = new GenericField(value, valueType, label, depth);
+                var fieldElement = new GenericField(new IdentityAccess(value), valueType, label, depth);
                 element.Add(fieldElement);
                 var labelElement = fieldElement.Q<Label>();
                 if (labelElement != null) labelElement.text = "Element " + index;

@@ -55,7 +55,7 @@ namespace Alchemy.Editor.Elements
 
                 var valueType = elementObj == null ? collection.GetType().GenericTypeArguments[0] : elementObj.GetType();
 
-                inputField = new GenericField(elementObj, valueType, label, depth);
+                inputField = new GenericField(new IdentityAccess(elementObj), valueType, label, depth);
                 inputField.style.flexGrow = 1f;
                 inputField.OnValueChanged += x =>
                 {

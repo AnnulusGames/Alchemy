@@ -101,7 +101,7 @@ namespace Alchemy.Editor.Elements
             {
                 foldout.Add(new VisualElement() { style = { height = EditorGUIUtility.standardVerticalSpacing } });
                 var so = new SerializedObject(property.objectReferenceValue);
-                InspectorHelper.BuildElements(so, foldout, so.targetObject, name => so.FindProperty(name), depth);
+                InspectorHelper.BuildElements(so, foldout, new IdentityAccess(so.targetObject), name => so.FindProperty(name), depth);
                 this.Bind(so);
             }
             else

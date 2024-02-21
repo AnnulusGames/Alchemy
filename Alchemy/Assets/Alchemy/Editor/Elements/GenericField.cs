@@ -14,18 +14,22 @@ namespace Alchemy.Editor.Elements
     public sealed class GenericField : VisualElement
     {
         const string CreateButtonText = "Create...";
-
-        public GenericField(object obj, Type type, string label, int depth, bool isDelayed = false)
+        // public GenericField(object  obj, Type type, string label, int depth, bool isDelayed = false)
+        // {
+        //     Build(new IdentityAccess(obj), type, label, depth, isDelayed);
+        //     GUIHelper.ScheduleAdjustLabelWidth(this);
+        // }
+        public GenericField(IObjectAccess  objectAccess, Type type, string label, int depth, bool isDelayed = false)
         {
-            Build(obj, type, label, depth, isDelayed);
+            Build(objectAccess, type, label, depth, isDelayed);
             GUIHelper.ScheduleAdjustLabelWidth(this);
         }
 
-        void Build(object obj, Type type, string label, int depth, bool isDelayed)
+        void Build(IObjectAccess  objectAccess, Type type, string label, int depth, bool isDelayed)
         {
             if (depth > InspectorHelper.MaxDepth) return;
             Clear();
-
+            var obj = objectAccess.Target;
             // Add [Create...] button
             if (obj == null && !typeof(UnityEngine.Object).IsAssignableFrom(type))
             {
@@ -53,7 +57,7 @@ namespace Alchemy.Editor.Elements
                     nullLabelElement.Add(new Button(() =>
                     {
                         var instance = "";
-                        Build(instance, type, label, depth, isDelayed);
+                        Build(new IdentityAccess(instance), type, label, depth, isDelayed);
                         OnValueChanged?.Invoke(instance);
                     })
                     {
@@ -65,7 +69,7 @@ namespace Alchemy.Editor.Elements
                     nullLabelElement.Add(new Button(() =>
                     {
                         var instance = Activator.CreateInstance(type, Activator.CreateInstance(type.GenericTypeArguments[0]));
-                        Build(instance, type, label, depth, isDelayed);
+                        Build(new IdentityAccess(instance), type, label, depth, isDelayed);
                         OnValueChanged?.Invoke(instance);
                     })
                     {
@@ -77,7 +81,7 @@ namespace Alchemy.Editor.Elements
                     nullLabelElement.Add(new Button(() =>
                     {
                         var instance = TypeHelper.CreateDefaultInstance(type);
-                        Build(instance, type, label, depth, isDelayed);
+                        Build(new IdentityAccess(instance), type, label, depth, isDelayed);
                         OnValueChanged?.Invoke(instance);
                     })
                     {
@@ -217,7 +221,7 @@ namespace Alchemy.Editor.Elements
             }
             else
             {
-                var field = new ClassField(obj, type, label, depth + 1);
+                var field = new ClassField(objectAccess, type, label, depth + 1);
                 field.OnValueChanged += x => OnValueChanged?.Invoke(x);
                 Add(field);
             }

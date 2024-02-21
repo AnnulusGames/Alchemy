@@ -74,11 +74,11 @@ namespace Alchemy.Editor
             }
         }
 
-        public static void BuildElements(SerializedObject serializedObject, VisualElement rootElement, object target, Func<string, SerializedProperty> findPropertyFunc, int depth)
+        public static void BuildElements(SerializedObject serializedObject, VisualElement rootElement, IObjectAccess targetAccess, Func<string, SerializedProperty> findPropertyFunc, int depth)
         {
             if (depth >= MaxDepth) return;
-            if (target == null) return;
-
+            if (targetAccess == null) return;
+            var target = targetAccess.Target;
             // Build node
             var rootNode = BuildInspectorNode(target.GetType());
 
@@ -133,7 +133,7 @@ namespace Alchemy.Editor
                     }
                     else
                     {
-                        element = CreateMemberElement(serializedObject, target, member, findPropertyFunc, depth + 1);
+                        element = CreateMemberElement(serializedObject, targetAccess, member, findPropertyFunc, depth + 1);
                     }
 
                     if (element == null) continue;
@@ -147,7 +147,7 @@ namespace Alchemy.Editor
 
                     if (e == null) node.VisualElement.Add(element);
                     else e.Add(element);
-                    AlchemyAttributeDrawer.ExecutePropertyDrawers(serializedObject, property, target, member, element);
+                    AlchemyAttributeDrawer.ExecutePropertyDrawers(serializedObject, property, targetAccess, member, element);
                 }
             }
         }
@@ -197,7 +197,7 @@ namespace Alchemy.Editor
             return rootNode;
         }
 
-        public static VisualElement CreateMemberElement(SerializedObject serializedObject, object target, MemberInfo memberInfo, Func<string, SerializedProperty> findPropertyFunc, int depth)
+        public static VisualElement CreateMemberElement(SerializedObject serializedObject, IObjectAccess objectAccess, MemberInfo memberInfo, Func<string, SerializedProperty> findPropertyFunc, int depth)
         {
             if (depth > MaxDepth) return null;
 
@@ -206,7 +206,7 @@ namespace Alchemy.Editor
                 case MethodInfo methodInfo:
                     if (methodInfo.HasCustomAttribute<ButtonAttribute>())
                     {
-                        return new MethodButton(target, methodInfo);
+                        return new MethodButton(objectAccess, methodInfo);
                     }
                     break;
                 case FieldInfo:
@@ -246,12 +246,12 @@ namespace Alchemy.Editor
                             var p = GetProperty();
                             if (p != null)
                             {
-                                var field = new ReflectionField(target, fieldInfo, depth);
+                                var field = new ReflectionField(objectAccess, fieldInfo, depth);
                                 var foldout = field.Q<Foldout>();
                                 foldout?.BindProperty(p);
                                 field.TrackPropertyValue(p, p =>
                                 {
-                                    field.Rebuild(target, memberInfo, depth);
+                                    field.Rebuild(objectAccess, memberInfo, depth);
                                     var foldout = field.Q<Foldout>();
                                     foldout?.BindProperty(p);
                                 });
@@ -279,7 +279,7 @@ namespace Alchemy.Editor
                     // Create element if member has ShowInInspector attribute
                     if (memberInfo.HasCustomAttribute<ShowInInspectorAttribute>())
                     {
-                        return new ReflectionField(target, memberInfo, depth);
+                        return new ReflectionField(objectAccess, memberInfo, depth);
                     }
                     break;
             }

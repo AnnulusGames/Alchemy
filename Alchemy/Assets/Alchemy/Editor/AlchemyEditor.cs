@@ -92,7 +92,7 @@ namespace Alchemy.Editor
             }
 
             // Add elements
-            InspectorHelper.BuildElements(serializedObject, root, target, name => serializedObject.FindProperty(name), 0);
+            InspectorHelper.BuildElements(serializedObject, root, new IdentityAccess(target), name => serializedObject.FindProperty(name), 0);
 
             return root;
         }

@@ -142,7 +142,7 @@ namespace Alchemy.Editor.Drawers
     {
         protected override void OnInspectorChanged()
         {
-            var condition = ReflectionHelper.GetValueBool(Target, ((HideIfAttribute)Attribute).Condition);
+            var condition = ReflectionHelper.GetValueBool(TargetAccess.Target, ((HideIfAttribute)Attribute).Condition);
             TargetElement.style.display = condition ? DisplayStyle.None : DisplayStyle.Flex;
         }
     }
@@ -152,7 +152,7 @@ namespace Alchemy.Editor.Drawers
     {
         protected override void OnInspectorChanged()
         {
-            var condition = ReflectionHelper.GetValueBool(Target, ((ShowIfAttribute)Attribute).Condition);
+            var condition = ReflectionHelper.GetValueBool(TargetAccess.Target, ((ShowIfAttribute)Attribute).Condition);
             TargetElement.style.display = !condition ? DisplayStyle.None : DisplayStyle.Flex;
         }
     }
@@ -162,7 +162,7 @@ namespace Alchemy.Editor.Drawers
     {
         protected override void OnInspectorChanged()
         {
-            var condition = ReflectionHelper.GetValueBool(Target, ((DisableIfAttribute)Attribute).Condition);
+            var condition = ReflectionHelper.GetValueBool(TargetAccess.Target, ((DisableIfAttribute)Attribute).Condition);
             TargetElement.SetEnabled(!condition);
         }
     }
@@ -172,7 +172,7 @@ namespace Alchemy.Editor.Drawers
     {
         protected override void OnInspectorChanged()
         {
-            var condition = ReflectionHelper.GetValueBool(Target, ((EnableIfAttribute)Attribute).Condition);
+            var condition = ReflectionHelper.GetValueBool(TargetAccess.Target, ((EnableIfAttribute)Attribute).Condition);
             TargetElement.SetEnabled(condition);
         }
     }
@@ -219,7 +219,9 @@ namespace Alchemy.Editor.Drawers
 
         protected override void OnInspectorChanged()
         {
-            var result = ReflectionHelper.Invoke(Target, ((ValidateInputAttribute)Attribute).Condition, SerializedProperty.GetValue<object>());
+            var target = TargetAccess.Target;
+            var result = ReflectionHelper.Invoke(target, ((ValidateInputAttribute)Attribute).Condition, SerializedProperty.GetValue<object>());
+            TargetAccess.Target = target;
             helpBox.style.display = result is bool flag && flag ? DisplayStyle.None : DisplayStyle.Flex;
         }
     }
@@ -338,8 +340,8 @@ namespace Alchemy.Editor.Drawers
             TargetElement.TrackPropertyValue(SerializedProperty, property =>
             {
                 var methodName = ((OnValueChangedAttribute)Attribute).MethodName;
-
-                var methods = ReflectionHelper.GetAllMethodsIncludingBaseNonPublic(Target.GetType())
+                var target= TargetAccess.Target;
+                var methods = ReflectionHelper.GetAllMethodsIncludingBaseNonPublic(target.GetType())
                     .Where(x => x.Name == methodName);
 
                 foreach (var methodInfo in methods)
@@ -349,13 +351,15 @@ namespace Alchemy.Editor.Drawers
                     var parameters = methodInfo.GetParameters();
                     if (parameters.Length == 1 && parameters[0].ParameterType.IsAssignableFrom(property.GetPropertyType()))
                     {
-                        methodInfo.Invoke(Target, new object[] { property.GetValue<object>() });
+                        methodInfo.Invoke(target, new object[] { property.GetValue<object>() });
+                      
                     }
                     else if (parameters.Length == 0)
                     {
-                        methodInfo.Invoke(Target, null);
+                        methodInfo.Invoke(target, null);
                     }
                 }
+                TargetAccess.Target = target;
             });
         }
     }

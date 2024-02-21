@@ -7,8 +7,8 @@ namespace Alchemy.Editor.Elements
 {
     public sealed class ClassField : VisualElement
     {
-        public ClassField(Type type, string label, int depth) : this(TypeHelper.CreateDefaultInstance(type), type, label, depth) { }
-        public ClassField(object obj, Type type, string label, int depth)
+        public ClassField(Type type, string label, int depth) : this(new IdentityAccess(TypeHelper.CreateDefaultInstance(type)), type, label, depth) { }
+        public ClassField(IObjectAccess objectAccess, Type type, string label, int depth)
         {
             if (depth > InspectorHelper.MaxDepth) return;
 
@@ -46,14 +46,19 @@ namespace Alchemy.Editor.Elements
                 // Add member elements
                 foreach (var member in node.Members.OrderByAttributeThenByMemberType())
                 {
-                    var element = new ReflectionField(obj, member, depth + 1);
+                    var element = new ReflectionField(objectAccess, member, depth + 1);
                     element.style.width = Length.Percent(100f);
-                    element.OnValueChanged += x => OnValueChanged?.Invoke(obj);
+                    element.OnValueChanged += x =>
+                    {
+                        var obj = objectAccess.Target;
+                        OnValueChanged?.Invoke(obj);
+                        objectAccess.Target = obj;
+                    };
 
                     var e = node.Drawer?.GetGroupElement(member.GetCustomAttribute<PropertyGroupAttribute>());
                     if (e == null) node.VisualElement.Add(element);
                     else e.Add(element);
-                    AlchemyAttributeDrawer.ExecutePropertyDrawers(null, null, obj, member, element);
+                    AlchemyAttributeDrawer.ExecutePropertyDrawers(null, null, objectAccess, member, element);
                 }
             }
 

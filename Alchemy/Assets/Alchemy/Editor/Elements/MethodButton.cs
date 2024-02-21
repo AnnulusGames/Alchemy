@@ -8,14 +8,19 @@ namespace Alchemy.Editor.Elements
     {
         const string ButtonLabelText = "Invoke";
 
-        public MethodButton(object target, MethodInfo methodInfo)
+        public MethodButton(IObjectAccess objectAccess, MethodInfo methodInfo)
         {
             var parameters = methodInfo.GetParameters();
 
             // Create parameterless button
             if (parameters.Length == 0)
             {
-                button = new Button(() => methodInfo.Invoke(target, null))
+                button = new Button(() =>
+                {
+                    var target = objectAccess.Target;
+                    methodInfo.Invoke(target, null);
+                    objectAccess.Target = target;
+                })
                 {
                     text = methodInfo.Name
                 };
@@ -40,7 +45,11 @@ namespace Alchemy.Editor.Elements
                 InternalAPIHelper.GetClickable(foldout.Q<Toggle>()), true
             );
 
-            button = new Button(() => methodInfo.Invoke(target, parameterObjects))
+            button = new Button(() =>    {
+                var target = objectAccess.Target;
+                methodInfo.Invoke(target, parameterObjects);
+                objectAccess.Target = target;
+            })
             {
                 text = ButtonLabelText,
                 style = {
@@ -60,7 +69,7 @@ namespace Alchemy.Editor.Elements
                 var index = i;
                 var parameter = parameters[index];
                 parameterObjects[index] = TypeHelper.CreateDefaultInstance(parameter.ParameterType);
-                var element = new GenericField(parameterObjects[index], parameter.ParameterType, ObjectNames.NicifyVariableName(parameter.Name), 0);
+                var element = new GenericField(new IdentityAccess( parameterObjects[index]), parameter.ParameterType, ObjectNames.NicifyVariableName(parameter.Name), 0);
                 element.OnValueChanged += x => parameterObjects[index] = x;
                 element.style.paddingRight = 4f;
                 foldout.Add(element);

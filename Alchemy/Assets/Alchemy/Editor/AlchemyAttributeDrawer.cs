@@ -13,7 +13,7 @@ namespace Alchemy.Editor
     {
         SerializedObject serializedObject;
         SerializedProperty serializedProperty;
-        object target;
+        IObjectAccess targetAccess;
         MemberInfo memberInfo;
         Attribute attribute;
         VisualElement targetElement;
@@ -31,7 +31,7 @@ namespace Alchemy.Editor
         /// <summary>
         /// Target object.
         /// </summary>
-        public object Target => target;
+        public IObjectAccess TargetAccess=> targetAccess;
 
         /// <summary>
         /// MemberInfo of the target member.
@@ -53,7 +53,7 @@ namespace Alchemy.Editor
         /// </summary>
         public abstract void OnCreateElement();
 
-        internal static void ExecutePropertyDrawers(SerializedObject serializedObject, SerializedProperty property, object target, MemberInfo memberInfo, VisualElement memberElement)
+        internal static void ExecutePropertyDrawers(SerializedObject serializedObject, SerializedProperty property, IObjectAccess targetAccess, MemberInfo memberInfo, VisualElement memberElement)
         {
             var attributes = memberInfo.GetCustomAttributes();
             var processorTypes = TypeCache.GetTypesWithAttribute(typeof(CustomAttributeDrawerAttribute));
@@ -65,7 +65,7 @@ namespace Alchemy.Editor
                 var processor = (AlchemyAttributeDrawer)Activator.CreateInstance(processorType);
                 processor.serializedObject = serializedObject;
                 processor.serializedProperty = property;
-                processor.target = target;
+                processor.targetAccess = targetAccess;
                 processor.memberInfo = memberInfo;
                 processor.attribute = attribute;
                 processor.targetElement = memberElement;

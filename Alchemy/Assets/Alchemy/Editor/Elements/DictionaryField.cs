@@ -97,14 +97,14 @@ namespace Alchemy.Editor.Elements
                 };
                 box.Add(keyValueElement);
 
-                keyField = new GenericField(key, keyType, KeyName, depth)
+                keyField = new GenericField(new IdentityAccess(key), keyType, KeyName, depth)
                 {
                     style = { flexGrow = 1f }
                 };
                 keyField.OnValueChanged += SetKey;
                 keyValueElement.Add(keyField);
 
-                valueField = new GenericField(value, valueType, ValueName, depth)
+                valueField = new GenericField(new IdentityAccess(value), valueType, ValueName, depth)
                 {
                     style = { flexGrow = 1f }
                 };

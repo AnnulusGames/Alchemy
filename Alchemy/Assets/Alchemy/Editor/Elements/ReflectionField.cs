@@ -9,12 +9,12 @@ namespace Alchemy.Editor.Elements
 {
     public sealed class ReflectionField : VisualElement
     {
-        public ReflectionField(object target, MemberInfo memberInfo, int depth)
+        public ReflectionField(IObjectAccess objectAccess, MemberInfo memberInfo, int depth)
         {
-            Rebuild(target, memberInfo, depth);
+            Rebuild(objectAccess, memberInfo, depth);
         }
 
-        public void Rebuild(object target, MemberInfo memberInfo, int depth)
+        public void Rebuild(IObjectAccess objectAccess, MemberInfo memberInfo, int depth)
         {
             Clear();
 
@@ -22,23 +22,25 @@ namespace Alchemy.Editor.Elements
             {
                 if (methodInfo.HasCustomAttribute<ButtonAttribute>())
                 {
-                    var button = new MethodButton(target, methodInfo);
+                    var button = new MethodButton(objectAccess, methodInfo);
                     Add(button);
                 }
                 return;
             }
 
+            var currentTarget = objectAccess is IdentityAccess ? objectAccess.Target : null;
             object value;
             GenericField element;
             switch (memberInfo)
             {
                 default: return;
                 case FieldInfo fieldInfo:
-                    value = fieldInfo.IsStatic ? fieldInfo.GetValue(null) : target == null ? TypeHelper.GetDefaultValue(fieldInfo.FieldType) : fieldInfo.GetValue(target);
-                    var fieldType = target == null ? fieldInfo.FieldType : fieldInfo.GetValue(target)?.GetType() ?? fieldInfo.FieldType;
-                    element = new GenericField(value, fieldType, ObjectNames.NicifyVariableName(memberInfo.Name), depth, true);
+                    value = fieldInfo.IsStatic ? fieldInfo.GetValue(null) : currentTarget == null ? TypeHelper.GetDefaultValue(fieldInfo.FieldType) : fieldInfo.GetValue(currentTarget);
+                    var fieldType = currentTarget == null ? fieldInfo.FieldType : fieldInfo.GetValue(currentTarget)?.GetType() ?? fieldInfo.FieldType;
+                    element = new GenericField(new IdentityAccess( value), fieldType, ObjectNames.NicifyVariableName(memberInfo.Name), depth, true);
                     element.OnValueChanged += x =>
                     {
+                        var target = objectAccess.Target;
                         OnBeforeValueChange?.Invoke(target);
                         fieldInfo.SetValue(target, x);
 
@@ -49,17 +51,19 @@ namespace Alchemy.Editor.Elements
                         }
 
                         OnValueChanged?.Invoke(target);
+                        objectAccess.Target = target;
                     };
                     break;
                 case PropertyInfo propertyInfo:
                     if (!propertyInfo.HasCustomAttribute<ShowInInspectorAttribute>()) return;
                     if (!propertyInfo.CanRead) return;
 
-                    value = propertyInfo.GetMethod.IsStatic ? propertyInfo.GetValue(null) : target == null ? TypeHelper.GetDefaultValue(propertyInfo.PropertyType) : propertyInfo.GetValue(target);
-                    var propertyType = target == null ? propertyInfo.PropertyType : propertyInfo.GetValue(target)?.GetType() ?? propertyInfo.PropertyType;
-                    element = new GenericField(value, propertyType, ObjectNames.NicifyVariableName(memberInfo.Name), depth, true);
+                    value = propertyInfo.GetMethod.IsStatic ? propertyInfo.GetValue(null) : currentTarget == null ? TypeHelper.GetDefaultValue(propertyInfo.PropertyType) : propertyInfo.GetValue(currentTarget);
+                    var propertyType = currentTarget == null ? propertyInfo.PropertyType : propertyInfo.GetValue(currentTarget)?.GetType() ?? propertyInfo.PropertyType;
+                    element = new GenericField(new IdentityAccess( value), propertyType, ObjectNames.NicifyVariableName(memberInfo.Name), depth, true);
                     element.OnValueChanged += x =>
                     {
+                        var target = objectAccess.Target;
                         OnBeforeValueChange?.Invoke(target);
                         if (propertyInfo.CanWrite) propertyInfo.SetValue(target, x);
 
@@ -70,6 +74,7 @@ namespace Alchemy.Editor.Elements
                         }
 
                         OnValueChanged?.Invoke(target);
+                        objectAccess.Target = target;
                     };
                     element.SetEnabled(propertyInfo.CanWrite);
                     break;
