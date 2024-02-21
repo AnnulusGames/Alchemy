@@ -82,6 +82,8 @@
     href: attributes/on-inspector-disable.md
   - name: On Inspector Enable
     href: attributes/on-inspector-enable.md
+  - name: On List View Changed
+    href: attributes/on-list-view-changed.md
   - name: On Value Changed
     href: attributes/on-value-changed.md
     
