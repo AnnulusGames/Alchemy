@@ -1,8 +1,8 @@
 {
     "name": "com.annulusgames.alchemy",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "displayName": "Alchemy",
-    "description": "Provides a rich set of editor and serialization extensions for Unity.",
+    "description": "Provides a rich set of editor extensions and serialization extensions for Unity.",
     "unity": "2021.2",
     "author": {
         "name": "Annulus Games",
