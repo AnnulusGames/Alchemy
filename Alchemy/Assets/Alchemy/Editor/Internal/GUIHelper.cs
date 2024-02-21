@@ -1,10 +1,11 @@
+using System;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Assertions;
 using Alchemy.Inspector;
-using System;
 
 namespace Alchemy.Editor
 {
@@ -51,8 +52,9 @@ namespace Alchemy.Editor
             };
         }
 
-        public static ListView CreateListViewFromSettingsAttribute(ListViewSettingsAttribute settings)
+        public static ListView CreateListViewFromFieldInfo(FieldInfo fieldInfo)
         {
+            var settings = fieldInfo.GetCustomAttribute<ListViewSettingsAttribute>();
             return new ListView
             {
                 reorderable = settings == null ? true : settings.Reorderable,

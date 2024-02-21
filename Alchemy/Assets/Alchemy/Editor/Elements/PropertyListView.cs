@@ -18,7 +18,7 @@ namespace Alchemy.Editor.Elements
 
             var settings = property.GetAttribute<ListViewSettingsAttribute>(true);
 
-            var listView = GUIHelper.CreateListViewFromSettingsAttribute(settings);
+            var listView = GUIHelper.CreateListViewFromFieldInfo(property.GetFieldInfo());
             listView.headerTitle = ObjectNames.NicifyVariableName(property.displayName);
             listView.bindItem = (element, index) =>
             {
