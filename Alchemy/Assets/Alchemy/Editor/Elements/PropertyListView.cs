@@ -27,14 +27,13 @@ namespace Alchemy.Editor.Elements
                 var e = new AlchemyPropertyField(arrayElement, property.GetPropertyType(true), depth + 1, true);
                 element.Add(e);
                 element.Bind(arrayElement.serializedObject);
-                if(events != null)
+                if (events != null)
                 {
-                    e.TrackPropertyValue(arrayElement,
-                        x =>
-                        {
-                            ReflectionHelper.Invoke(parentObj, events.OnItemChanged,
-                                new object[] { index, x.GetValue<object>() });
-                        });
+                    e.TrackPropertyValue(arrayElement, x =>
+                    {
+                        ReflectionHelper.Invoke(parentObj, events.OnItemChanged,
+                            new object[] { index, x.GetValue<object>() });
+                    });
                 }
             };
             listView.unbindItem = (element, index) =>
