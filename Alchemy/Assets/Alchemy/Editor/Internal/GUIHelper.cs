@@ -82,26 +82,50 @@ namespace Alchemy.Editor
                     if (events.OnItemsRemoved == null) return;
                     ReflectionHelper.Invoke(target, events.OnItemsRemoved, new object[] { indices });
                 };
+#if UNITY_2022_2_OR_NEWER
                 listView.itemsChosen += items =>
                 {
                     if (events.OnItemsChosen == null) return;
                     ReflectionHelper.Invoke(target, events.OnItemsChosen, new object[] { items });
                 };
+#elif  UNITY_2022_1_OR_NEWER
+                 listView.onItemsChosen += items =>
+                {
+                    if (events.OnItemsChosen == null) return;
+                    ReflectionHelper.Invoke(target, events.OnItemsChosen, new object[] { items });
+                };
+#endif
+                
                 listView.itemIndexChanged += (before, after) =>
                 {
                     if (events.OnItemIndexChanged == null) return;
                     ReflectionHelper.Invoke(target, events.OnItemIndexChanged, new object[] { before, after });
                 };
+#if UNITY_2022_2_OR_NEWER
                 listView.selectionChanged += items =>
                 {
                     if (events.OnSelectionChanged == null) return;
                     ReflectionHelper.Invoke(target, events.OnSelectionChanged, new object[] { items });
                 };
+
                 listView.selectedIndicesChanged += indices =>
                 {
                     if (events.OnSelectedIndicesChanged== null) return;
                     ReflectionHelper.Invoke(target, events.OnSelectedIndicesChanged, new object[] { indices });
                 };
+#elif  UNITY_2022_1_OR_NEWER
+                listView.onSelectionChanged += items =>
+                {
+                    if (events.OnSelectionChanged == null) return;
+                    ReflectionHelper.Invoke(target, events.OnSelectionChanged, new object[] { items });
+                };
+
+                listView.onSelectedIndicesChange += indices =>
+                {
+                    if (events.OnSelectedIndicesChanged== null) return;
+                    ReflectionHelper.Invoke(target, events.OnSelectedIndicesChanged, new object[] { indices });
+                };
+#endif
                 listView.itemsSourceChanged += () =>
                 {
                     if (events.OnItemsSourceChanged == null) return;

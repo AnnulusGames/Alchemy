@@ -100,9 +100,25 @@ namespace Alchemy.Editor.Elements
             {
                 AddField(new IntegerField(label), (int)obj);
             }
+            
             else if (type == typeof(uint))
             {
+#if UNITY_2022_2_OR_NEWER
                 AddField(new UnsignedIntegerField(label), (uint)obj);
+#else
+                var value = (uint)obj;
+                var control = new LongField(label);
+                control.value = value;
+                control.RegisterValueChangedCallback(x =>
+                {
+                    var newValue = (uint)Math.Clamp(control.value, 0, uint.MaxValue);    
+                    OnValueChanged?.Invoke(newValue);
+                    control.value = newValue;
+                });
+                
+                Add(control);
+#endif
+                
             }
             else if (type == typeof(long))
             {
@@ -110,7 +126,21 @@ namespace Alchemy.Editor.Elements
             }
             else if (type == typeof(ulong))
             {
-                AddField(new UnsignedLongField(label), (ulong)obj);
+#if UNITY_2022_2_OR_NEWER
+                AddField(new UnsignedIntegerField(label), (ulong)obj);
+#else
+                var value = (ulong)obj;
+                var control = new LongField(label);
+                control.value = (long)value;
+                control.RegisterValueChangedCallback(x =>
+                {
+                    var newValue = (long)Math.Clamp(control.value, 0, long.MaxValue); 
+                    OnValueChanged?.Invoke(newValue);
+                    control.value = newValue;
+                });
+                
+                Add(control);
+#endif
             }
             else if (type == typeof(float))
             {
