@@ -127,7 +127,7 @@ namespace Alchemy.Editor.Elements
             else if (type == typeof(ulong))
             {
 #if UNITY_2022_2_OR_NEWER
-                AddField(new UnsignedIntegerField(label), (ulong)obj);
+                AddField(new UnsignedLongField(label), (ulong)obj);
 #else
                 var value = (ulong)obj;
                 var control = new LongField(label);
