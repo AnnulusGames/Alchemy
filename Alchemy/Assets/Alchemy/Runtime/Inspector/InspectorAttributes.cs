@@ -225,13 +225,13 @@ namespace Alchemy.Inspector
         public string OnItemIndexChanged { get; set; }
         public string OnItemsAdded { get; set; }
         public string OnItemsRemoved { get; set; }
-#if UNITY_2022_1_OR_NEWER
+        
         public string OnItemsChosen { get; set; }
-#endif
+        
         public string OnItemsSourceChanged { get; set; }
-#if UNITY_2022_1_OR_NEWER
+        
         public string OnSelectionChanged { get; set; }
         public string OnSelectedIndicesChanged { get; set; }
-#endif
+        
     }
 }

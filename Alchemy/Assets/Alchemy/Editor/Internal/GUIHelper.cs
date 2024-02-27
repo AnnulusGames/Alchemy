@@ -88,7 +88,7 @@ namespace Alchemy.Editor
                     if (events.OnItemsChosen == null) return;
                     ReflectionHelper.Invoke(target, events.OnItemsChosen, new object[] { items });
                 };
-#elif  UNITY_2022_1_OR_NEWER
+#else 
                  listView.onItemsChosen += items =>
                 {
                     if (events.OnItemsChosen == null) return;
@@ -113,8 +113,8 @@ namespace Alchemy.Editor
                     if (events.OnSelectedIndicesChanged== null) return;
                     ReflectionHelper.Invoke(target, events.OnSelectedIndicesChanged, new object[] { indices });
                 };
-#elif  UNITY_2022_1_OR_NEWER
-                listView.onSelectionChanged += items =>
+#else
+                listView.onSelectionChange += items =>
                 {
                     if (events.OnSelectionChanged == null) return;
                     ReflectionHelper.Invoke(target, events.OnSelectionChanged, new object[] { items });
