@@ -103,7 +103,7 @@ namespace Alchemy.Editor.Elements
             
             else if (type == typeof(uint))
             {
-#if UNITY_2022_2_OR_NEWER
+#if UNITY_2022_1_OR_NEWER
                 AddField(new UnsignedIntegerField(label), (uint)obj);
 #else
                 var value = (uint)obj;
@@ -126,7 +126,7 @@ namespace Alchemy.Editor.Elements
             }
             else if (type == typeof(ulong))
             {
-#if UNITY_2022_2_OR_NEWER
+#if UNITY_2022_1_OR_NEWER
                 AddField(new UnsignedLongField(label), (ulong)obj);
 #else
                 var value = (ulong)obj;

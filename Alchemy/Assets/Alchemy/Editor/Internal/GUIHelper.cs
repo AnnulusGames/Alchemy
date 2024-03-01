@@ -82,7 +82,7 @@ namespace Alchemy.Editor
                     if (events.OnItemsRemoved == null) return;
                     ReflectionHelper.Invoke(target, events.OnItemsRemoved, new object[] { indices });
                 };
-#if UNITY_2022_2_OR_NEWER
+#if UNITY_2022_1_OR_NEWER
                 listView.itemsChosen += items =>
                 {
                     if (events.OnItemsChosen == null) return;
@@ -101,7 +101,7 @@ namespace Alchemy.Editor
                     if (events.OnItemIndexChanged == null) return;
                     ReflectionHelper.Invoke(target, events.OnItemIndexChanged, new object[] { before, after });
                 };
-#if UNITY_2022_2_OR_NEWER
+#if UNITY_2022_1_OR_NEWER
                 listView.selectionChanged += items =>
                 {
                     if (events.OnSelectionChanged == null) return;
