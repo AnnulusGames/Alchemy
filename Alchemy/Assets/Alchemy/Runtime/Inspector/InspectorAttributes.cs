@@ -229,5 +229,6 @@ namespace Alchemy.Inspector
         public string OnItemsSourceChanged { get; set; }
         public string OnSelectionChanged { get; set; }
         public string OnSelectedIndicesChanged { get; set; }
+        
     }
 }

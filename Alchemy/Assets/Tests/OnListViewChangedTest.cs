@@ -8,6 +8,8 @@ public class OnListViewChangedTest : MonoBehaviour
         OnItemChanged = nameof(OnItemChanged),
         OnItemsAdded = nameof(OnItemsAdded),
         OnItemsRemoved = nameof(OnItemsRemoved),
+        OnItemsChosen = nameof(OnItemChosen),
+        OnSelectionChanged = nameof(OnSelectionChanged),
         OnSelectedIndicesChanged = nameof(OnSelectedIndicesChanged),
         OnItemIndexChanged = nameof(OnItemIndexChanged))
     ]
@@ -27,12 +29,22 @@ public class OnListViewChangedTest : MonoBehaviour
     {
         Debug.Log($"Removed: [{string.Join(',', indices)}]");
     }
-
+    
+    void OnItemChosen(IEnumerable<object> items)
+    {
+        Debug.Log($"Chosen: [{string.Join(',', items)}]");
+    }
+    
+    void OnSelectionChanged(IEnumerable<object> items)
+    {
+        Debug.Log($"Selection Changed: [{string.Join(',', items)}]");
+    }
+    
     void OnSelectedIndicesChanged(IEnumerable<int> indices)
     {
         Debug.Log($"Selected: [{string.Join(',', indices)}]");
     }
-
+    
     void OnItemIndexChanged(int before, int after)
     {
         Debug.Log($"Index Changed: [{before} -> {after}]");
