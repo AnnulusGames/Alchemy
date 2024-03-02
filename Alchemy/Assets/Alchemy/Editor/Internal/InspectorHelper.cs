@@ -235,13 +235,21 @@ namespace Alchemy.Editor
 
 #if ALCHEMY_SUPPORT_SERIALIZATION
                     if (serializedObject.targetObject != null &&
-                        serializedObject.targetObject.GetType().HasCustomAttribute<AlchemySerializeAttribute>() &&
+                        memberInfo.DeclaringType.HasCustomAttribute<AlchemySerializeAttribute>() &&
                         memberInfo.HasCustomAttribute<AlchemySerializeFieldAttribute>())
                     {
                         var element = default(VisualElement);
                         if (memberInfo is FieldInfo fieldInfo)
                         {
-                            SerializedProperty GetProperty() => findPropertyFunc?.Invoke("alchemySerializationData").FindPropertyRelative(memberInfo.Name);
+                            var declaredType = fieldInfo.DeclaringType;
+                            if (declaredType.IsConstructedGenericType)
+                            {
+                                declaredType = declaredType.GetGenericTypeDefinition();
+                            }
+                            var dataName = declaredType.FullName.Replace("`","").Replace(".", "_") + "_alchemySerializationData";
+                            
+                            SerializedProperty GetProperty() => findPropertyFunc?.Invoke(dataName)
+                                .FindPropertyRelative(memberInfo.Name);
 
                             var p = GetProperty();
                             if (p != null)
