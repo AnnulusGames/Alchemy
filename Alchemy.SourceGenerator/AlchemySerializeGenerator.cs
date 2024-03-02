@@ -155,7 +155,7 @@ namespace Alchemy.SourceGenerator
                 : "";
 
             var alchemySerializationDataName = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
-                .Replace("global::", "");
+                .Replace("global::", "").Replace(".", "_");
             alchemySerializationDataName = ReplaceGenericsToCount(alchemySerializationDataName,genericsCount) + "_alchemySerializationData";
 
             var inheritedSerializationCallback = hasInheritedImplementation
