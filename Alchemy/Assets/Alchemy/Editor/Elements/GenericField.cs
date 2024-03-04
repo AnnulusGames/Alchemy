@@ -133,8 +133,8 @@ namespace Alchemy.Editor.Elements
                 control.value = (long)value;
                 control.RegisterValueChangedCallback(x =>
                 {
-                    var newValue = (long)Math.Clamp(control.value, 0, long.MaxValue); 
-                    OnValueChanged?.Invoke(newValue);
+                    var newValue = Math.Clamp(control.value, 0, long.MaxValue); 
+                    OnValueChanged?.Invoke((ulong)newValue);
                     control.value = newValue;
                 });
                 
