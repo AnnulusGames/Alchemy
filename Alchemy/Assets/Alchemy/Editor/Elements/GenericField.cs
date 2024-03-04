@@ -15,15 +15,14 @@ namespace Alchemy.Editor.Elements
     {
         const string CreateButtonText = "Create...";
 
-        public GenericField(object obj, Type type, string label, int depth, bool isDelayed = false)
+        public GenericField(object obj, Type type, string label,bool isDelayed = false)
         {
-            Build(obj, type, label, depth, isDelayed);
+            Build(obj, type, label, isDelayed);
             GUIHelper.ScheduleAdjustLabelWidth(this);
         }
 
-        void Build(object obj, Type type, string label, int depth, bool isDelayed)
+        void Build(object obj, Type type, string label, bool isDelayed)
         {
-            if (depth > InspectorHelper.MaxDepth) return;
             Clear();
 
             // Add [Create...] button
@@ -53,7 +52,7 @@ namespace Alchemy.Editor.Elements
                     nullLabelElement.Add(new Button(() =>
                     {
                         var instance = "";
-                        Build(instance, type, label, depth, isDelayed);
+                        Build(instance, type, label, isDelayed);
                         OnValueChanged?.Invoke(instance);
                     })
                     {
@@ -65,7 +64,7 @@ namespace Alchemy.Editor.Elements
                     nullLabelElement.Add(new Button(() =>
                     {
                         var instance = Activator.CreateInstance(type, Activator.CreateInstance(type.GenericTypeArguments[0]));
-                        Build(instance, type, label, depth, isDelayed);
+                        Build(instance, type, label, isDelayed);
                         OnValueChanged?.Invoke(instance);
                     })
                     {
@@ -77,7 +76,7 @@ namespace Alchemy.Editor.Elements
                     nullLabelElement.Add(new Button(() =>
                     {
                         var instance = TypeHelper.CreateDefaultInstance(type);
-                        Build(instance, type, label, depth, isDelayed);
+                        Build(instance, type, label, isDelayed);
                         OnValueChanged?.Invoke(instance);
                     })
                     {
@@ -228,26 +227,26 @@ namespace Alchemy.Editor.Elements
             }
             else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(HashSet<>))
             {
-                var field = new HashSetField(obj, label, depth + 1);
+                var field = new HashSetField(obj, label);
                 field.OnValueChanged += x => OnValueChanged?.Invoke(x);
 
                 Add(field);
             }
             else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
             {
-                var field = new DictionaryField(obj, label, depth + 1);
+                var field = new DictionaryField(obj, label);
                 field.OnValueChanged += x => OnValueChanged?.Invoke(x);
                 Add(field);
             }
             else if (typeof(IList).IsAssignableFrom(type))
             {
-                var field = new ListField((IList)obj, label, depth + 1);
+                var field = new ListField((IList)obj, label);
                 field.OnValueChanged += x => OnValueChanged?.Invoke(x);
                 Add(field);
             }
             else
             {
-                var field = new ClassField(obj, type, label, depth + 1);
+                var field = new ClassField(obj, type, label);
                 field.OnValueChanged += x => OnValueChanged?.Invoke(x);
                 Add(field);
             }

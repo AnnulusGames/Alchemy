@@ -12,11 +12,9 @@ namespace Alchemy.Editor.Elements
     /// </summary>
     public sealed class InlineEditorObjectField : BindableElement
     {
-        public InlineEditorObjectField(SerializedProperty property, Type type, int depth)
+        public InlineEditorObjectField(SerializedProperty property, Type type)
         {
             Assert.IsTrue(property.propertyType == SerializedPropertyType.ObjectReference);
-
-            this.depth = depth;
 
             style.minHeight = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
 
@@ -55,7 +53,6 @@ namespace Alchemy.Editor.Elements
 
         readonly Foldout foldout;
         readonly ObjectField field;
-        readonly int depth;
         bool isNull;
 
         public bool IsObjectNull => isNull;
@@ -101,7 +98,7 @@ namespace Alchemy.Editor.Elements
             {
                 foldout.Add(new VisualElement() { style = { height = EditorGUIUtility.standardVerticalSpacing } });
                 var so = new SerializedObject(property.objectReferenceValue);
-                InspectorHelper.BuildElements(so, foldout, so.targetObject, name => so.FindProperty(name), depth);
+                InspectorHelper.BuildElements(so, foldout, so.targetObject, name => so.FindProperty(name));
                 this.Bind(so);
             }
             else

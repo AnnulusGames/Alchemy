@@ -7,11 +7,9 @@ namespace Alchemy.Editor.Elements
 {
     public sealed class ClassField : VisualElement
     {
-        public ClassField(Type type, string label, int depth) : this(TypeHelper.CreateDefaultInstance(type), type, label, depth) { }
-        public ClassField(object obj, Type type, string label, int depth)
+        public ClassField(Type type, string label) : this(TypeHelper.CreateDefaultInstance(type), type, label) { }
+        public ClassField(object obj, Type type, string label)
         {
-            if (depth > InspectorHelper.MaxDepth) return;
-
             var foldout = new Foldout
             {
                 text = label,
@@ -46,7 +44,7 @@ namespace Alchemy.Editor.Elements
                 // Add member elements
                 foreach (var member in node.Members.OrderByAttributeThenByMemberType())
                 {
-                    var element = new ReflectionField(obj, member, depth + 1);
+                    var element = new ReflectionField(obj, member);
                     element.style.width = Length.Percent(100f);
                     element.OnValueChanged += x => OnValueChanged?.Invoke(obj);
 

@@ -14,7 +14,7 @@ namespace Alchemy.Editor.Elements
     /// </summary>
     public sealed class SerializeReferenceField : VisualElement
     {
-        public SerializeReferenceField(SerializedProperty property, int depth)
+        public SerializeReferenceField(SerializedProperty property)
         {
             Assert.IsTrue(property.propertyType == SerializedPropertyType.ManagedReference);
 
@@ -76,7 +76,7 @@ namespace Alchemy.Editor.Elements
                         property.serializedObject.ApplyModifiedProperties();
                         property.serializedObject.Update();
 
-                        Rebuild(property, depth);
+                        Rebuild(property);
                     };
 
                     dropdown.Show(position);
@@ -100,7 +100,7 @@ namespace Alchemy.Editor.Elements
             buttonContainer.style.right = 0f;
             Add(buttonContainer);
 
-            Rebuild(property, depth);
+            Rebuild(property);
         }
 
         public readonly Foldout foldout;
@@ -109,7 +109,7 @@ namespace Alchemy.Editor.Elements
         /// <summary>
         /// Rebuild child elements
         /// </summary>
-        void Rebuild(SerializedProperty property, int depth)
+        void Rebuild(SerializedProperty property)
         {
             foldout.Clear();
 
@@ -120,7 +120,7 @@ namespace Alchemy.Editor.Elements
             }
             else
             {
-                InspectorHelper.BuildElements(property.serializedObject, foldout, property.managedReferenceValue, x => property.FindPropertyRelative(x), depth + 1);
+                InspectorHelper.BuildElements(property.serializedObject, foldout, property.managedReferenceValue, x => property.FindPropertyRelative(x));
             }
 
             this.Bind(property.serializedObject);

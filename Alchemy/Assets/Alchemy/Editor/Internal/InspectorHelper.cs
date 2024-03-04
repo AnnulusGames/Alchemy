@@ -16,8 +16,6 @@ namespace Alchemy.Editor
 {
     internal static class InspectorHelper
     {
-        public const int MaxDepth = 15;
-
         public sealed class GroupNode
         {
             public GroupNode(string name, AlchemyGroupDrawer drawer)
@@ -74,9 +72,8 @@ namespace Alchemy.Editor
             }
         }
 
-        public static void BuildElements(SerializedObject serializedObject, VisualElement rootElement, object target, Func<string, SerializedProperty> findPropertyFunc, int depth)
+        public static void BuildElements(SerializedObject serializedObject, VisualElement rootElement, object target, Func<string, SerializedProperty> findPropertyFunc)
         {
-            if (depth >= MaxDepth) return;
             if (target == null) return;
 
             // Build node
@@ -133,7 +130,7 @@ namespace Alchemy.Editor
                     }
                     else
                     {
-                        element = CreateMemberElement(serializedObject, target, member, findPropertyFunc, depth + 1);
+                        element = CreateMemberElement(serializedObject, target, member, findPropertyFunc);
                     }
 
                     if (element == null) continue;
@@ -197,10 +194,8 @@ namespace Alchemy.Editor
             return rootNode;
         }
 
-        public static VisualElement CreateMemberElement(SerializedObject serializedObject, object target, MemberInfo memberInfo, Func<string, SerializedProperty> findPropertyFunc, int depth)
+        public static VisualElement CreateMemberElement(SerializedObject serializedObject, object target, MemberInfo memberInfo, Func<string, SerializedProperty> findPropertyFunc)
         {
-            if (depth > MaxDepth) return null;
-
             switch (memberInfo)
             {
                 case MethodInfo methodInfo:
@@ -224,11 +219,11 @@ namespace Alchemy.Editor
                         {
                             if (memberInfo is FieldInfo fieldInfo)
                             {
-                                return new AlchemyPropertyField(property, fieldInfo.FieldType, depth);
+                                return new AlchemyPropertyField(property, fieldInfo.FieldType);
                             }
                             else
                             {
-                                return new AlchemyPropertyField(property, ((PropertyInfo)memberInfo).PropertyType, depth);
+                                return new AlchemyPropertyField(property, ((PropertyInfo)memberInfo).PropertyType);
                             }
                         }
                     }
@@ -246,12 +241,12 @@ namespace Alchemy.Editor
                             var p = GetProperty();
                             if (p != null)
                             {
-                                var field = new ReflectionField(target, fieldInfo, depth);
+                                var field = new ReflectionField(target, fieldInfo);
                                 var foldout = field.Q<Foldout>();
                                 foldout?.BindProperty(p);
                                 field.TrackPropertyValue(p, p =>
                                 {
-                                    field.Rebuild(target, memberInfo, depth);
+                                    field.Rebuild(target, memberInfo);
                                     var foldout = field.Q<Foldout>();
                                     foldout?.BindProperty(p);
                                 });
@@ -279,7 +274,7 @@ namespace Alchemy.Editor
                     // Create element if member has ShowInInspector attribute
                     if (memberInfo.HasCustomAttribute<ShowInInspectorAttribute>())
                     {
-                        return new ReflectionField(target, memberInfo, depth);
+                        return new ReflectionField(target, memberInfo);
                     }
                     break;
             }

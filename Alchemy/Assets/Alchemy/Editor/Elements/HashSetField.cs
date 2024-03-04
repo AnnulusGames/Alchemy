@@ -6,7 +6,7 @@ namespace Alchemy.Editor.Elements
 {
     public sealed class HashSetField : HashMapFieldBase
     {
-        public HashSetField(object collection, string label, int depth) : base(collection, label, depth) { }
+        public HashSetField(object collection, string label) : base(collection, label) { }
 
         public override string CollectionTypeName => "HashSet";
 
@@ -35,14 +35,14 @@ namespace Alchemy.Editor.Elements
             ReflectionHelper.Invoke(Collection, "Clear");
         }
 
-        public override HashMapItemBase CreateItem(object collection, object elementObj, string label, int depth)
+        public override HashMapItemBase CreateItem(object collection, object elementObj, string label)
         {
-            return new Item(collection, elementObj, label, depth);
+            return new Item(collection, elementObj, label);
         }
 
         public sealed class Item : HashMapItemBase
         {
-            public Item(object collection, object elementObj, string label, int depth)
+            public Item(object collection, object elementObj, string label)
             {
                 var box = new Box()
                 {
@@ -55,7 +55,7 @@ namespace Alchemy.Editor.Elements
 
                 var valueType = elementObj == null ? collection.GetType().GenericTypeArguments[0] : elementObj.GetType();
 
-                inputField = new GenericField(elementObj, valueType, label, depth);
+                inputField = new GenericField(elementObj, valueType, label);
                 inputField.style.flexGrow = 1f;
                 inputField.OnValueChanged += x =>
                 {
