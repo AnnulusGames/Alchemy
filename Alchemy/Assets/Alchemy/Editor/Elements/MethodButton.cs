@@ -60,7 +60,7 @@ namespace Alchemy.Editor.Elements
                 var index = i;
                 var parameter = parameters[index];
                 parameterObjects[index] = TypeHelper.CreateDefaultInstance(parameter.ParameterType);
-                var element = new GenericField(parameterObjects[index], parameter.ParameterType, ObjectNames.NicifyVariableName(parameter.Name), 0);
+                var element = new GenericField(parameterObjects[index], parameter.ParameterType, ObjectNames.NicifyVariableName(parameter.Name));
                 element.OnValueChanged += x => parameterObjects[index] = x;
                 element.style.paddingRight = 4f;
                 foldout.Add(element);

@@ -8,9 +8,8 @@ namespace Alchemy.Editor.Elements
 {
     public abstract class HashMapFieldBase : VisualElement
     {
-        public HashMapFieldBase(object collection, string label, int depth)
+        public HashMapFieldBase(object collection, string label)
         {
-            this.depth = depth;
             this.collection = collection;
 
             var foldout = new Foldout()
@@ -51,7 +50,6 @@ namespace Alchemy.Editor.Elements
 
         public object Collection => collection;
         readonly object collection;
-        readonly int depth;
 
         bool isInputting;
 
@@ -75,7 +73,7 @@ namespace Alchemy.Editor.Elements
             isInputting = true;
 
             var initValue = CreateElement();
-            var form = CreateItem(collection, initValue, "New Value", depth);
+            var form = CreateItem(collection, initValue, "New Value");
             inputForm.Clear();
             inputForm.Add(form);
             form.OnValueChanged += ValidateValue;
@@ -119,7 +117,7 @@ namespace Alchemy.Editor.Elements
             var i = 0;
             foreach (var item in (IEnumerable)collection)
             {
-                var element = CreateItem(collection, item, "Element " + i, depth);
+                var element = CreateItem(collection, item, "Element " + i);
                 element.OnClose += () =>
                 {
                     if (isInputting) return;
@@ -151,7 +149,7 @@ namespace Alchemy.Editor.Elements
             }
         }
 
-        public abstract HashMapItemBase CreateItem(object collection, object elementObj, string label, int depth);
+        public abstract HashMapItemBase CreateItem(object collection, object elementObj, string label);
         public abstract bool CheckElement(object element);
         public abstract object CreateElement();
         public abstract void AddElement(object element);

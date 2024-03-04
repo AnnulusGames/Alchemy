@@ -21,7 +21,7 @@ namespace Alchemy.Editor
             var serializedObject = new SerializedObject(this);
 
             // Build visual elements and bind serialized object
-            InspectorHelper.BuildElements(serializedObject, windowElement, this, name => serializedObject.FindProperty(name), 0);
+            InspectorHelper.BuildElements(serializedObject, windowElement, this, name => serializedObject.FindProperty(name));
             windowElement.Bind(serializedObject);
 
             // Remove "Serialized Data Model Controller" field

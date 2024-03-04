@@ -8,7 +8,7 @@ namespace Alchemy.Editor.Elements
 {
     public sealed class DictionaryField : HashMapFieldBase
     {
-        public DictionaryField(object collection, string label, int depth) : base(collection, label, depth)
+        public DictionaryField(object collection, string label) : base(collection, label)
         {
             if (collection != null)
             {
@@ -60,14 +60,14 @@ namespace Alchemy.Editor.Elements
             ReflectionHelper.Invoke(Collection, "Clear");
         }
 
-        public override HashMapItemBase CreateItem(object collection, object elementObj, string label, int depth)
+        public override HashMapItemBase CreateItem(object collection, object elementObj, string label)
         {
-            return new Item(collection, elementObj, depth + 1);
+            return new Item(collection, elementObj);
         }
 
         public sealed class Item : HashMapItemBase
         {
-            public Item(object collection, object keyValuePair, int depth)
+            public Item(object collection, object keyValuePair)
             {
                 var box = new Box()
                 {
@@ -97,14 +97,14 @@ namespace Alchemy.Editor.Elements
                 };
                 box.Add(keyValueElement);
 
-                keyField = new GenericField(key, keyType, KeyName, depth)
+                keyField = new GenericField(key, keyType, KeyName)
                 {
                     style = { flexGrow = 1f }
                 };
                 keyField.OnValueChanged += SetKey;
                 keyValueElement.Add(keyField);
 
-                valueField = new GenericField(value, valueType, ValueName, depth)
+                valueField = new GenericField(value, valueType, ValueName)
                 {
                     style = { flexGrow = 1f }
                 };

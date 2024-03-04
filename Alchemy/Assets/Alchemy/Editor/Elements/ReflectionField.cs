@@ -9,12 +9,12 @@ namespace Alchemy.Editor.Elements
 {
     public sealed class ReflectionField : VisualElement
     {
-        public ReflectionField(object target, MemberInfo memberInfo, int depth)
+        public ReflectionField(object target, MemberInfo memberInfo)
         {
-            Rebuild(target, memberInfo, depth);
+            Rebuild(target, memberInfo);
         }
 
-        public void Rebuild(object target, MemberInfo memberInfo, int depth)
+        public void Rebuild(object target, MemberInfo memberInfo)
         {
             Clear();
 
@@ -36,7 +36,7 @@ namespace Alchemy.Editor.Elements
                 case FieldInfo fieldInfo:
                     value = fieldInfo.IsStatic ? fieldInfo.GetValue(null) : target == null ? TypeHelper.GetDefaultValue(fieldInfo.FieldType) : fieldInfo.GetValue(target);
                     var fieldType = target == null ? fieldInfo.FieldType : fieldInfo.GetValue(target)?.GetType() ?? fieldInfo.FieldType;
-                    element = new GenericField(value, fieldType, ObjectNames.NicifyVariableName(memberInfo.Name), depth, true);
+                    element = new GenericField(value, fieldType, ObjectNames.NicifyVariableName(memberInfo.Name), true);
                     element.OnValueChanged += x =>
                     {
                         OnBeforeValueChange?.Invoke(target);
@@ -57,7 +57,7 @@ namespace Alchemy.Editor.Elements
 
                     value = propertyInfo.GetMethod.IsStatic ? propertyInfo.GetValue(null) : target == null ? TypeHelper.GetDefaultValue(propertyInfo.PropertyType) : propertyInfo.GetValue(target);
                     var propertyType = target == null ? propertyInfo.PropertyType : propertyInfo.GetValue(target)?.GetType() ?? propertyInfo.PropertyType;
-                    element = new GenericField(value, propertyType, ObjectNames.NicifyVariableName(memberInfo.Name), depth, true);
+                    element = new GenericField(value, propertyType, ObjectNames.NicifyVariableName(memberInfo.Name), true);
                     element.OnValueChanged += x =>
                     {
                         OnBeforeValueChange?.Invoke(target);

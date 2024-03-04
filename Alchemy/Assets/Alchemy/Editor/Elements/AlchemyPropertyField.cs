@@ -11,9 +11,8 @@ namespace Alchemy.Editor.Elements
     /// </summary>
     public sealed class AlchemyPropertyField : BindableElement
     {
-        public AlchemyPropertyField(SerializedProperty property, Type type, int depth, bool isArrayElement = false)
+        public AlchemyPropertyField(SerializedProperty property, Type type, bool isArrayElement = false)
         {
-            if (depth > 20) return;
             var labelText = ObjectNames.NicifyVariableName(property.displayName);
 
             switch (property.propertyType)
@@ -24,7 +23,7 @@ namespace Alchemy.Editor.Elements
                 case SerializedPropertyType.ObjectReference:
                     if (property.GetAttribute<InlineEditorAttribute>() != null)
                     {
-                        element = new InlineEditorObjectField(property, type, depth);
+                        element = new InlineEditorObjectField(property, type);
                     }
                     else
                     {
@@ -40,14 +39,14 @@ namespace Alchemy.Editor.Elements
                     }
                     else if (property.isArray)
                     {
-                        element = new PropertyListView(property, depth);
+                        element = new PropertyListView(property);
                     }
                     else if (targetType.TryGetCustomAttribute<PropertyGroupAttribute>(out var groupAttribute)) // custom group
                     {
                         var drawer = AlchemyEditorUtility.CreateGroupDrawer(groupAttribute, targetType);
 
                         var root = drawer.CreateRootElement(labelText);
-                        InspectorHelper.BuildElements(property.serializedObject, root, property.GetValue<object>(), name => property.FindPropertyRelative(name), depth + 1);
+                        InspectorHelper.BuildElements(property.serializedObject, root, property.GetValue<object>(), name => property.FindPropertyRelative(name));
                         if (root is BindableElement bindableElement) bindableElement.BindProperty(property);
                         element = root;
                     }
@@ -57,13 +56,13 @@ namespace Alchemy.Editor.Elements
 
                         var clickable = InternalAPIHelper.GetClickable(foldout.Q<Toggle>());
                         InternalAPIHelper.SetAcceptClicksIfDisabled(clickable, true);
-                        InspectorHelper.BuildElements(property.serializedObject, foldout, property.GetValue<object>(), name => property.FindPropertyRelative(name), depth + 1);
+                        InspectorHelper.BuildElements(property.serializedObject, foldout, property.GetValue<object>(), name => property.FindPropertyRelative(name));
                         foldout.BindProperty(property);
                         element = foldout;
                     }
                     break;
                 case SerializedPropertyType.ManagedReference:
-                    element = new SerializeReferenceField(property, depth);
+                    element = new SerializeReferenceField(property);
                     break;
             }
             Add(element);

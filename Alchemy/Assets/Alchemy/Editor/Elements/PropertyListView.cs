@@ -12,7 +12,7 @@ namespace Alchemy.Editor.Elements
     /// </summary>
     public sealed class PropertyListView : BindableElement
     {
-        public PropertyListView(SerializedProperty property, int depth)
+        public PropertyListView(SerializedProperty property)
         {
             Assert.IsTrue(property.isArray);
 
@@ -24,7 +24,7 @@ namespace Alchemy.Editor.Elements
             listView.bindItem = (element, index) =>
             {
                 var arrayElement = property.GetArrayElementAtIndex(index);
-                var e = new AlchemyPropertyField(arrayElement, property.GetPropertyType(true), depth + 1, true);
+                var e = new AlchemyPropertyField(arrayElement, property.GetPropertyType(true), true);
                 element.Add(e);
                 element.Bind(arrayElement.serializedObject);
                 if (events != null)
