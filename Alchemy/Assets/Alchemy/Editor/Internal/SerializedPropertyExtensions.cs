@@ -97,12 +97,12 @@ namespace Alchemy.Editor
                     if (i >= splits.Length) continue;
 
                     targetType = target.GetType();
-                    fieldInfo = ReflectionHelper.GetField(targetType, splits[i]);
+                    fieldInfo = ReflectionHelper.GetField(targetType, splits[i], includingBaseNonPublic: true);
                 }
                 else
                 {
                     var targetType = target.GetType();
-                    fieldInfo = ReflectionHelper.GetField(targetType, splits[i]);
+                    fieldInfo = ReflectionHelper.GetField(targetType, splits[i], includingBaseNonPublic: true);
                 }
 
                 target = fieldInfo?.GetValue(target);
