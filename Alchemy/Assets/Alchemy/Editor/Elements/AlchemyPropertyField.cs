@@ -82,6 +82,7 @@ namespace Alchemy.Editor.Elements
                     PropertyField propertyField => propertyField.label,
                     SerializeReferenceField serializeReferenceField => serializeReferenceField.foldout.text,
                     InlineEditorObjectField inlineEditorObjectField => inlineEditorObjectField.Label,
+                    PropertyListView propertyListView => propertyListView.Label,
                     _ => null,
                 };
             }
@@ -100,6 +101,9 @@ namespace Alchemy.Editor.Elements
                         break;
                     case InlineEditorObjectField inlineEditorObjectField:
                         inlineEditorObjectField.Label = value;
+                        break;
+                    case PropertyListView propertyListView:
+                        propertyListView.Label = value;
                         break;
                 };
             }
