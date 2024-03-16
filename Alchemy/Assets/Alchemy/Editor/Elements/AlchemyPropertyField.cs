@@ -105,7 +105,7 @@ namespace Alchemy.Editor.Elements
                     case PropertyListView propertyListView:
                         propertyListView.Label = value;
                         break;
-                };
+                }
             }
         }
     }
