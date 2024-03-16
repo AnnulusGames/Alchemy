@@ -216,6 +216,7 @@ namespace Alchemy.Inspector
         public SelectionType SelectionType { get; set; } = SelectionType.Multiple;
         public bool Reorderable { get; set; } = true;
         public ListViewReorderMode ReorderMode { get; set; } = ListViewReorderMode.Animated;
+        public string ElementLabelTextSelector { get; set; } = null;
     }
 
     [AttributeUsage(AttributeTargets.Field)]
