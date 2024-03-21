@@ -246,7 +246,7 @@ namespace Alchemy.Editor
                             {
                                 declaredType = declaredType.GetGenericTypeDefinition();
                             }
-                            var dataName = declaredType.FullName.Replace("`","").Replace(".", "_") + "_alchemySerializationData";
+                            var dataName ="__alchemySerializationData_"+ declaredType.FullName.Replace("`","").Replace(".", "_") ;
                             
                             SerializedProperty GetProperty() => findPropertyFunc?.Invoke(dataName)
                                 .FindPropertyRelative(memberInfo.Name);

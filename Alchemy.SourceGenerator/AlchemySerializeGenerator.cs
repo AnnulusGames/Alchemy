@@ -156,12 +156,14 @@ namespace Alchemy.SourceGenerator
 
             var alchemySerializationDataName = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
                 .Replace("global::", "").Replace(".", "_");
-            alchemySerializationDataName = ReplaceGenericsToCount(alchemySerializationDataName,genericsCount) + "_alchemySerializationData";
+            alchemySerializationDataName ="__alchemySerializationData_"+ ReplaceGenericsToCount(alchemySerializationDataName,genericsCount) ;
 
-            var inheritedSerializationCallback = hasInheritedImplementation
-                ? "base.SerializationCallback_AlchemyImpl(isBeforeSerialize);"
+            var inheritedOnBeforeSerialize = hasInheritedImplementation
+                ? "base.__AlchemyOnBeforeSerialize();"
                 : string.Empty;
-
+            var inheritedOnAfterDeserialize = hasInheritedImplementation
+                ? "base.__AlchemyOnAfterDeserialize();"
+                : string.Empty;
             var hasShowSerializationData = typeSymbol.GetAttributes().Any(x => x.AttributeClass.Name
                 is "ShowAlchemySerializationData"
                 or "ShowAlchemySerializationDataAttribute"
@@ -218,31 +220,30 @@ catch (global::System.Exception ex)
     {{
         void global::UnityEngine.ISerializationCallbackReceiver.OnAfterDeserialize()
         {{
-            SerializationCallback_AlchemyImpl(false);
+            __AlchemyOnAfterDeserialize();
             if (this is global::Alchemy.Serialization.IAlchemySerializationCallbackReceiver receiver) receiver.OnAfterDeserialize();
         }}
 
         void global::UnityEngine.ISerializationCallbackReceiver.OnBeforeSerialize()
         {{
             if (this is global::Alchemy.Serialization.IAlchemySerializationCallbackReceiver receiver) receiver.OnBeforeSerialize();
-            SerializationCallback_AlchemyImpl(true);
+            __AlchemyOnBeforeSerialize();
         }}
         
-        protected {(hasInheritedImplementation ? "new" : "")} void SerializationCallback_AlchemyImpl(bool isBeforeSerialize = false)
+       
+        protected {(hasInheritedImplementation ? "new" : "")} void __AlchemyOnAfterDeserialize()
         {{
-            {inheritedSerializationCallback}
-            if (isBeforeSerialize)
-            {{
-                {alchemySerializationDataName}.UnityObjectReferences.Clear();
-                {onBeforeSerializeCodeBuilder}
-                    
-            }}
-            else
-            {{
-                 {onAfterDeserializeCodeBuilder}
-            }}
+            {inheritedOnAfterDeserialize}
+           {onAfterDeserializeCodeBuilder}
         }}
 
+        protected {(hasInheritedImplementation ? "new" : "")} void __AlchemyOnBeforeSerialize()
+        {{
+            {inheritedOnBeforeSerialize}
+            {alchemySerializationDataName}.UnityObjectReferences.Clear();
+            {onBeforeSerializeCodeBuilder}
+        }}
+        
         [global::System.Serializable]
         sealed class AlchemySerializationData
         {{
