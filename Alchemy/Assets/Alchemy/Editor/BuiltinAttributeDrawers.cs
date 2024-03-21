@@ -271,9 +271,9 @@ namespace Alchemy.Editor.Drawers
             };
             parent.Insert(parent.IndexOf(TargetElement), title);
 
-            if (att.SubitleText != null)
+            if (att.SubtitleText != null)
             {
-                var subtitle = new Label(att.SubitleText)
+                var subtitle = new Label(att.SubtitleText)
                 {
                     style = {
                         fontSize = 10f,

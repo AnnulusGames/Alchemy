@@ -164,18 +164,18 @@ namespace Alchemy.Inspector
         public TitleAttribute(string titleText)
         {
             TitleText = titleText;
-            SubitleText = null;
+            SubtitleText = null;
         }
 
         public TitleAttribute(string titleText, string subtitle)
         {
             TitleText = titleText;
-            SubitleText = subtitle;
+            SubtitleText = subtitle;
         }
 
 
         public string TitleText { get; }
-        public string SubitleText { get; }
+        public string SubtitleText { get; }
     }
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method)]
