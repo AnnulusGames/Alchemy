@@ -239,6 +239,68 @@ namespace Alchemy.Editor.Drawers
         }
     }
 
+    [CustomAttributeDrawer(typeof(PreviewAttribute))]
+    public sealed class PreviewDrawer : TrackSerializedObjectAttributeDrawer
+    {
+        private Image image;
+        private const float PreviewSize = 40f;
+        private const float BorderWidth = 1f;
+        private static readonly Color borderColor = new Color(0f, 0f, 0f, 0.3f);
+
+        public override void OnCreateElement()
+        {
+            if (SerializedProperty.propertyType != SerializedPropertyType.ObjectReference) return;
+
+            image = new Image
+            {
+                scaleMode = ScaleMode.ScaleToFit,
+                style = {
+                    width = PreviewSize,
+                    height = PreviewSize,
+                    marginTop = EditorGUIUtility.standardVerticalSpacing,
+                    marginBottom = EditorGUIUtility.standardVerticalSpacing * 4f,
+                    alignSelf = Align.FlexEnd,
+                    borderTopWidth = BorderWidth,
+                    borderBottomWidth = BorderWidth,
+                    borderLeftWidth = BorderWidth,
+                    borderRightWidth = BorderWidth,
+                    borderBottomColor = borderColor,
+                    borderTopColor = borderColor,
+                    borderLeftColor = borderColor,
+                    borderRightColor = borderColor,
+                }
+            };
+
+            image.RegisterCallback<MouseDownEvent>(x =>
+            {
+                using var mouseDownEvent = MouseDownEvent.GetPooled(x);
+                var objectFieldSelector = TargetElement.Q(className: "unity-object-field__selector");
+                mouseDownEvent.target = objectFieldSelector;
+                objectFieldSelector.SendEvent(mouseDownEvent);
+            });
+
+            var parent = TargetElement.parent;
+            parent.Insert(parent.IndexOf(TargetElement) + 1, image);
+
+            base.OnCreateElement();
+        }
+
+        protected override void OnInspectorChanged()
+        {
+            if (SerializedProperty.objectReferenceValue == null)
+            {
+                image.image = null;
+                return;
+            }
+
+            TargetElement.schedule.Execute(() =>
+            {
+                var texture = AssetPreview.GetAssetPreview(SerializedProperty.objectReferenceValue);
+                image.image = texture;
+            }).Until(() => image.image != null);
+        }
+    }
+
     [CustomAttributeDrawer(typeof(HorizontalLineAttribute))]
     public sealed class HorizontalLineDrawer : AlchemyAttributeDrawer
     {

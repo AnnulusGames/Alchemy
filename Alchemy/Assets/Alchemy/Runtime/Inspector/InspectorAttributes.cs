@@ -137,6 +137,9 @@ namespace Alchemy.Inspector
     }
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method)]
+    public sealed class PreviewAttribute : Attribute { }
+
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method)]
     public sealed class HorizontalLineAttribute : Attribute
     {
         public HorizontalLineAttribute()
