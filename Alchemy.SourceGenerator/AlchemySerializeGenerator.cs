@@ -31,15 +31,13 @@ namespace Alchemy.SourceGenerator
 
                     if (!IsPartial(typeSyntax))
                     {
-                        context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.MustBePartial,
-                            typeSyntax.Identifier.GetLocation(), typeSymbol.Name));
+                        context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.MustBePartial, typeSyntax.Identifier.GetLocation(), typeSymbol.Name));
                         continue;
                     }
 
                     if (IsNested(typeSyntax))
                     {
-                        context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.NestedNotAllow,
-                            typeSyntax.Identifier.GetLocation(), typeSymbol.Name));
+                        context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.NestedNotAllow, typeSyntax.Identifier.GetLocation(), typeSymbol.Name));
                         continue;
                     }
 
@@ -70,9 +68,7 @@ namespace Alchemy.SourceGenerator
                             {
                                 if (nonSerializedAttribute == null)
                                 {
-                                    context.ReportDiagnostic(Diagnostic.Create(
-                                        DiagnosticDescriptors.ShouldBeNonSerialized, variable.Identifier.GetLocation(),
-                                        fieldSymbol.Name));
+                                    context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptors.ShouldBeNonSerialized, variable.Identifier.GetLocation(), fieldSymbol.Name));
                                 }
 
                                 fieldSymbols.Add(fieldSymbol);
@@ -91,11 +87,8 @@ namespace Alchemy.SourceGenerator
             }
             catch (Exception ex)
             {
-                var diagnosticDescriptor = new DiagnosticDescriptor("AlchemySerializeGeneratorError",
-                    "AlchemySerializeGeneratorError", $"Generation failed with:\n {ex}",
-                    "AlchemySerializeGeneratorError", DiagnosticSeverity.Error, true);
-                context.ReportDiagnostic(Diagnostic.Create(diagnosticDescriptor, Location.None,
-                    DiagnosticSeverity.Error));
+                var diagnosticDescriptor = new DiagnosticDescriptor("AlchemySerializeGeneratorError", "AlchemySerializeGeneratorError", $"Generation failed with:\n {ex}", "AlchemySerializeGeneratorError", DiagnosticSeverity.Error, true);
+                context.ReportDiagnostic(Diagnostic.Create(diagnosticDescriptor, Location.None, DiagnosticSeverity.Error));
             }
         }
         static string ReplaceGenericsToCount( string typeName,int count)
