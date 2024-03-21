@@ -19,7 +19,7 @@ namespace Alchemy.Editor.Elements
             var parentObj = property.GetDeclaredObject();
             var events = property.GetAttribute<OnListViewChangedAttribute>(true);
 
-            var listView = GUIHelper.CreateListViewFromFieldInfo(parentObj, property.GetFieldInfo());
+            listView = GUIHelper.CreateListViewFromFieldInfo(parentObj, property.GetFieldInfo());
             listView.headerTitle = ObjectNames.NicifyVariableName(property.displayName);
             listView.bindItem = (element, index) =>
             {
@@ -47,6 +47,14 @@ namespace Alchemy.Editor.Elements
 
             listView.BindProperty(property);
             Add(listView);
+        }
+
+        readonly ListView listView;
+
+        public string Label
+        {
+            get => listView.headerTitle;
+            set => listView.headerTitle = value;
         }
     }
 }

@@ -1085,6 +1085,12 @@ MonoBehaviour:
   foo: 0
   bar: {x: 0, y: 0, z: 0}
   baz: {fileID: 0}
+  fooList:
+  - 0
+  barList:
+  - {x: 0, y: 0, z: 0}
+  bazList:
+  - {fileID: 0}
 --- !u!1 &801201066
 GameObject:
   m_ObjectHideFlags: 0
