@@ -43,8 +43,7 @@ namespace Alchemy.SourceGenerator
 
                     var fieldSymbols = new List<IFieldSymbol>();
                     var fields = typeSyntax.Members
-                        .Where(x => x is FieldDeclarationSyntax)
-                        .Select(x => (FieldDeclarationSyntax)x);
+                        .OfType<FieldDeclarationSyntax>();
                     foreach (var field in fields)
                     {
                         var model = context.Compilation.GetSemanticModel(field.SyntaxTree);
@@ -54,16 +53,16 @@ namespace Alchemy.SourceGenerator
                             var alchemySerializeAttribute = fieldSymbol.GetAttributes()
                                 .FirstOrDefault(x =>
                                     x.AttributeClass.Name is "AlchemySerializeField"
-                                                          or "AlchemySerializeFieldAttribute"
-                                                          or "Alchemy.Serialization.AlchemySerializeField"
-                                                          or "Alchemy.Serialization.AlchemySerializeFieldAttribute");
+                                        or "AlchemySerializeFieldAttribute"
+                                        or "Alchemy.Serialization.AlchemySerializeField"
+                                        or "Alchemy.Serialization.AlchemySerializeFieldAttribute");
 
                             var nonSerializedAttribute = fieldSymbol.GetAttributes()
                                 .FirstOrDefault(x =>
                                     x.AttributeClass.Name is "NonSerialized"
-                                                          or "NonSerializedAttribute"
-                                                          or "System.NonSerialized"
-                                                          or "System.NonSerializedAttribute");
+                                        or "NonSerializedAttribute"
+                                        or "System.NonSerialized"
+                                        or "System.NonSerializedAttribute");
 
                             if (alchemySerializeAttribute != null)
                             {
@@ -92,31 +91,93 @@ namespace Alchemy.SourceGenerator
                 context.ReportDiagnostic(Diagnostic.Create(diagnosticDescriptor, Location.None, DiagnosticSeverity.Error));
             }
         }
+        static string ReplaceGenericsToCount( string typeName,int count)
+        {
+            if(count == 0) return typeName;
+            var builder = new StringBuilder();
+            bool skip = false;
+            foreach (var c in typeName)
+            {
+                if (c == '<')
+                {
+                    skip = true;
+                    builder.Append(count);
+                }
+                else if (c == '>')
+                {
+                    skip = false;
+                }
+                else if (!skip)
+                {
+                    builder.Append(c);
+                }
+            }
+            return builder.ToString();
+        }
 
         static string ProcessClass(INamedTypeSymbol typeSymbol, List<IFieldSymbol> fieldSymbols)
         {
             var onAfterDeserializeCodeBuilder = new StringBuilder();
             var onBeforeSerializeCodeBuilder = new StringBuilder();
             var serializationDataCodeBuilder = new StringBuilder();
+            bool hasInheritedImplementation = false;
+            var baseType = typeSymbol.BaseType;
+            while (baseType != null)
+            {
+                if (baseType.GetAttributes().Any(x => x.AttributeClass!.Name
+                        is "AlchemySerialize"
+                        or "AlchemySerializeAttribute"
+                        or "Alchemy.Serialization.AlchemySerialize"
+                        or "Alchemy.Serialization.AlchemySerializeAttribute"))
+                {
+                    hasInheritedImplementation = true;
+                    break;
+                }
 
+                baseType = baseType.BaseType;
+            }
+
+            var genericsCount = 0;
+            if (typeSymbol.IsGenericType)
+            {
+                genericsCount = typeSymbol.TypeParameters.Length;
+                
+            }
+            var typeGenerics = typeSymbol.IsGenericType
+                ? "<" + string.Join(", ", typeSymbol.TypeParameters.Select(x => x.Name)) + ">"
+                : "";
+            var displayName = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Replace("global::", "");
+            var alchemySerializationDataName = displayName.Replace(".", "_");
+            alchemySerializationDataName ="__alchemySerializationData_"+ ReplaceGenericsToCount(alchemySerializationDataName,genericsCount) ;
+
+            var inheritedOnBeforeSerialize = hasInheritedImplementation
+                ? "base.__AlchemyOnBeforeSerialize();"
+                : string.Empty;
+            var inheritedOnAfterDeserialize = hasInheritedImplementation
+                ? "base.__AlchemyOnAfterDeserialize();"
+                : string.Empty;
             var hasShowSerializationData = typeSymbol.GetAttributes().Any(x => x.AttributeClass.Name
                 is "ShowAlchemySerializationData"
                 or "ShowAlchemySerializationDataAttribute"
                 or "Alchemy.Serialization.ShowAlchemySerializationData"
                 or "Alchemy.Serialization.ShowAlchemySerializationDataAttribute");
 
-            var serializationDataAttibutesCode = hasShowSerializationData ? "[global::Alchemy.Inspector.ReadOnly, global::UnityEngine.TextArea(3, 999), global::UnityEngine.SerializeField]" : "[global::UnityEngine.HideInInspector, global::UnityEngine.SerializeField]";
-
+            var serializationDataAttributesCode = hasShowSerializationData
+                ? $"[global::Alchemy.Inspector.LabelText(\"Alchemy Serialization Data ({displayName})\"),global::Alchemy.Inspector.ReadOnly, global::UnityEngine.TextArea(3, 999), global::UnityEngine.SerializeField]"
+                : "[global::UnityEngine.HideInInspector, global::UnityEngine.SerializeField]";
+            
             // target class namespace
-            var ns = typeSymbol.ContainingNamespace.IsGlobalNamespace ? string.Empty : $"namespace {typeSymbol.ContainingNamespace} {{";
+            var ns = typeSymbol.ContainingNamespace.IsGlobalNamespace
+                ? string.Empty
+                : $"namespace {typeSymbol.ContainingNamespace} {{";
 
             foreach (var field in fieldSymbols)
             {
                 var serializeCode =
-@$"try
+                    @$"try
 {{
-    alchemySerializationData.{field.Name}.data = global::Alchemy.Serialization.Internal.SerializationHelper.ToJson(this.{field.Name} , alchemySerializationData.UnityObjectReferences);
-    alchemySerializationData.{field.Name}.isCreated = true;
+    {alchemySerializationDataName}.{field.Name}.data = global::Alchemy.Serialization.Internal.SerializationHelper.ToJson(this.{field.Name} , {alchemySerializationDataName}.UnityObjectReferences);
+    {alchemySerializationDataName}.{field.Name}.isCreated = true;
 }}
 catch (global::System.Exception ex)
 {{
@@ -124,11 +185,11 @@ catch (global::System.Exception ex)
 }}";
 
                 var deserializeCode =
-@$"try 
+                    @$"try 
 {{
-    if (alchemySerializationData.{field.Name}.isCreated)
+    if ({alchemySerializationDataName}.{field.Name}.isCreated)
     {{
-        this.{field.Name} = global::Alchemy.Serialization.Internal.SerializationHelper.FromJson<{field.Type.ToDisplayString()}>(alchemySerializationData.{field.Name}.data, alchemySerializationData.UnityObjectReferences);
+        this.{field.Name} = global::Alchemy.Serialization.Internal.SerializationHelper.FromJson<{field.Type.ToDisplayString()}>({alchemySerializationDataName}.{field.Name}.data, {alchemySerializationDataName}.UnityObjectReferences);
     }}
 }}
 catch (global::System.Exception ex)
@@ -143,25 +204,38 @@ catch (global::System.Exception ex)
             }
 
             return
-@$"
+                @$"
 // <auto-generated/>
 {ns}
 
-    partial class {typeSymbol.Name} : global::UnityEngine.ISerializationCallbackReceiver
+    partial class {typeSymbol.Name}{typeGenerics} : global::UnityEngine.ISerializationCallbackReceiver
     {{
         void global::UnityEngine.ISerializationCallbackReceiver.OnAfterDeserialize()
         {{
-            {onAfterDeserializeCodeBuilder}
+            __AlchemyOnAfterDeserialize();
             if (this is global::Alchemy.Serialization.IAlchemySerializationCallbackReceiver receiver) receiver.OnAfterDeserialize();
         }}
 
         void global::UnityEngine.ISerializationCallbackReceiver.OnBeforeSerialize()
         {{
             if (this is global::Alchemy.Serialization.IAlchemySerializationCallbackReceiver receiver) receiver.OnBeforeSerialize();
-            alchemySerializationData.UnityObjectReferences.Clear();
-            {onBeforeSerializeCodeBuilder}
+            __AlchemyOnBeforeSerialize();
+        }}
+        
+       
+        protected {(hasInheritedImplementation ? "new" : "")} void __AlchemyOnAfterDeserialize()
+        {{
+            {inheritedOnAfterDeserialize}
+           {onAfterDeserializeCodeBuilder}
         }}
 
+        protected {(hasInheritedImplementation ? "new" : "")} void __AlchemyOnBeforeSerialize()
+        {{
+            {inheritedOnBeforeSerialize}
+            {alchemySerializationDataName}.UnityObjectReferences.Clear();
+            {onBeforeSerializeCodeBuilder}
+        }}
+        
         [global::System.Serializable]
         sealed class AlchemySerializationData
         {{
@@ -178,7 +252,7 @@ catch (global::System.Exception ex)
             }}
         }}
 
-        {serializationDataAttibutesCode} private AlchemySerializationData alchemySerializationData = new();
+        {serializationDataAttributesCode} private AlchemySerializationData {alchemySerializationDataName} = new();
     }}
 
 {(string.IsNullOrEmpty(ns) ? "" : "}")}
@@ -209,12 +283,12 @@ catch (global::System.Exception ex)
                 if (syntaxNode is TypeDeclarationSyntax typeDeclarationSyntax)
                 {
                     var hasAttribute = typeDeclarationSyntax.AttributeLists
-                            .SelectMany(x => x.Attributes)
-                            .Any(x => x.Name.ToString()
-                                is "AlchemySerialize"
-                                or "AlchemySerializeAttribute"
-                                or "Alchemy.Serialization.AlchemySerialize"
-                                or "Alchemy.Serialization.AlchemySerializeAttribute");
+                        .SelectMany(x => x.Attributes)
+                        .Any(x => x.Name.ToString()
+                            is "AlchemySerialize"
+                            or "AlchemySerializeAttribute"
+                            or "Alchemy.Serialization.AlchemySerialize"
+                            or "Alchemy.Serialization.AlchemySerializeAttribute");
                     if (hasAttribute)
                     {
                         TargetTypes.Add(typeDeclarationSyntax);
