@@ -153,9 +153,8 @@ namespace Alchemy.SourceGenerator
             var typeGenerics = typeSymbol.IsGenericType
                 ? "<" + string.Join(", ", typeSymbol.TypeParameters.Select(x => x.Name)) + ">"
                 : "";
-
-            var alchemySerializationDataName = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
-                .Replace("global::", "").Replace(".", "_");
+            var displayName = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Replace("global::", "");
+            var alchemySerializationDataName = displayName.Replace(".", "_");
             alchemySerializationDataName ="__alchemySerializationData_"+ ReplaceGenericsToCount(alchemySerializationDataName,genericsCount) ;
 
             var inheritedOnBeforeSerialize = hasInheritedImplementation
@@ -171,9 +170,9 @@ namespace Alchemy.SourceGenerator
                 or "Alchemy.Serialization.ShowAlchemySerializationDataAttribute");
 
             var serializationDataAttributesCode = hasShowSerializationData
-                ? "[global::Alchemy.Inspector.ReadOnly, global::UnityEngine.TextArea(3, 999), global::UnityEngine.SerializeField]"
+                ? $"[global::Alchemy.Inspector.LabelText(\"Alchemy Serialization Data ({displayName})\"),global::Alchemy.Inspector.ReadOnly, global::UnityEngine.TextArea(3, 999), global::UnityEngine.SerializeField]"
                 : "[global::UnityEngine.HideInInspector, global::UnityEngine.SerializeField]";
-
+            
             // target class namespace
             var ns = typeSymbol.ContainingNamespace.IsGlobalNamespace
                 ? string.Empty
