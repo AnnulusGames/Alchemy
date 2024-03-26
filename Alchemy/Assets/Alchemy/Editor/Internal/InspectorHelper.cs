@@ -199,9 +199,9 @@ namespace Alchemy.Editor
             switch (memberInfo)
             {
                 case MethodInfo methodInfo:
-                    if (methodInfo.HasCustomAttribute<ButtonAttribute>())
+                    if (methodInfo.TryGetCustomAttribute<ButtonAttribute>(out var buttonAttribute))
                     {
-                        return new MethodButton(target, methodInfo);
+                        return new MethodButton(target, methodInfo, buttonAttribute.useParameters);
                     }
                     break;
                 case FieldInfo:
