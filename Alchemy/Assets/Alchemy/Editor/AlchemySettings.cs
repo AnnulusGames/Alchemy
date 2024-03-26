@@ -65,9 +65,10 @@ namespace Alchemy.Editor
 
                             using (var changeCheck = new EditorGUI.ChangeCheckScope())
                             {
-                                EditorGUILayout.PropertyField(serializedObject.FindProperty("hierarchyObjectMode"));
-                                EditorGUILayout.PropertyField(serializedObject.FindProperty("showHierarchyToggles"), new GUIContent("Show Toggles"));
-                                EditorGUILayout.PropertyField(serializedObject.FindProperty("showComponentIcons"));
+                                EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(hierarchyObjectMode)));
+                                EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(showHierarchyToggles)), new GUIContent("Show Toggles"));
+                                EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(showComponentIcons)));
+                                EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(alwaysHideScriptField)));
 
                                 if (changeCheck.changed)
                                 {
@@ -84,9 +85,11 @@ namespace Alchemy.Editor
         [SerializeField] HierarchyObjectMode hierarchyObjectMode = HierarchyObjectMode.RemoveInBuild;
         [SerializeField] bool showHierarchyToggles;
         [SerializeField] bool showComponentIcons;
+        [SerializeField] bool alwaysHideScriptField;
 
         public HierarchyObjectMode HierarchyObjectMode => hierarchyObjectMode;
         public bool ShowHierarchyToggles => showHierarchyToggles;
         public bool ShowComponentIcons => showComponentIcons;
+        public bool AlwaysHideScriptField => alwaysHideScriptField;
     }
 }
