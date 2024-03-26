@@ -1,5 +1,6 @@
 {
     "hierarchyObjectMode": 2,
     "showHierarchyToggles": true,
-    "showComponentIcons": true
+    "showComponentIcons": true,
+    "alwaysHideScriptField": true
 }
