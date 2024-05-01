@@ -32,8 +32,9 @@ namespace Alchemy.Editor.Elements
                     break;
                 case SerializedPropertyType.Generic:
                     var targetType = property.GetPropertyType(isArrayElement);
+                    var isManagedReferenceProperty = property.propertyType == SerializedPropertyType.ManagedReference;
 
-                    if (InternalAPIHelper.GetDrawerTypeForType(targetType) != null)
+                    if (InternalAPIHelper.GetDrawerTypeForType(targetType, isManagedReferenceProperty) != null)
                     {
                         element = new PropertyField(property);
                     }
