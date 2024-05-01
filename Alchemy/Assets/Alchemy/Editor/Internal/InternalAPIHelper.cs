@@ -39,6 +39,14 @@ namespace Alchemy.Editor
             {
                 return (Type)methodInfo.Invoke(instance, new object[] { classType });
             }
+#elif UNITY_2022_3_OR_NEWER
+            // Unity 2022.3.23f1 added a new parameter to the method
+            var version = UnityEditorInternal.InternalEditorUtility.GetUnityVersion();
+            if (version.Build >= 23)
+            {
+                return (Type)methodInfo?.Invoke(instance, new object[] { classType, isManagedReferenceProperty });
+            }
+            return (Type)methodInfo?.Invoke(instance, new object[] { classType });
 #else
             _ = isManagedReferenceProperty; // discard
             return (Type)methodInfo.Invoke(instance, new object[] { classType });
