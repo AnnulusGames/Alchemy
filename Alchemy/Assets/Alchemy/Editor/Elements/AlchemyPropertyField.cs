@@ -17,6 +17,8 @@ namespace Alchemy.Editor.Elements
 
             switch (property.propertyType)
             {
+                // NOTE: RectOffset is a generic property type, but it doesn't have a SerializeField. Instead, use PropertyField.
+                case SerializedPropertyType.Generic when property.type == "RectOffset":
                 default:
                     element = new PropertyField(property);
                     break;
