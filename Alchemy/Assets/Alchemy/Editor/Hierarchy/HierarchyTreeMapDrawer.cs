@@ -17,7 +17,7 @@ namespace Alchemy.Editor
 
                 if (tex != null) return tex;
                 tex = AssetHelper.FindAssetWithPath<Texture2D>("tree_map_current.png", "Editor/Hierarchy/Textures");
-                TextureCached.Add(nameof(TreeMapCurrent), tex);
+                TextureCached[nameof(TreeMapCurrent)] = tex;
                 return tex;
             }
         }
@@ -30,7 +30,7 @@ namespace Alchemy.Editor
 
                 if (tex != null) return tex;
                 tex = AssetHelper.FindAssetWithPath<Texture2D>("tree_map_last.png", "Editor/Hierarchy/Textures");
-                TextureCached.Add(nameof(TreeMapLast), tex);
+                TextureCached[nameof(TreeMapLast)] = tex;
                 return tex;
             }
         }
@@ -43,7 +43,7 @@ namespace Alchemy.Editor
 
                 if (tex != null) return tex;
                 tex = AssetHelper.FindAssetWithPath<Texture2D>("tree_map_level.png", "Editor/Hierarchy/Textures");
-                TextureCached.Add(nameof(TreeMapLevel), tex);
+                TextureCached[nameof(TreeMapLevel)] = tex;
                 return tex;
             }
         }
@@ -56,7 +56,7 @@ namespace Alchemy.Editor
 
                 if (tex != null) return tex;
                 tex = AssetHelper.FindAssetWithPath<Texture2D>("tree_map_line.png", "Editor/Hierarchy/Textures");
-                TextureCached.Add(nameof(TreeMapLine), tex);
+                TextureCached[nameof(TreeMapLine)] = tex;
                 return tex;
             }
         }
