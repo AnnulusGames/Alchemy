@@ -111,7 +111,7 @@ namespace Alchemy.Editor
         [SerializeField] bool showHierarchyToggles;
         [SerializeField] bool showComponentIcons;
         [SerializeField] bool showTreeMap = true;
-        [SerializeField] Color treeMapColor = new(1f, 1f, 1f, 0.22f);
+        [SerializeField] Color treeMapColor = new(0.53f, 0.53f, 0.53f, 0.45f);
         [SerializeField] bool showSeparator = true;
         [SerializeField] bool showRowShading = true;
         [SerializeField] Color separatorColor = new(0.19f, 0.19f, 0.19f, 0f);

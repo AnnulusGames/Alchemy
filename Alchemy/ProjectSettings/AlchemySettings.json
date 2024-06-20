@@ -4,10 +4,10 @@
     "showComponentIcons": true,
     "showTreeMap": true,
     "treeMapColor": {
-        "r": 1.0,
-        "g": 1.0,
-        "b": 1.0,
-        "a": 0.2199999988079071
+        "r": 0.529411792755127,
+        "g": 0.529411792755127,
+        "b": 0.529411792755127,
+        "a": 0.45098039507865908
     },
     "showSeparator": true,
     "showRowShading": true,
