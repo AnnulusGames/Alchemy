@@ -67,6 +67,9 @@ namespace Alchemy.Editor
             if (gameObject == null) return;
 
             var settings = AlchemySettings.GetOrCreateSettings();
+
+            var tempColor = GUI.color;
+
             if (settings.ShowTreeMap)
             {
                 selectionRect.width = 14;
@@ -130,7 +133,7 @@ namespace Alchemy.Editor
                     else break;
                 }
 
-                GUI.color = Color.white;
+                GUI.color = tempColor;
             }
         }
     }
